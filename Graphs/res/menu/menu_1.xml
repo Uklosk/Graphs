@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_add"
+        android:icon="@drawable/ic_action_new"
+        android:showAsAction="ifRoom"
+        android:title="Nuevo"/>
+    <item
+        android:id="@+id/action_remove"
+        android:icon="@drawable/ic_action_discard"
+        android:showAsAction="ifRoom"
+        android:title="Eliminar"/>
+    <item
+        android:id="@+id/action_load"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="Aplicar Kruskal"/>
+    <item
+        android:id="@+id/action_clear"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="Limpiar"/>
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
+
+</menu>
