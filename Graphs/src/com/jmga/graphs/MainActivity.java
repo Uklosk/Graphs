@@ -28,11 +28,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	private static final int TOGGLE_ADD = 0;
 	private static final int TOGGLE_REMOVE = 1;
-	private static final int TOGGLE_EDIT = 2;
 
 	boolean toggle_remove = false;
 	boolean toggle_add = false;
-	boolean toggle_edit = false;
 
 	private DisplayMetrics metrics;
 
@@ -87,9 +85,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 						modifyGraph(v, event, x, y, node);
 					break;
 				case GRAPH_MODE_WEIGHTS:
-					if (toggle_edit)
-						addArrowM(v, event, x, y, node);
-					else
+					
 						modifyGraph(v, event, x, y, node);
 					break;
 				default:
@@ -139,9 +135,32 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		// getMenuInflater().inflate(R.menu.main, menu);
 		MenuInflater inflater = getMenuInflater();
+
 		inflater.inflate(R.menu.menu_1, menu);
 		this.menu = menu;
+
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+
+		if(gMode==GRAPH_MODE_WEIGHTS){
+			menu.clear();
+
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.menu_2, menu);
+		}else{
+			stop(TOGGLE_ADD, (MenuItem) menu.findItem(R.id.action_add));
+			stop(TOGGLE_REMOVE, (MenuItem) menu.findItem(R.id.action_remove));
+			menu.clear();
+
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.menu_1, menu);
+		}
+		this.menu=menu;
+		return super.onPrepareOptionsMenu(menu);
+
 	}
 
 	@Override
@@ -205,6 +224,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			gMode = GRAPH_MODE_WEIGHTS;
 			break;
 		}
+		invalidateOptionsMenu();
 	}
 
 	@Override
@@ -384,15 +404,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				toggle_remove = true;
 			}
 			break;
-		case TOGGLE_EDIT:
-			if (toggle_edit) {
-				item.setIcon(R.drawable.ic_action_discard);
-				toggle_edit = false;
-			} else {
-				item.setIcon(R.drawable.ic_action_discard_toggle);
-				toggle_edit = true;
-			}
-			break;
 		}
 	}
 
@@ -406,11 +417,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		case TOGGLE_REMOVE:
 			item.setIcon(R.drawable.ic_action_discard);
 			toggle_remove = false;
-
-			break;
-		case TOGGLE_EDIT:
-			item.setIcon(R.drawable.ic_action_discard);
-			toggle_edit = false;
 
 			break;
 		}
