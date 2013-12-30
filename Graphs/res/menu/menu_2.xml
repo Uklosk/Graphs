@@ -4,6 +4,7 @@
         android:id="@+id/action_edit"
         android:icon="@drawable/ic_action_edit"
         android:showAsAction="ifRoom"
+        android:actionLayout="@layout/edit_weight_layout"
         android:title="Nuevo"/>
    
     <item

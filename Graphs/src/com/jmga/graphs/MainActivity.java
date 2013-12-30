@@ -3,14 +3,22 @@ package com.jmga.graphs;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.ActionProvider;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.jmga.graphs.classes.GView;
 import com.jmga.graphs.classes.Node;
@@ -34,6 +42,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	private DisplayMetrics metrics;
 
+	public int weight = 0;
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
 	@Override
@@ -85,8 +94,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 						modifyGraph(v, event, x, y, node);
 					break;
 				case GRAPH_MODE_WEIGHTS:
-					
-						modifyGraph(v, event, x, y, node);
+					kruskalM(v, event, x, y, node);
 					break;
 				default:
 					modifyGraph(v, event, x, y, node);
@@ -145,12 +153,28 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 
-		if(gMode==GRAPH_MODE_WEIGHTS){
+		if (gMode == GRAPH_MODE_WEIGHTS) {
 			menu.clear();
 
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.menu_2, menu);
-		}else{
+
+			View v = (View) menu.findItem(R.id.action_edit).getActionView();
+			EditText text = (EditText) v.findViewById(R.id.weightText);
+
+			text.setOnEditorActionListener(new OnEditorActionListener() {
+
+				@Override
+				public boolean onEditorAction(TextView v, int actionId,
+						KeyEvent event) {
+					if(v.getText()!=null){
+						weight=Integer.parseInt(v.getText().toString());
+					}
+					System.out.println(weight);
+					return false;
+				}
+			});
+		} else {
 			stop(TOGGLE_ADD, (MenuItem) menu.findItem(R.id.action_add));
 			stop(TOGGLE_REMOVE, (MenuItem) menu.findItem(R.id.action_remove));
 			menu.clear();
@@ -158,7 +182,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.menu_1, menu);
 		}
-		this.menu=menu;
+		this.menu = menu;
 		return super.onPrepareOptionsMenu(menu);
 
 	}
@@ -186,8 +210,48 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			toggle(TOGGLE_ADD, item);
 			stop(TOGGLE_REMOVE, (MenuItem) menu.findItem(R.id.action_remove));
 			return true;
+
 		default:
 			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	public class CustomEditProvider extends ActionProvider {
+		public int weight = 0;
+		private EditText text;
+		Context mContext;
+
+		public CustomEditProvider(Context context) {
+			super(context);
+			mContext = context;
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public View onCreateActionView() {
+			// Inflate the action view to be shown on the action bar.
+			LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+			View view = layoutInflater.inflate(R.layout.edit_weight_layout,
+					null);
+			text = (EditText) view.findViewById(R.id.weightText);
+			text.setOnEditorActionListener(new OnEditorActionListener() {
+				@Override
+				public boolean onEditorAction(TextView v, int actionId,
+						KeyEvent event) {
+					boolean handled = false;
+					if (actionId == EditorInfo.IME_ACTION_DONE) {
+						if (text.getText().toString() != null) {
+							weight = Integer
+									.parseInt(text.getText().toString());
+						}
+
+						handled = true;
+					}
+					return false;
+				}
+			});
+			return view;
+
 		}
 	}
 
@@ -368,7 +432,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			if (node == nFocused) {
 
 			} else if (node != null && node != nFocused) {
-				view.changeWeight(nFocused, node, 5);
+				view.changeWeight(nFocused, node, weight);
 			}
 			view.deleteAux();
 
