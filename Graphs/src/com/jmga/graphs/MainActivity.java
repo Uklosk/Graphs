@@ -36,7 +36,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	private static final int TOGGLE_ADD = 0;
 	private static final int TOGGLE_REMOVE = 1;
-	
+
 	boolean isKruskal = false;
 	boolean toggle_remove = false;
 	boolean toggle_add = false;
@@ -195,13 +195,14 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.action_load:
-			
+
 			if (isKruskal) {
-				isKruskal=false;
+				isKruskal = false;
 				view.restore();
 
 			} else {
-				isKruskal=true;;
+				isKruskal = true;
+				;
 
 				view.Kruskal();
 

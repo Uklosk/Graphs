@@ -15,14 +15,14 @@ public class GView extends View {
 	private Paint paint;
 	private Paint fontPaint;
 	private Path path;
-	public boolean isKruskal=false;
-	
-	
+	public boolean isKruskal = false;
+
 	Arrow aux;
 
-	public GView(Context context){
+	public GView(Context context) {
 		super(context);
 	}
+
 	public GView(Context context, float density) {
 		super(context);
 		g = new Graph();
@@ -165,9 +165,11 @@ public class GView extends View {
 	public void update() {
 		g.update();
 		if (g.getArrows().size() >= g.getVertex().size() - 1
-				&& g.getVertex().size() > 0 && g.getArrows().size() > 0){
+				&& g.getVertex().size() > 0 && g.getArrows().size() > 0) {
 			gKruskal = aplicarKruskal(g);
-			isKruskal = true;}else isKruskal=false;
+			isKruskal = true;
+		} else
+			isKruskal = false;
 	}
 
 	public void clear() {
@@ -175,10 +177,10 @@ public class GView extends View {
 		gKruskal = new Graph();
 		invalidate();
 	}
-	
-	public void restore(){
-		for(int i=0; i<g.getArrows().size();i++){
-			g.getArrows().get(i).color=Color.BLACK;
+
+	public void restore() {
+		for (int i = 0; i < g.getArrows().size(); i++) {
+			g.getArrows().get(i).color = Color.BLACK;
 		}
 	}
 }
