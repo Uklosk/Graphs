@@ -1,25 +1,30 @@
 package com.labs.digitizer.logic;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
-import org.opencv.android.Utils;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
+import org.xmlpull.v1.XmlSerializer;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Environment;
+import android.content.Context;
 import android.util.Log;
+import android.util.Xml;
 
 public class Digitizing {
 	private static final String TAG = "Digitizing";
-	private static final char[] ids = {'A','B','C','D','E','F','G','H','H','I',
-									   'J','K','L','M','N','O','P','Q','R','S',
-									   'T','U','V','W','X','Y','Z'};
+	private static final int EXTRA_RADIUS = 1;
+	private Context con;
+	private static final char[] ids = {'A','B','C','D','E','F','G','H','I',
+										'J','K','L','M','N','O','P','Q','R','S',
+										'T','U','V','W','X','Y','Z',
+										'a','b','c','d','e','f','g','h','i','j','k',
+										'l','m','n','o','p','q','r','s','t','u',
+										'v','w','x','y','z'};
 	private String img_path;
 	private double[][] allvec;
 	private int totalvec;
@@ -27,8 +32,9 @@ public class Digitizing {
 	private int totalcir;
 	
 	
-	public Digitizing(String path) {
+	public Digitizing(Context con_, String path) {
 		super();
+		con = con_;
 		img_path = path;
 	}
 	
@@ -46,7 +52,29 @@ public class Digitizing {
 	
 	public int getTotalCir(){
 		return totalcir;
+	}	
+
+	
+	public boolean inVertex(double x1, double y1){
+		boolean ok = false;
+		for(int j = 0; j < totalcir && ok != true; j++){
+			double[] cir = new double[4];
+			cir = allcir[j]; 
+			double x = cir[0],
+				   y = cir[1],
+				   r = cir[2]; // Radius
+			if(Math.pow((x1-x),2) + Math.pow((y1-y),2) <= Math.pow(r+EXTRA_RADIUS,2)){
+				// inside the area of the vertex
+				ok = true;
+			}
+		}
+		return ok;
 	}
+	
+	public boolean inVertex(double x, double y, double r, double x1, double y1){
+		return Math.pow((x1-x),2) + Math.pow((y1-y),2) <= Math.pow(r+EXTRA_RADIUS,2);
+	}
+	
 	
 	public boolean loadData(){
 		boolean task = true;
@@ -73,7 +101,6 @@ public class Digitizing {
 		    Mat circles = new Mat();
 		    Imgproc.HoughCircles( m_gray, circles, Imgproc.CV_HOUGH_GRADIENT, 1, 5, 70, 10, 1, 15);
 		    totalcir = circles.cols();
-		    Log.e(TAG, "Tester: |V|:"+totalcir);
 		    allcir = new double[totalcir][3];
 		    for(int i = 0; i < totalcir; i++ ){
 		    	double[] cir = circles.get(0, i);
@@ -90,7 +117,7 @@ public class Digitizing {
 		Mat m_img = new Mat();
 		File file = new File(img_path);
 		m_img = Highgui.imread(file.getAbsolutePath());
-	    
+		
 	    if(m_img.empty() == true)
 	    	task = false;
 	   
@@ -111,64 +138,52 @@ public class Digitizing {
 		    int t = lines.cols();
 		    int tv = t;
 		    
-		    double[][] allvectors = new double[t][5];
+		    double[][] allvectors = new double[t][4];
 		    for (int i = 0; i < t; i++){
 		    	double[] vec = lines.get(0, i);
 		    	allvectors[i] = vec;
 		    }
-
-		    Log.e(TAG, "Tester: |A|:"+t);
 				
-		    // Puede darse el caso de que una linea sea interpretada como 2 o más, será 
-		    // necesario un arreglo para que sea interpretada como una sóla linea, para
-		    // ello el punto final de una linea será prolongado hasta cortar con un vertice
+		    // Una recta puede interpretarse como una recta fragmentada, de modo que hay que
+		    // seleccionar unico fragmento con el que trabajar y eliminar los sobrantes, para
+		    // ello se realiza una busqueda que elimina las rectas cuyo punto inicial no esta
+		    // contenido en un vertice, y se prolongan las rectas cuyo punto final no esta 
+		    // contenido en un vertice, la recta se prolonga hasta cortar con un vertice
 		    for(int i = 0; i < t; i++){
-		    	if(allvectors[i] != null)
-				    for(int j = 0; j < t; j++){
-				    	if(allvectors[j] != null && i != j){
-					    	boolean[] ok = new boolean[2];
-				    		for(int z = 0; z < 2; z++)
-						    	if(allvectors[i][z]>allvectors[j][z+2])
-						    		if(allvectors[i][z]-allvectors[j][z+2]<=2) ok[z] = true;
-						    		else ok[z] = false;
-						    	else
-						    		if(allvectors[j][z+2]-allvectors[i][z]<=2) ok[z] = true;
-						    		else ok[z] = false;
-				    		if(ok[0]==true && ok[1]==true){
-				    			// Prolongación de la linea fragmentada (sólo a partir del primer fragmento)
-				    			if(allvectors[i][5] < 0){
-				    				double distance = Math.sqrt(Math.pow(allvectors[i][0]-allvectors[i][2],2)+
-				    										    Math.pow(allvectors[i][1]-allvectors[i][3],2));
-				    				/* Para obtener la inclinación de la recta y poder prolongarla hasta un vertice,
-				    				 * necesito obtener el grado del angulo de la inclinacion del fragmento inicial:
-				    				 *  x * COS(a) + y * SIN(a) = distance 
-				    				 *  
-				    				 *  http://es.answers.yahoo.com/question/index?qid=20080903233313AAaWjPM
-				    				 */
-				    			}
-						    	allvectors[j][5] = -1; // Si forma parte de una linea fragmentada se marca con [][5] = -1
-						    						   // Esta linea será eliminada posteriormente y servirá para eliminar
-						    						   // otras posibles fragmentaciones de la recta buscada a continuación
-						    }
-				    	}
-				    }
-		    }
-		    
-		    // Las lineas marcadas como fragmentos secundarios de la linea prolongada se eliminan en el siguiente fragmeto
-		    for(int i = 0; i < t; i++){
-		    	if(allvectors[i] != null && allvectors[i][5] < 0){
+		    	boolean[] remain = new boolean[2];
+		    	remain[0] = inVertex(allvectors[i][0], allvectors[i][1]);
+		    	remain[1] = inVertex(allvectors[i][2], allvectors[i][3]);
+		    	if(remain[0]==true && remain[1]==true){}
+		    	else if(remain[0]==true && remain[1]==false){
+					// m = tang (degree angle) -> v2/v1
+					double m = (allvectors[i][3]-allvectors[i][1])/(allvectors[i][2]-allvectors[i][0]);
+					// Ecuacion punto-pendiente: y - y1 = m * (x - x1)
+					// X se aumentará en el siguiente bucle y despejando en la anterior ecuacion
+					// se obtiene la Y relativa para obtener un nuevo punto de prolongación, se
+					// comprobará si dicho punto está en el area de un vertice, en tal caso la
+					// prolongación finliza, obteniendo el nuevo punto final de la recta
+					double x = allvectors[i][2], y = 0;
+					int index = 1;
+					boolean end = false;
+					for( ; index<m_img.width() && end != true; index++){
+						y = m * (x+index - allvectors[i][2]) + allvectors[i][3];
+						end = inVertex(x+index, y);
+					}
+					// Se guarda el punto obtenido como el punto final de la recta prolongada
+					allvectors[i][2] = x + index - 1;
+					allvectors[i][3] = y;
+		    	}else{
 		    		allvectors[i] = null;
 		    		tv--;
-			    	Log.e(TAG, "Eliminado 1, quedan: "+tv);
 		    	}
-		    }		    
+		    }	    
 		    
 		    // Por cada recta, HoughLinesP capta 2 lineas, una por cada borde,
 		    // por tanto, de cada par de lineas detectadas solo una será util.
 		    // El siguiente código se encarga de deshechar las lineas sobrantes
-		    for(int i = 0; i < t; i++){
+		    for(int i = 0; i < t; i++)
 		    	if(allvectors[i] != null)
-				    for(int j = 0; j < t; j++){
+				    for(int j = 0; j < t; j++)
 				    	if(allvectors[j] != null && i != j){
 					    	boolean[] ok = new boolean[4];
 					    	for(int z = 0; z < 4; z++)
@@ -182,69 +197,76 @@ public class Digitizing {
 					    			&& ok[2]==true && ok[3]==true){
 						    	allvectors[j] = null;
 						    	tv--;
-						    	Log.e(TAG, "Eliminado 2, quedan: "+tv);
 						    }
 					    }	
-				    }
-		    }
 		    
 		    int index = 0;
 		    allvec = new double[tv][4];
-		    for(int i = 0; i < t; i++){
+		    for(int i = 0; i < t; i++)
 		    	if(allvectors[i] != null){
 		    		allvec[index] = allvectors[i];
 		    		index++;
 		    	}
-		    }
 		    
 		    totalvec = tv;
 		    
-		    
-		    Log.e(TAG, "Tester: |A|:"+totalvec);
+		    Log.e(TAG, "Graph:\n|V|:"+totalcir+"\n|A|:"+totalvec);
 	    }
 		    
 	    return task;
 	}
 	
 	public void generateXML(){
-		
-		for(int i = 0; i < totalcir; i++){
-			double[] cir = new double[4];
-			cir = allcir[i]; 
-			double x = cir[0],
-				   y = cir[1],
-				   r = cir[2]; // Radius
-			Log.i(TAG, "Tester: (Vertices:"+totalcir+") : x:"+x+", y:"+y+"   radius:"+r);
-		}
-		
-		for(int i = 0; i < totalvec; i++){
-			double[] vec = new double[4];
-			vec = allvec[i]; 
-			double x1 = vec[0],
-				   y1 = vec[1],
-				   x2 = vec[2],
-				   y2 = vec[3];
-			Log.i(TAG, "Tester: (Aristas:"+totalvec+") : x1:"+x1+", y1:"+y1+"  -  x2:"+x2+", y2:"+y2);
-			for(int j = 0; j < totalcir; j++){
-				double[] cir = new double[4];
-				cir = allcir[j]; 
-				double x = cir[0],
-					   y = cir[1],
-					   r = cir[2]; // Radius
-				Log.i(TAG, "Tester: (Vertices:"+totalcir+") : x:"+x+", y:"+y+"   radius:"+r);
-				if(Math.pow((x1-x),2) + Math.pow((y1-y),2) == Math.pow(r,2)){
-					// inside the area of the vertex
-					Log.i(TAG,"XML: Punto inicial, dentro del area de la arista");
-				}else if(Math.pow((x2-x),2) + Math.pow((y2-y),2) == Math.pow(r,2)){
-					// inside the area of the vertex
-					Log.i(TAG,"XML: Punto final, dentro del area de la arista");
-				}
+		FileOutputStream fout = null;
+		try {
+			fout = con.openFileOutput("graph.xml", Context.MODE_PRIVATE);
+	    } catch (FileNotFoundException e) {
+	    	e.printStackTrace();
+	    }
+		XmlSerializer serializer = Xml.newSerializer();
+		try {
+		    serializer.setOutput(fout, "UTF-8");
+		    serializer.startDocument(null, true);
+		    serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
+		    
+			serializer.startTag(null, "graph");
+			serializer.attribute(null, "v", Integer.toString(totalcir));
+			serializer.attribute(null, "a", Integer.toString(totalvec));
+	
+			for(int i = 0; i < totalcir; i++){
+				serializer.startTag(null, "vertex");
+				serializer.attribute(null, "id", ids[i]+"");
+				serializer.attribute(null, "x", Double.toString(allcir[i][0]));
+				serializer.attribute(null, "y", Double.toString(allcir[i][1]));
+				serializer.attribute(null, "r", Double.toString(allcir[i][2]));
+				String adjacent = "";
+				for(int j = 0; j < totalvec; j++)
+					if(inVertex(allcir[i][0],allcir[i][1],allcir[i][2],allvec[j][0], allvec[j][1])
+							||inVertex(allcir[i][0],allcir[i][1],allcir[i][2],allvec[j][2], allvec[j][3]))
+						for(int z = 0; z < totalcir; z++)
+							if(i!=z && (inVertex(allcir[z][0],allcir[z][1],allcir[z][2],allvec[j][0], allvec[j][1])
+									||inVertex(allcir[z][0],allcir[z][1],allcir[z][2],allvec[j][2], allvec[j][3])))
+								adjacent += ids[z]+",";
+				if(adjacent.indexOf(",")!=-1)
+					adjacent = adjacent.substring(0, adjacent.lastIndexOf(","));
+				serializer.text(adjacent);
+				serializer.endTag(null, "vertex");
+				adjacent = "";
 			}
+	
+			serializer.endTag(null, "Graph");
+	
+			Log.i(TAG," xml: ");
+			
+			serializer.endDocument();
+			serializer.flush();
+			fout.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
 	}
 	
-	public void cargarXML(){
+	public void loadXML(){
 		
 	}
     

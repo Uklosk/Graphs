@@ -59,7 +59,8 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
                 {
                     Log.i(TAG, "OpenCV loaded successfully");
                     mOpenCvCameraView.enableView();
-                    digitizer = new Digitizing(Environment.getExternalStorageDirectory().getPath() + "/grafo.png");
+                    digitizer = new Digitizing(getApplicationContext(),
+                    						   Environment.getExternalStorageDirectory().getPath() + "/grafo.png");
                 } break;
                 default:
                 {
@@ -165,14 +166,49 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
 	        	mOpenCvCameraView.enableView();
 	            mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
 	            Toast.makeText(this, "The camera is active", Toast.LENGTH_SHORT).show();
+	            /*******************************************************************
+	             * *****************************************************************
+	             * *****************************************************************
+	             * 
+	             * Esta opción se implementa en graphs.apk, que servira para abrir
+	             * este activity.
+	             * 
+	             * *****************************************************************
+	             * *****************************************************************
+	             * *****************************************************************
+	             */
 	        }else if (id == 1) {
 	            mOpenCvCameraView.setVisibility(SurfaceView.GONE);
 	        	mOpenCvCameraView.disableView();
 	            Toast.makeText(this, "Now you can work", Toast.LENGTH_SHORT).show();
+	            
+	            /*******************************************************************
+	             * *****************************************************************
+	             * *****************************************************************
+	             * 
+	             * Abrir el activity de graphs.apk
+	             * 
+	             * *****************************************************************
+	             * *****************************************************************
+	             * *****************************************************************
+	             */
 	        }
         }
         
         if (item.getGroupId() == 2){
+            
+            /*******************************************************************
+             * *****************************************************************
+             * *****************************************************************
+             * 
+             * Cambiar reslucion de pantalla.
+             * Yo lo dejaria...
+             * 
+             * *****************************************************************
+             * *****************************************************************
+             * *****************************************************************
+             */
+        	
             int id = item.getItemId();
             Size resolution = mResolutionList.get(id);
             mOpenCvCameraView.setResolution(resolution);
@@ -182,13 +218,56 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
         }
 
         if (item == mItemPHOTO) {
+            
+            /*******************************************************************
+             * *****************************************************************
+             * *****************************************************************
+             * 
+             * Tomar foto:
+             * Hay que cambiar la ruta actual, por la ruta interna de la apk.
+             * 
+             * Hacer:
+             *  -> Que cuando se tome la foto, digitalice la imagen a xml.
+             *  -> Además desde la opcion XML se puede selecciona una imagen
+             *     a digitalizar. Se quedan guardadas a modo historico.
+             *     
+             *     SI LA CARPETA ES ACCESIBLE PARA EL USUARIO, ESTE PODRIA:
+             *     - Pegar fotos que le pasen amigos
+             *     - Pegar pantallazos hechos con el ordenador
+             *     - ...
+             *     (Emulated/0/Graphs/photos)     
+             * 
+             * 
+             * *****************************************************************
+             * *****************************************************************
+             * *****************************************************************
+             */
+        	
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
             String currentDateandTime = sdf.format(new Date());
             String fileName = Environment.getExternalStorageDirectory().getPath() +
-                                   "/Grafo_" + currentDateandTime + ".jpg";
+                                   "/graph_" + currentDateandTime + ".png";
             mOpenCvCameraView.takePicture(fileName);
             Toast.makeText(this, fileName + " saved", Toast.LENGTH_SHORT).show();
         } else if (item == mItemXML) {
+            
+            /*******************************************************************
+             * *****************************************************************
+             * *****************************************************************
+             * 
+             * Voy a cambiarla:
+             * 
+             * Esta opcion solo ocultara la camara, dejando visible la interfaz
+             * que mostrara la lista de las imagenes tomadas (Historial):
+             * 1. Se marca una imagen de la lista
+             * 2. Se pulsa el boton digitalizar, desde donde se ejecutara todo
+             *    el codigo implementado de momento en esta opcion del menu.
+             * 
+             * *****************************************************************
+             * *****************************************************************
+             * *****************************************************************
+             */
+        	
             digitizer.loadData();
             digitizer.generateXML();
             
@@ -196,7 +275,6 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
             Bitmap b = Bitmap.createBitmap(800, 500, Bitmap.Config.ARGB_8888);
             Canvas c = new Canvas(b);
             Paint p = new Paint();
-            p.setColor(Color.BLUE);
             p.setStrokeWidth(1);
             
             int t = digitizer.getTotalVec();
@@ -219,9 +297,9 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
             	c.drawCircle((float)ci[i][0], (float)ci[i][1], (float)ci[i][2], p);
         	}
             
-            String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
+            String storageDirectory = Environment.getDataDirectory().toString();
             OutputStream outStream = null;
-            File file = new File(extStorageDirectory, "digitalizer.png");
+            File file = new File(storageDirectory, "digitalized-graph.png");
             try {
              outStream = new FileOutputStream(file);
              b.compress(Bitmap.CompressFormat.PNG, 100, outStream);
