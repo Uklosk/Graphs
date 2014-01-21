@@ -36,7 +36,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	private static final int TOGGLE_ADD = 0;
 	private static final int TOGGLE_REMOVE = 1;
-
+	
+	boolean isKruskal = false;
 	boolean toggle_remove = false;
 	boolean toggle_add = false;
 
@@ -94,7 +95,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 						modifyGraph(v, event, x, y, node);
 					break;
 				case GRAPH_MODE_WEIGHTS:
-					kruskalM(v, event, x, y, node);
+					weightM(v, event, x, y, node);
 					break;
 				default:
 					modifyGraph(v, event, x, y, node);
@@ -141,7 +142,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		// getMenuInflater().inflate(R.menu.main, menu);
 		MenuInflater inflater = getMenuInflater();
 
 		inflater.inflate(R.menu.menu_1, menu);
@@ -167,8 +167,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				@Override
 				public boolean onEditorAction(TextView v, int actionId,
 						KeyEvent event) {
-					if(v.getText()!=null){
-						weight=Integer.parseInt(v.getText().toString());
+					if (v.getText() != null) {
+						weight = Integer.parseInt(v.getText().toString());
 					}
 					System.out.println(weight);
 					return false;
@@ -181,6 +181,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.menu_1, menu);
+			menu.findItem(R.id.action_load).setEnabled(view.isKruskal);
+			menu.findItem(R.id.action_load).setChecked(isKruskal);
+
 		}
 		this.menu = menu;
 		return super.onPrepareOptionsMenu(menu);
@@ -192,7 +195,17 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.action_load:
-			view.Kruskal();
+			
+			if (isKruskal) {
+				isKruskal=false;
+				view.restore();
+
+			} else {
+				isKruskal=true;;
+
+				view.Kruskal();
+
+			}
 			view.invalidate();
 			return true;
 		case R.id.action_clear:
@@ -238,14 +251,12 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				@Override
 				public boolean onEditorAction(TextView v, int actionId,
 						KeyEvent event) {
-					boolean handled = false;
 					if (actionId == EditorInfo.IME_ACTION_DONE) {
 						if (text.getText().toString() != null) {
 							weight = Integer
 									.parseInt(text.getText().toString());
 						}
 
-						handled = true;
 					}
 					return false;
 				}
@@ -413,7 +424,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		}
 	}
 
-	public void kruskalM(View v, MotionEvent event, int x, int y, Node node) {
+	public void weightM(View v, MotionEvent event, int x, int y, Node node) {
 
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:

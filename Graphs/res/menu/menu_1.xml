@@ -15,7 +15,9 @@
         android:id="@+id/action_load"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="Aplicar Kruskal"/>
+        android:title="Árbol generador mínimo"
+        android:checkable="true"
+        android:enabled="false"/>
     <item
         android:id="@+id/action_clear"
         android:orderInCategory="100"

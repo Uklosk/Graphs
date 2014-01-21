@@ -11,11 +11,17 @@ import android.view.View;
 
 public class GView extends View {
 	private Graph g;
+	private Graph gKruskal;
 	private Paint paint;
 	private Paint fontPaint;
 	private Path path;
+	public boolean isKruskal=false;
+
 	Arrow aux;
 
+	public GView(Context context){
+		super(context);
+	}
 	public GView(Context context, float density) {
 		super(context);
 		g = new Graph();
@@ -89,11 +95,10 @@ public class GView extends View {
 
 	public void Kruskal() {
 		if (g.getArrows().size() >= g.getVertex().size() - 1) {
-			Graph g2 = Kruskal.aplicarKruskal(g);
 			for (int i = 0; i < g.getArrows().size(); i++) {
-				for (int j = 0; j < g2.getArrows().size(); j++) {
+				for (int j = 0; j < gKruskal.getArrows().size(); j++) {
 					Arrow a = g.getArrows().get(i);
-					Arrow k = g2.getArrows().get(j);
+					Arrow k = gKruskal.getArrows().get(j);
 					if (a.getIdi().equals(k.getIdi())
 							&& a.getIdf().equals(k.getIdf())) {
 						a.color = Color.BLUE;
@@ -119,8 +124,9 @@ public class GView extends View {
 	}
 
 	public void deleteNode(Node n) {
-		if(n!=null){
-		g.deleteNode(n.getId());}
+		if (n != null) {
+			g.deleteNode(n.getId());
+		}
 	}
 
 	public void addArrow(Node n1, Node n2) {
@@ -133,9 +139,10 @@ public class GView extends View {
 		g.deleteLink(n1.getId(), n2.getId());
 	}
 
-	public void changeWeight(Node n1, Node n2, int weight){
-		g.changeWeight(n1.getId(),n2.getId(), weight);
+	public void changeWeight(Node n1, Node n2, int weight) {
+		g.changeWeight(n1.getId(), n2.getId(), weight);
 	}
+
 	public void addAux(Node n, int x, int y) {
 		aux = new Arrow(n.getCenterX(), n.getCenterY(), x, y);
 	}
@@ -156,10 +163,21 @@ public class GView extends View {
 
 	public void update() {
 		g.update();
+		if (g.getArrows().size() >= g.getVertex().size() - 1
+				&& g.getVertex().size() > 0 && g.getArrows().size() > 0){
+			gKruskal = aplicarKruskal(g);
+			isKruskal = true;}else isKruskal=false;
 	}
 
 	public void clear() {
 		g = new Graph();
+		gKruskal = new Graph();
 		invalidate();
+	}
+	
+	public void restore(){
+		for(int i=0; i<g.getArrows().size();i++){
+			g.getArrows().get(i).color=Color.BLACK;
+		}
 	}
 }
