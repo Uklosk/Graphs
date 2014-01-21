@@ -12,7 +12,7 @@ import android.view.View;
 public class GView extends View {
 	private Graph g;
 	private Graph gKruskal;
-	private Paint paint;
+	private Paint paint, auxP;
 	private Paint fontPaint;
 	private Path path;
 	public boolean isKruskal = false;
@@ -31,6 +31,12 @@ public class GView extends View {
 		paint.setStrokeWidth(6f);
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStrokeJoin(Paint.Join.ROUND);
+		
+		auxP = new Paint();
+		auxP.setStrokeWidth(10f);
+		auxP.setStyle(Paint.Style.STROKE);
+		auxP.setStrokeJoin(Paint.Join.ROUND);
+		auxP.setColor(Color.BLACK);
 
 		fontPaint = new Paint();
 		fontPaint.setTextAlign(Align.CENTER);
@@ -67,7 +73,7 @@ public class GView extends View {
 
 		if (aux != null) {
 			canvas.drawLine(aux.start[0], aux.start[1], aux.stop[0],
-					aux.stop[1], paint);
+					aux.stop[1], auxP);
 		}
 
 		for (int i = 0; i < g.getVertex().size(); i++) {
