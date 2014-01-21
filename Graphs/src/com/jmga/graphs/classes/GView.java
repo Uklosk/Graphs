@@ -16,7 +16,8 @@ public class GView extends View {
 	private Paint fontPaint;
 	private Path path;
 	public boolean isKruskal=false;
-
+	
+	
 	Arrow aux;
 
 	public GView(Context context){
