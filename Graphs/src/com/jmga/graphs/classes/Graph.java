@@ -31,14 +31,6 @@ public class Graph implements Cloneable {
 		this.arrows = arrows;
 		nodes = vertex.size();
 	}
-
-	/*
-	 * Constructor from xml data
-	 * Parameter: xml file uri 
-	 */
-	public Graph(String uri){
-		
-	} 
 	
 	/*
 	 * GETTERS AND SETTERS
