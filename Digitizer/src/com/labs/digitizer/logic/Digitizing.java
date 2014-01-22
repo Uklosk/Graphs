@@ -4,6 +4,7 @@ package com.labs.digitizer.logic;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -25,7 +26,8 @@ public class Digitizing {
 										'a','b','c','d','e','f','g','h','i','j','k',
 										'l','m','n','o','p','q','r','s','t','u',
 										'v','w','x','y','z'};
-	private String img_path;
+	private String storage_path;
+	private String current_image;
 	private double[][] allvec;
 	private int totalvec;
 	private double[][] allcir;
@@ -35,7 +37,12 @@ public class Digitizing {
 	public Digitizing(Context con_, String path) {
 		super();
 		con = con_;
-		img_path = path;
+		storage_path = path + "/";
+	}
+	
+	
+	public void setCurrentImage(String ci){
+		current_image = ci;
 	}
 	
 	public double[][] getAllVec(){
@@ -53,7 +60,11 @@ public class Digitizing {
 	public int getTotalCir(){
 		return totalcir;
 	}	
-
+	
+	
+	public boolean inVertex(double x, double y, double r, double x1, double y1){
+		return Math.pow((x1-x),2) + Math.pow((y1-y),2) <= Math.pow(r+EXTRA_RADIUS,2);
+	}
 	
 	public boolean inVertex(double x1, double y1){
 		boolean ok = false;
@@ -63,7 +74,7 @@ public class Digitizing {
 			double x = cir[0],
 				   y = cir[1],
 				   r = cir[2]; // Radius
-			if(Math.pow((x1-x),2) + Math.pow((y1-y),2) <= Math.pow(r+EXTRA_RADIUS,2)){
+			if(inVertex(x, y, r, x1, y1)){
 				// inside the area of the vertex
 				ok = true;
 			}
@@ -71,16 +82,13 @@ public class Digitizing {
 		return ok;
 	}
 	
-	public boolean inVertex(double x, double y, double r, double x1, double y1){
-		return Math.pow((x1-x),2) + Math.pow((y1-y),2) <= Math.pow(r+EXTRA_RADIUS,2);
-	}
-	
-	
 	public boolean loadData(){
 		boolean task = true;
 		if(this.loadDataCir())
 			this.loadDataVec();
 		else task = false;
+
+		Log.e(TAG, "Image location: " + storage_path + current_image);
 		
 		return task;
 	}
@@ -89,7 +97,7 @@ public class Digitizing {
 		boolean task = true;
 
 		Mat m_img = new Mat(), m_gray = new Mat();
-		File file = new File(img_path);
+		File file = new File(storage_path + current_image);
 		m_img = Highgui.imread(file.getAbsolutePath());
 
 	    if(m_img.empty() == true)
@@ -115,7 +123,7 @@ public class Digitizing {
 		boolean task = true;
 
 		Mat m_img = new Mat();
-		File file = new File(img_path);
+		File file = new File(storage_path + current_image);
 		m_img = Highgui.imread(file.getAbsolutePath());
 		
 	    if(m_img.empty() == true)
@@ -217,9 +225,10 @@ public class Digitizing {
 	}
 	
 	public void generateXML(){
+		File file = new File(storage_path, "graph.xml");
 		FileOutputStream fout = null;
 		try {
-			fout = con.openFileOutput("graph.xml", Context.MODE_PRIVATE);
+			fout = new FileOutputStream(file, false);
 	    } catch (FileNotFoundException e) {
 	    	e.printStackTrace();
 	    }
@@ -254,9 +263,9 @@ public class Digitizing {
 				adjacent = "";
 			}
 	
-			serializer.endTag(null, "Graph");
+			serializer.endTag(null, "graph");
 	
-			Log.i(TAG," xml: ");
+			Log.i(TAG," xml: "+serializer.toString());
 			
 			serializer.endDocument();
 			serializer.flush();
@@ -264,10 +273,6 @@ public class Digitizing {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public void loadXML(){
-		
 	}
     
 }

@@ -1,6 +1,5 @@
 package com.jmga.graphs.classes;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -46,7 +45,6 @@ public class GView extends View {
 
 	}
 
-	@SuppressLint("DrawAllocation")
 	@Override
 	public void onDraw(Canvas canvas) {
 		super.onDraw(canvas);

@@ -38,18 +38,19 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements CvCameraViewListener2{
-	private static final String  TAG = "Mensage::";
-    private MenuItem[] 			 mModeListItems;
-    private SubMenu				 mMode;
-    private List<Size> 			 mResolutionList;
-    private MenuItem[] 			 mResolutionMenuItems;
-    private SubMenu				 mResolutionMenu;
-    private MenuItem             mItemPHOTO;
-    private MenuItem             mItemXML;
-    private MenuItem             mItemSettings;
-    private DigitizerView		 mOpenCvCameraView;
-    private Mat                  mRgba;
-	private Digitizing 			 digitizer;
+	private static final String  	TAG = "Mensage::";
+    private MenuItem[] 			 	mModeListItems;
+    private SubMenu				 	mMode;
+    private List<Size> 			 	mResolutionList;
+    private MenuItem[] 			 	mResolutionMenuItems;
+    private SubMenu				 	mResolutionMenu;
+    private MenuItem             	mItemPHOTO;
+    private MenuItem             	mItemXML;
+    private MenuItem             	mItemSettings;
+    private DigitizerView		 	mOpenCvCameraView;
+    private Mat                  	mRgba;
+    private String					storage_directory;
+	private Digitizing 			 	digitizer;
 	
 	private BaseLoaderCallback  mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -59,8 +60,6 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
                 {
                     Log.i(TAG, "OpenCV loaded successfully");
                     mOpenCvCameraView.enableView();
-                    digitizer = new Digitizing(getApplicationContext(),
-                    						   Environment.getExternalStorageDirectory().getPath() + "/grafo.png");
                 } break;
                 default:
                 {
@@ -87,6 +86,10 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
         mOpenCvCameraView = (DigitizerView) findViewById(R.id.digitizer_surface_view);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
+        
+        storage_directory = Environment.getExternalStorageDirectory().toString();
+        digitizer = new Digitizing(getApplicationContext(), storage_directory);
+        
     }
 
 
@@ -132,7 +135,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
     public void onResume()
     {
         super.onResume();
-        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_3, this, mLoaderCallback);
+        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_8, this, mLoaderCallback);
     }
 
 
@@ -245,8 +248,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
         	
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
             String currentDateandTime = sdf.format(new Date());
-            String fileName = Environment.getExternalStorageDirectory().getPath() +
-                                   "/graph_" + currentDateandTime + ".png";
+            String fileName = storage_directory + "/graph_" + currentDateandTime + ".png";
             mOpenCvCameraView.takePicture(fileName);
             Toast.makeText(this, fileName + " saved", Toast.LENGTH_SHORT).show();
         } else if (item == mItemXML) {
@@ -268,9 +270,11 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
              * *****************************************************************
              */
         	
-            digitizer.loadData();
-            digitizer.generateXML();
-            
+        	digitizer.setCurrentImage("graph.png");
+        	if(digitizer.loadData() == true){
+        		Toast.makeText(this, "Grafo digitalizado con éxito", Toast.LENGTH_SHORT).show();
+        		digitizer.generateXML();
+        	}            
             
             Bitmap b = Bitmap.createBitmap(800, 500, Bitmap.Config.ARGB_8888);
             Canvas c = new Canvas(b);
@@ -297,9 +301,8 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
             	c.drawCircle((float)ci[i][0], (float)ci[i][1], (float)ci[i][2], p);
         	}
             
-            String storageDirectory = Environment.getDataDirectory().toString();
             OutputStream outStream = null;
-            File file = new File(storageDirectory, "digitalized-graph.png");
+            File file = new File(storage_directory, "digitalizedgraph.png");
             try {
              outStream = new FileOutputStream(file);
              b.compress(Bitmap.CompressFormat.PNG, 100, outStream);
@@ -312,6 +315,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
             
             
         } else if (item == mItemSettings) {
+        	
         }
 
         return true;

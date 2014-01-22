@@ -33,6 +33,14 @@ public class Graph implements Cloneable {
 	}
 
 	/*
+	 * Constructor from xml data
+	 * Parameter: xml file uri 
+	 */
+	public Graph(String uri){
+		
+	} 
+	
+	/*
 	 * GETTERS AND SETTERS
 	 * 
 	 * NODES
@@ -257,7 +265,7 @@ public class Graph implements Cloneable {
 		}
 		return false;
 	}
-
+	
 	public Arrow getAux() {
 		return aux;
 	}
