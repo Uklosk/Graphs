@@ -4,6 +4,17 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class Graph implements Cloneable {
+	private final String[] ids = {"A","B","C","D","E","F","G","H","I",
+								"J","K","L","M","N","O","P","Q","R","S",
+								"T","U","V","W","X","Y","Z",
+								"a","b","c","d","e","f","g","h","i","j","k",
+								"l","m","n","o","p","q","r","s","t","u",
+								"v","w","x","y","z"};
+	
+	public String getId(int i){
+		return ids[i];
+	}
+	
 	private ArrayList<String> nombres;
 	private Hashtable<String, Node> vertex;
 	private ArrayList<Arrow> arrows;
@@ -58,14 +69,14 @@ public class Graph implements Cloneable {
 	}
 
 	public void addNode(Node node) {
-		String nombre = "Nodo" + nodes;
+		String nombre = ids[nodes];
 		nombres.add(nombre);
 		vertex.put(nombre, node);
 		nodes++;
 	}
 
 	public void addNode(int x, int y) {
-		String nombre = "Nodo" + nodes;
+		String nombre = ids[nodes];
 		nombres.add(nombre);
 		Node node = new Node(x, y, nombre);
 		vertex.put(nombre, node);

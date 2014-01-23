@@ -88,7 +88,7 @@ public class GView extends View {
 		}
 
 		for (int i = 0; i < g.getVertex().size(); i++) {
-			Node n = g.getVertex().get("Nodo" + i);
+			Node n = g.getVertex().get(g.getId(i));
 			if (n != null && !n.getId().equals("nulo")) {
 				n.draw(canvas);
 				canvas.drawText(n.getId(), n.getCenterX(), n.getCenterY()
@@ -100,7 +100,7 @@ public class GView extends View {
 
 	public Node checkBounds(int x, int y) {
 		for (int i = 0; i < g.getVertex().size(); i++) {
-			Node n = g.getVertex().get("Nodo" + i);
+			Node n = g.getVertex().get(g.getId(i));
 			if (n != null && !n.getId().equals("nulo")) {
 				if (n.getBounds().left < x && n.getBounds().right > x
 						&& n.getBounds().top < y && n.getBounds().bottom > y) {
