@@ -1,11 +1,14 @@
 package com.jmga.graphs.classes;
 
+import com.jmga.graphs.tools.XMLParser;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Path;
+import android.util.Log;
 import android.view.View;
 
 public class GView extends View {
@@ -43,6 +46,16 @@ public class GView extends View {
 
 		// TODO Auto-generated constructor stub
 
+	}
+	
+	public void xmlToGraph(String storage, String xml){
+		XMLParser xmlp = new XMLParser(storage, xml);
+		try {
+			g = xmlp.parseGraph(g); // El grafo instaciado previamente, ahora actualiza sus datos
+		} catch (Exception e) {
+			// El unico error que puede suceder es que no exista el archivo xml
+			Log.d("XMLParser", "Error: " + e.getMessage());
+		}
 	}
 
 	@Override

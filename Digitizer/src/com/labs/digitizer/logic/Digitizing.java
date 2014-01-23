@@ -258,7 +258,7 @@ public class Digitizing {
 								adjacent += ids[z]+",";
 				if(adjacent.indexOf(",")!=-1)
 					adjacent = adjacent.substring(0, adjacent.lastIndexOf(","));
-				serializer.text(adjacent);
+				serializer.attribute(null, "adjacent", adjacent);
 				serializer.endTag(null, "vertex");
 				adjacent = "";
 			}

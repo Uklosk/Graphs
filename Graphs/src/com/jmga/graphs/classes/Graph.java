@@ -183,7 +183,7 @@ public class Graph implements Cloneable {
 		}
 	}
 
-	public boolean busarArista(Arrow a) {
+	public boolean buscarArista(Arrow a) {
 		for (int i = 0; i < arrows.size(); i++) {
 			Arrow otro = arrows.get(i);
 			if (a.getIdi().equals(otro.getIdi())

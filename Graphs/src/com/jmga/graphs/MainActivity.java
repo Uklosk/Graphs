@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.view.ActionProvider;
 import android.view.KeyEvent;
@@ -24,6 +25,8 @@ import com.jmga.graphs.classes.GView;
 import com.jmga.graphs.classes.Node;
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
+	
+	private final static String storage = Environment.getExternalStorageDirectory().toString();
 
 	GView view;
 	Node nFocused;
@@ -137,6 +140,15 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 			}
 		});
+		
+		// *****************************************************************************
+		// Esta sentencia sirve para cargar al grafo con los datos almacenados en el xml
+		// El grafo puede estar vacio o inicializado con aristas y vertices
+		// La sentencia tiene que estar en un Listener
+		// *****************************************************************************
+		view.xmlToGraph(storage, "graph.xml");
+		// *****************************************************************************
+		
 	}
 
 	@Override
