@@ -79,7 +79,6 @@ public class XMLParser {
 						if(xml.getAttributeName(i).equals("id")){
 							data.put(xml.getAttributeValue(i), xmldata);
 						}else{
-							
 							if(xml.getAttributeValue(i) != null){
 								xmldata.add((xml.getAttributeValue(i).indexOf(".") > 0)
 											?xml.getAttributeValue(i).substring(0, xml.getAttributeValue(i).indexOf("."))
@@ -110,25 +109,23 @@ public class XMLParser {
 			// principal (hash<"id principal", ArrayList>), la arista que pueda generarse con esos IDs
 			// ya existira y por tanto no se añadira
 			String adj = xmlitem.get(3);
-			Log.d(TAG, "Vectice(" + id + ") :4: " + adj );
 			if(adj.length()>0){
 				if(adj.indexOf(",") != -1){
-					Log.d(TAG,"HAY COMA");
 					String[] adjacent = adj.split(",");
 					for(int i=0; i<adjacent.length; i++){
-						Log.d(TAG,"Adjacent " + adjacent[i]);
 						if(aux_read.contains(adjacent[i]) == false){
-							Log.d(TAG,"Link::" + id + "," + adjacent[i]);
+							Log.d(TAG,"1.Link::" + id + "," + adjacent[i]);
 							gr.addLink(id, adjacent[i], 1);
 						}
 					}
 				}else{
-					Log.d(TAG,"NOOOO COMA");
-					Log.d(TAG,"Link::" + id + "," + adj);
-					gr.addLink(id, adj, 1);
+					if(aux_read.contains(adj) == false){
+						Log.d(TAG,"2.Link::" + id + "," + adj);
+						gr.addLink(id, adj, 1);
+					}
 				}
 			}else{
-				Log.d(TAG,id + ", SIN ADJACENTS");
+				Log.d(TAG,"3.Vertex(" + id + "):: NO ADJACENTS");
 			}
         }
 		
