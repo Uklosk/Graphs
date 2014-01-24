@@ -249,7 +249,8 @@ public class DigitActivity extends Activity implements CvCameraViewListener2{
         	
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
             String currentDateandTime = sdf.format(new Date());
-            String fileName = storage_directory + "/graph_" + currentDateandTime + ".png";
+//          String fileName = storage_directory + "/graph_" + currentDateandTime + ".png";
+            String fileName = storage_directory + "/Graphs/graph.png";
             mOpenCvCameraView.takePicture(fileName);
             Toast.makeText(this, fileName + " saved", Toast.LENGTH_SHORT).show();
         } else if (item == mItemXML) {
@@ -271,7 +272,7 @@ public class DigitActivity extends Activity implements CvCameraViewListener2{
              * *****************************************************************
              */
         	
-        	digitizer.setCurrentImage("graph.png");
+        	digitizer.setCurrentImage("/Graphs/graph.png");
         	if(digitizer.loadData() == true){
         		Toast.makeText(this, "Grafo digitalizado con éxito", Toast.LENGTH_SHORT).show();
         		digitizer.generateXML();
@@ -303,7 +304,8 @@ public class DigitActivity extends Activity implements CvCameraViewListener2{
         	}
             
             OutputStream outStream = null;
-            File file = new File(storage_directory, "digitalizedgraph.png");
+         // File file = new File(storage_directory, "digitalizedgraph.png");
+            File file = new File(storage_directory, "/Graphs/digitalizedgraph.png");
             try {
              outStream = new FileOutputStream(file);
              b.compress(Bitmap.CompressFormat.PNG, 100, outStream);

@@ -225,7 +225,7 @@ public class Digitizing {
 	}
 	
 	public void generateXML(){
-		File file = new File(storage_path, "graph.xml");
+		File file = new File(storage_path, "Graphs/graph.xml");
 		FileOutputStream fout = null;
 		try {
 			fout = new FileOutputStream(file, false);
