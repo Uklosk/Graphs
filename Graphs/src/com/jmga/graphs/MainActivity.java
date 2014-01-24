@@ -214,7 +214,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			// El grafo puede estar vacio o inicializado con aristas y vertices
 			// La sentencia tiene que estar en un Listener
 			// *****************************************************************************
-			view.xmlToGraph(storage, "graph.xml");
+			if(view.xmlToGraph(storage, "graph.xml"))
+				Toast.makeText(getBaseContext(), "El grafo se ha cargado, toca la pantalla para visualizarlo.",Toast.LENGTH_LONG).show();
 			// *****************************************************************************
 			
 			return true;

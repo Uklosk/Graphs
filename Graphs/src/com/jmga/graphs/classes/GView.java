@@ -9,7 +9,9 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Path;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 
 public class GView extends View {
 	private Graph g;
@@ -18,6 +20,9 @@ public class GView extends View {
 	private Paint fontPaint;
 	private Path path;
 	public boolean isKruskal = false;
+	
+	private int height, width;
+	private float density;
 
 	Arrow aux;
 
@@ -25,8 +30,14 @@ public class GView extends View {
 		super(context);
 	}
 
-	public GView(Context context, float density) {
+	public GView(Context context, float density_) {
 		super(context);
+		
+		Display display = ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		height = display.getWidth();
+		width = display.getWidth();
+		density = density_;
+		
 		g = new Graph();
 
 		paint = new Paint();
@@ -48,14 +59,18 @@ public class GView extends View {
 
 	}
 	
-	public void xmlToGraph(String storage, String xml){
+	public boolean xmlToGraph(String storage, String xml){
+		boolean task = true;
 		XMLParser xmlp = new XMLParser(storage, xml);
+		xmlp.setDisplacement(width, height, density);
 		try {
 			g = xmlp.parseGraph(g); // El grafo instaciado previamente, ahora actualiza sus datos
 		} catch (Exception e) {
 			// El unico error que puede suceder es que no exista el archivo xml
 			Log.d("XMLParser", "Error: " + e.getMessage());
+			task = false;
 		}
+		return task;
 	}
 
 	@Override

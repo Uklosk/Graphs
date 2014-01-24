@@ -18,12 +18,18 @@ public class XMLParser {
 	private String storage_path;
 	private String current_xml;
 	
+	private int[] displacement; /* [0]:x [1]:y */
+	private float density;
+	
 	private int[] cardinals;
 	private Hashtable<String, ArrayList<String>> data;
 	
 	public XMLParser(){
 		storage_path = "";
 		current_xml = "";
+		
+		displacement = new int[2];
+		displacement[0] = displacement[1] = 0;
 		
 		cardinals = new int[2];
 		data = new Hashtable<String, ArrayList<String>>();
@@ -33,6 +39,9 @@ public class XMLParser {
 		storage_path = storage + "/";
 		current_xml = "";
 
+		displacement = new int[2];
+		displacement[0] = displacement[1] = 0;
+
 		cardinals = new int[2];
 		data = new Hashtable<String, ArrayList<String>>();
 	}
@@ -40,6 +49,9 @@ public class XMLParser {
 	public XMLParser(String storage, String xml){
 		storage_path = storage + "/";
 		current_xml = xml;
+
+		displacement = new int[2];
+		displacement[0] = displacement[1] = 0;
 
 		cardinals = new int[2];
 		data = new Hashtable<String, ArrayList<String>>();
@@ -54,6 +66,12 @@ public class XMLParser {
 		current_xml = xml;
 	}
 	
+	public void setDisplacement(int x, int y, float d){
+		displacement[0] = x/4;
+		displacement[1] = y/4;
+		density = d;
+	}
+	
 	
 	public Graph parseGraph(Graph gr) throws Exception{
 		FileInputStream fis = null;
@@ -61,7 +79,9 @@ public class XMLParser {
 
 		fis = new FileInputStream(storage_path + current_xml);
 		xml.setInput(fis, "UTF-8");
-
+		
+		Log.d(TAG,"Desplazamientos, x:"+displacement[0]+ " y:"+displacement[1] + " Density:"+ density);
+		
 		int event = xml.next();
 		while(event != XmlPullParser.END_DOCUMENT) {
 			ArrayList<String> xmldata = new ArrayList<String>();
@@ -96,7 +116,8 @@ public class XMLParser {
         Arrays.sort(keys);  
         for(String id : keys) {  
 			ArrayList<String> xmlitem = (ArrayList<String>)data.get(id);
-			gr.addNode(Integer.parseInt(xmlitem.get(0)), Integer.parseInt(xmlitem.get(1)));
+			gr.addNode(Integer.parseInt(xmlitem.get(0))+displacement[0], 
+						Integer.parseInt(xmlitem.get(1))+displacement[1]);
 		}
         for(String id : keys) {  
 			ArrayList<String> xmlitem = (ArrayList<String>)data.get(id);
@@ -106,24 +127,15 @@ public class XMLParser {
 			// principal (hash<"id principal", ArrayList>), la arista que pueda generarse con esos IDs
 			// ya existira y por tanto no se añadira
 			String adj = xmlitem.get(3);
-			if(adj.length()>0){
+			if(adj.length()>0)
 				if(adj.indexOf(",") != -1){
 					String[] adjacent = adj.split(",");
-					for(int i=0; i<adjacent.length; i++){
-						if(aux_read.contains(adjacent[i]) == false){
-							Log.d(TAG,"1.Link::" + id + "," + adjacent[i]);
+					for(int i=0; i<adjacent.length; i++)
+						if(aux_read.contains(adjacent[i]) == false)
 							gr.addLink(id, adjacent[i], 1);
-						}
-					}
-				}else{
-					if(aux_read.contains(adj) == false){
-						Log.d(TAG,"2.Link::" + id + "," + adj);
+				}else
+					if(aux_read.contains(adj) == false)
 						gr.addLink(id, adj, 1);
-					}
-				}
-			}else{
-				Log.d(TAG,"3.Vertex(" + id + "):: NO ADJACENTS");
-			}
         }
 		
 		Log.d(TAG,"grafo generado a partir del xml");
