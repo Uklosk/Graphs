@@ -142,13 +142,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			}
 		});
 		
-		// *****************************************************************************
-		// Esta sentencia sirve para cargar al grafo con los datos almacenados en el xml
-		// El grafo puede estar vacio o inicializado con aristas y vertices
-		// La sentencia tiene que estar en un Listener
-		// *****************************************************************************
-		view.xmlToGraph(storage, "graph.xml");
-		// *****************************************************************************
+		
 		
 	}
 
@@ -208,15 +202,24 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.action_load:
-			if(isExternalStorageWritable()){
+			if(!isExternalStorageWritable()){
 				Toast toast = Toast.makeText(getBaseContext(), getString(R.string.memory_not_available),Toast.LENGTH_LONG);
 				toast.show();
+				
+
 				return true;
 			}
+			// *****************************************************************************
+			// Esta sentencia sirve para cargar al grafo con los datos almacenados en el xml
+			// El grafo puede estar vacio o inicializado con aristas y vertices
+			// La sentencia tiene que estar en un Listener
+			// *****************************************************************************
+			view.xmlToGraph(storage, "graph.xml");
+			// *****************************************************************************
 			
 			return true;
 		case R.id.action_save:
-			if(isExternalStorageWritable()){
+			if(!isExternalStorageWritable()){
 				Toast toast = Toast.makeText(getBaseContext(), getString(R.string.memory_not_available),Toast.LENGTH_LONG);
 				toast.show();
 				return true;
