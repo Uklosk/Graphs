@@ -23,6 +23,7 @@ public class Node extends ShapeDrawable {
 	public Node(int x, int y, String id) {
 		super(new OvalShape());
 		getPaint().setColor(Color.BLACK);
+		getPaint().setAntiAlias(true);
 		setPos(x, y);
 		enlacesExistentes = -1;
 		enlaces = new ArrayList<Link>();
@@ -36,6 +37,7 @@ public class Node extends ShapeDrawable {
 	public Node(int x, int y) {
 		super(new OvalShape());
 		getPaint().setColor(Color.BLACK);
+		getPaint().setAntiAlias(true);
 		setPos(x, y);
 		enlacesExistentes = -1;
 		enlaces = new ArrayList<Link>();

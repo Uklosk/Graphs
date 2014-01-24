@@ -44,12 +44,14 @@ public class GView extends View {
 		paint.setStrokeWidth(6f);
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStrokeJoin(Paint.Join.ROUND);
+		paint.setAntiAlias(true);
 		
 		auxP = new Paint();
 		auxP.setStrokeWidth(10f);
 		auxP.setStyle(Paint.Style.STROKE);
 		auxP.setStrokeJoin(Paint.Join.ROUND);
 		auxP.setColor(Color.BLACK);
+		auxP.setAntiAlias(true);
 
 		fontPaint = new Paint();
 		fontPaint.setTextAlign(Align.CENTER);
