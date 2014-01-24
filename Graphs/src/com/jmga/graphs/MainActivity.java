@@ -20,6 +20,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.jmga.graphs.classes.GView;
 import com.jmga.graphs.classes.Node;
@@ -206,24 +207,39 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
+		case R.id.action_load:
+			if(isExternalStorageWritable()){
+				Toast toast = Toast.makeText(getBaseContext(), getString(R.string.memory_not_available),Toast.LENGTH_LONG);
+				toast.show();
+				return true;
+			}
+			
+			return true;
+		case R.id.action_save:
+			if(isExternalStorageWritable()){
+				Toast toast = Toast.makeText(getBaseContext(), getString(R.string.memory_not_available),Toast.LENGTH_LONG);
+				toast.show();
+				return true;
+			}
+			
+			return true;
+		
 		case R.id.action_kruskal:
-
 			if (isKruskal) {
 				isKruskal = false;
 				view.restore();
 
 			} else {
 				isKruskal = true;
-				;
-
 				view.Kruskal();
-
 			}
 			view.invalidate();
 			return true;
+			
 		case R.id.action_clear:
 			view.clear();
 			return true;
+			
 		case R.id.action_settings:
 			return true;
 
@@ -472,6 +488,15 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	}
 
+	/* Checks if external storage is available for read and write */
+	public boolean isExternalStorageWritable() {
+	    String state = Environment.getExternalStorageState();
+	    if (Environment.MEDIA_MOUNTED.equals(state)) {
+	        return true;
+	    }
+	    return false;
+	}
+	
 	public void toggle(int toggle, MenuItem item) {
 		switch (toggle) {
 		case TOGGLE_ADD:
