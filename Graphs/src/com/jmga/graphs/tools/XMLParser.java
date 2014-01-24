@@ -3,13 +3,10 @@ package com.jmga.graphs.tools;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.Hashtable;
 
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlSerializer;
 
-import android.R.id;
 import android.util.Log;
 import android.util.Xml;
 

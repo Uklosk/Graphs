@@ -193,8 +193,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.menu_1, menu);
-			menu.findItem(R.id.action_load).setEnabled(view.isKruskal);
-			menu.findItem(R.id.action_load).setChecked(isKruskal);
+			menu.findItem(R.id.action_kruskal).setEnabled(view.isKruskal);
+			menu.findItem(R.id.action_kruskal).setChecked(isKruskal);
 
 		}
 		this.menu = menu;
@@ -206,7 +206,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-		case R.id.action_load:
+		case R.id.action_kruskal:
 
 			if (isKruskal) {
 				isKruskal = false;
