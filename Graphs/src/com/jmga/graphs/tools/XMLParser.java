@@ -67,8 +67,8 @@ public class XMLParser {
 	}
 	
 	public void setDisplacement(int x, int y, float d){
-		displacement[0] = x/4;
-		displacement[1] = y/4;
+		displacement[0] = x/(int)d;
+		displacement[1] = y;
 		density = d;
 	}
 	
