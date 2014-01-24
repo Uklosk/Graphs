@@ -20,6 +20,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.jmga.graphs.classes.GView;
 import com.jmga.graphs.classes.Node;
@@ -141,13 +142,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			}
 		});
 		
-		// *****************************************************************************
-		// Esta sentencia sirve para cargar al grafo con los datos almacenados en el xml
-		// El grafo puede estar vacio o inicializado con aristas y vertices
-		// La sentencia tiene que estar en un Listener
-		// *****************************************************************************
-		view.xmlToGraph(storage, "graph.xml");
-		// *****************************************************************************
+		
 		
 	}
 
@@ -193,8 +188,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 			MenuInflater inflater = getMenuInflater();
 			inflater.inflate(R.menu.menu_1, menu);
-			menu.findItem(R.id.action_load).setEnabled(view.isKruskal);
-			menu.findItem(R.id.action_load).setChecked(isKruskal);
+			menu.findItem(R.id.action_kruskal).setEnabled(view.isKruskal);
+			menu.findItem(R.id.action_kruskal).setChecked(isKruskal);
 
 		}
 		this.menu = menu;
@@ -207,23 +202,47 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.action_load:
+			if(!isExternalStorageWritable()){
+				Toast toast = Toast.makeText(getBaseContext(), getString(R.string.memory_not_available),Toast.LENGTH_LONG);
+				toast.show();
+				
 
+				return true;
+			}
+			// *****************************************************************************
+			// Esta sentencia sirve para cargar al grafo con los datos almacenados en el xml
+			// El grafo puede estar vacio o inicializado con aristas y vertices
+			// La sentencia tiene que estar en un Listener
+			// *****************************************************************************
+			view.xmlToGraph(storage, "graph.xml");
+			// *****************************************************************************
+			
+			return true;
+		case R.id.action_save:
+			if(!isExternalStorageWritable()){
+				Toast toast = Toast.makeText(getBaseContext(), getString(R.string.memory_not_available),Toast.LENGTH_LONG);
+				toast.show();
+				return true;
+			}
+			
+			return true;
+		
+		case R.id.action_kruskal:
 			if (isKruskal) {
 				isKruskal = false;
 				view.restore();
 
 			} else {
 				isKruskal = true;
-				;
-
 				view.Kruskal();
-
 			}
 			view.invalidate();
 			return true;
+			
 		case R.id.action_clear:
 			view.clear();
 			return true;
+			
 		case R.id.action_settings:
 			return true;
 
@@ -472,6 +491,15 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	}
 
+	/* Checks if external storage is available for read and write */
+	public boolean isExternalStorageWritable() {
+	    String state = Environment.getExternalStorageState();
+	    if (Environment.MEDIA_MOUNTED.equals(state)) {
+	        return true;
+	    }
+	    return false;
+	}
+	
 	public void toggle(int toggle, MenuItem item) {
 		switch (toggle) {
 		case TOGGLE_ADD:

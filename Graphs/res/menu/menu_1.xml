@@ -5,24 +5,37 @@
         android:id="@+id/action_add"
         android:icon="@drawable/ic_action_new"
         android:showAsAction="ifRoom"
-        android:title="Nuevo"/>
+        android:title="@string/action_add"/>
     <item
         android:id="@+id/action_remove"
         android:icon="@drawable/ic_action_discard"
         android:showAsAction="ifRoom"
-        android:title="Eliminar"/>
-    <item
+        android:title="@string/action_remove"/>
+    
+    <item 
         android:id="@+id/action_load"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="Árbol generador mínimo"
+        android:title="@string/action_load"/>
+    
+    <item 
+        android:id="@+id/action_save"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_save"/>
+    
+    <item
+        android:id="@+id/action_kruskal"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_kruskal"
         android:checkable="true"
         android:enabled="false"/>
     <item
         android:id="@+id/action_clear"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="Limpiar"/>
+        android:title="@string/action_clear"/>
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
