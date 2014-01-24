@@ -38,7 +38,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements CvCameraViewListener2{
+public class DigitActivity extends Activity implements CvCameraViewListener2{
 	private static final String  	TAG = "Mensage::";
     private MenuItem[] 			 	mModeListItems;
     private SubMenu				 	mMode;
@@ -71,7 +71,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
     };
     
     
-    public MainActivity() {
+    public DigitActivity() {
         Log.i(TAG, "Instantiated new " + this.getClass());
     }
     

@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.DisplayMetrics;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 
 import com.jmga.graphs.classes.GView;
 import com.jmga.graphs.classes.Node;
+import com.labs.digitizer.DigitActivity;
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
 	
@@ -257,6 +259,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			stop(TOGGLE_REMOVE, (MenuItem) menu.findItem(R.id.action_remove));
 			return true;
 
+		case R.id.action_digit:
+			Intent intent = new Intent(getBaseContext(), DigitActivity.class);
+			startActivity(intent);
+			
+			
 		default:
 			return super.onOptionsItemSelected(item);
 		}

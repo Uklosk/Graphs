@@ -10,5 +10,7 @@
     <string name="action_remove">Remove</string>
     <string name="action_kruskal">Minimum spanning tree</string>
     <string name="action_clear">Clear</string>
+    <string name="memory_not_available">Cannot access to external memory</string>
+    <string name="action_digit">Capture graph from photo</string>
 
 </resources>

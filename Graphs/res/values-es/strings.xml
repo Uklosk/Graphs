@@ -11,5 +11,7 @@
     <string name="action_kruskal">Árbol recubridor mínimo</string>
     <string name="action_clear">Limpiar</string>
     <string name="memory_not_available">No se puede acceder a la memoria</string>
+    <string name="action_digit">Capturar grafo con la cámara</string>
+    
 
 </resources>

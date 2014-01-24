@@ -4,8 +4,7 @@
         android:id="@+id/action_edit"
         android:icon="@drawable/ic_action_edit"
         android:showAsAction="ifRoom"
-        android:actionLayout="@layout/edit_weight_layout"
-        android:title="Nuevo"/>
+        android:actionLayout="@layout/edit_weight_layout"/>
    
     <item 
         android:id="@+id/action_load"
@@ -19,6 +18,12 @@
         android:showAsAction="never"
         android:title="@string/action_save"/>
     
+    <item 
+        android:id="@+id/action_digit"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_digit"/>
+    
     <item
         android:id="@+id/action_kruskal"
         android:orderInCategory="100"
@@ -30,7 +35,7 @@
         android:id="@+id/action_clear"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="Limpiar"/>
+        android:title="@string/action_clear"/>
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
