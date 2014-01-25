@@ -15,6 +15,7 @@ public class Graph implements Cloneable {
 		return ids[i];
 	}
 	
+	private Hashtable<String, Integer[]> distancesT;
 	private ArrayList<String> nombres;
 	private Hashtable<String, Node> vertex;
 	private ArrayList<Arrow> arrows;
@@ -31,6 +32,7 @@ public class Graph implements Cloneable {
 		vertex = new Hashtable<String, Node>();
 		arrows = new ArrayList<Arrow>();
 		nombres = new ArrayList<String>();
+		distancesT = new Hashtable<String, Integer[]>();
 		nodes = 0;
 	}
 
@@ -40,6 +42,8 @@ public class Graph implements Cloneable {
 	public Graph(Hashtable<String, Node> vertex, ArrayList<Arrow> arrows) {
 		this.vertex = vertex;
 		this.arrows = arrows;
+		distancesT = new Hashtable<String, Integer[]>();
+
 		nodes = vertex.size();
 	}
 	
@@ -267,6 +271,10 @@ public class Graph implements Cloneable {
 			return true;
 		}
 		return false;
+	}
+	
+	public void updateDistances(){
+		
 	}
 	
 	public Arrow getAux() {

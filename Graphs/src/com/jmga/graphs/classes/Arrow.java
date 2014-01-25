@@ -7,7 +7,7 @@ public class Arrow {
 
 	public float[] start = new float[2];
 	public float[] stop = new float[2];
-	private int weight = 0;
+	private int weight = 1;
 	public int color = Color.BLACK;
 
 	/*
