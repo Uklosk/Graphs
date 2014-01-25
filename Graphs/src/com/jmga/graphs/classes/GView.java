@@ -1,7 +1,5 @@
 package com.jmga.graphs.classes;
 
-import com.jmga.graphs.tools.XMLParser;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,12 +11,15 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.jmga.graphs.tools.XMLParser;
+
 public class GView extends View {
 	private Graph g;
 	private Graph gKruskal;
 	private Paint paint, auxP;
 	private Paint fontPaint;
 	private Path path;
+	
 	public boolean isKruskal = false;
 	
 	private int height, width;
@@ -216,5 +217,9 @@ public class GView extends View {
 		for (int i = 0; i < g.getArrows().size(); i++) {
 			g.getArrows().get(i).color = Color.BLACK;
 		}
+	}
+	public void dijkstra(){
+		Dijkstra d = new Dijkstra(g);
+		d.execute(g.getNode("A"));
 	}
 }

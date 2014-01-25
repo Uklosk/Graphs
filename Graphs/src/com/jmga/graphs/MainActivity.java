@@ -236,6 +236,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			} else {
 				isKruskal = true;
 				view.Kruskal();
+				view.dijkstra();
 			}
 			view.invalidate();
 			return true;
