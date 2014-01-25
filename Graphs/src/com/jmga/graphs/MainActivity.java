@@ -27,7 +27,8 @@ import com.jmga.graphs.classes.Node;
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
 	
-	private final static String storage = Environment.getExternalStorageDirectory().toString();
+	private final static String storage = Environment.getExternalStorageDirectory().toString() 
+			+ "/Graphs";
 
 	GView view;
 	Node nFocused;

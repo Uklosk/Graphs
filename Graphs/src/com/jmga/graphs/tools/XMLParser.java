@@ -67,7 +67,7 @@ public class XMLParser {
 	}
 	
 	public void setDisplacement(int x, int y, float d){
-		displacement[0] = x/(int)d;
+		displacement[0] = x;
 		displacement[1] = y;
 		density = d;
 	}
@@ -114,9 +114,44 @@ public class XMLParser {
 		ArrayList<String> aux_read = new ArrayList<String>(cardinals[0]);
 		String[] keys = (String[]) data.keySet().toArray(new String[0]);  
         Arrays.sort(keys);  
+        
+        // Actualizando la posicion
+        boolean load = false;
+        // [0]:x  [1]:y
+        int[] max = new int[2];
+        int[] min = new int[2];
+        max[0] = max[1] = min[0] = min[1] = 0; 
+        for(String id : keys) {
+			ArrayList<String> xmlitem = (ArrayList<String>)data.get(id);
+			if(!load){
+		        max[0] = min[0] = Integer.parseInt(xmlitem.get(0));
+		        max[1] = min[1] = Integer.parseInt(xmlitem.get(1)); 
+		        load = true;
+			}else{
+				for(int i=0; i<2; i++){
+					if(Integer.parseInt(xmlitem.get(i)) > max[i])
+						max[i] = Integer.parseInt(xmlitem.get(i));
+					if(Integer.parseInt(xmlitem.get(i)) < min[i])
+						min[i] = Integer.parseInt(xmlitem.get(i));
+				}
+			}
+        }
+        // Calculando el tamaño que ocupa el grafo
+        // Y actualizando el desplazamiento de los vertices respecto del tamaño del canvas
+        // [0]:width  [1]:height
+        int[] tam = new int[2];
+        for(int i=0; i<2; i++){
+        	tam[i] = max[i] - min[i];
+        	displacement[i] = (displacement[i] - tam[i])/2;
+        }
+        Log.d(TAG,"Maximo X: "+max[0]+" Minimo X: "+min[0]);
+        Log.d(TAG,"Maximo Y: "+max[1]+" Minimo Y: "+min[1]);
+        Log.d(TAG,"Tamaño X del grafo: "+tam[0]+" Pantalla X: "+displacement[0]);
+        Log.d(TAG,"Tamaño Y del grafo: "+tam[1]+" Pantalla Y: "+displacement[1]);
+        
         for(String id : keys) {  
 			ArrayList<String> xmlitem = (ArrayList<String>)data.get(id);
-			gr.addNode(Integer.parseInt(xmlitem.get(0))+displacement[0], 
+			gr.addNode(Integer.parseInt(xmlitem.get(0))+displacement[0],
 						Integer.parseInt(xmlitem.get(1))+displacement[1]);
 		}
         for(String id : keys) {  

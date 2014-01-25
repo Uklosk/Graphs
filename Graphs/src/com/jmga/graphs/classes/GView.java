@@ -33,9 +33,6 @@ public class GView extends View {
 	public GView(Context context, float density_) {
 		super(context);
 		
-		Display display = ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-		height = display.getWidth();
-		width = display.getWidth();
 		density = density_;
 		
 		g = new Graph();
@@ -79,6 +76,9 @@ public class GView extends View {
 	public void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		canvas.drawColor(Color.WHITE);
+		
+		height = this.getWidth();
+		width = this.getWidth();
 
 		for (int i = 0; i < g.getArrows().size(); i++) {
 			Arrow a = g.getArrows().get(i);

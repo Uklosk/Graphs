@@ -39,6 +39,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity implements CvCameraViewListener2{
 	private static final String  	TAG = "Mensage::";
+    private static final String		storage_directory = Environment.getExternalStorageDirectory().toString() + "/Graphs";
     private MenuItem[] 			 	mModeListItems;
     private SubMenu				 	mMode;
     private List<Size> 			 	mResolutionList;
@@ -49,7 +50,6 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
     private MenuItem             	mItemSettings;
     private DigitizerView		 	mOpenCvCameraView;
     private Mat                  	mRgba;
-    private String					storage_directory;
 	private Digitizing 			 	digitizer;
 	
 	private BaseLoaderCallback  mLoaderCallback = new BaseLoaderCallback(this) {
@@ -87,7 +87,6 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
         
-        storage_directory = Environment.getExternalStorageDirectory().toString();
         digitizer = new Digitizing(getApplicationContext(), storage_directory);
         
     }
