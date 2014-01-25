@@ -36,7 +36,7 @@ public class XMLParser {
 	}
 	
 	public XMLParser(String storage){
-		storage_path = storage + "/";
+		storage_path = storage + "/Graphs/";
 		current_xml = "";
 
 		displacement = new int[2];

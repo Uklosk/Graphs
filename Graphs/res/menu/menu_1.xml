@@ -24,6 +24,12 @@
         android:showAsAction="never"
         android:title="@string/action_save"/>
     
+    <item 
+        android:id="@+id/action_digit"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_digit"/>
+    
     <item
         android:id="@+id/action_kruskal"
         android:orderInCategory="100"
