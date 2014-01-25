@@ -78,7 +78,7 @@ public class GView extends View {
 		super.onDraw(canvas);
 		canvas.drawColor(Color.WHITE);
 		
-		height = this.getWidth();
+		height = this.getHeight();
 		width = this.getWidth();
 
 		for (int i = 0; i < g.getArrows().size(); i++) {
