@@ -141,7 +141,8 @@ public class XMLParser {
         // [0]:width  [1]:height
         int[] tam = new int[2];
         for(int i=0; i<2; i++){
-        	tam[i] = max[i] - min[i];
+        	//tam[i] = max[i] - min[i];
+        	tam[i] = max[i] + min[i];
         	displacement[i] = (displacement[i] - tam[i])/2;
         }
         Log.d(TAG,"Maximo X: "+max[0]+" Minimo X: "+min[0]);
