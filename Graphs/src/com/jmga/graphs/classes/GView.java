@@ -1,11 +1,13 @@
 package com.jmga.graphs.classes;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Path;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -19,9 +21,9 @@ public class GView extends View {
 	private Paint paint, auxP;
 	private Paint fontPaint;
 	private Path path;
-	
+
 	public boolean isKruskal = false;
-	
+
 	private int height, width;
 	private float density;
 
@@ -29,13 +31,19 @@ public class GView extends View {
 
 	public GView(Context context) {
 		super(context);
+		init();
 	}
 
 	public GView(Context context, float density_) {
 		super(context);
-		
 		density = density_;
-		
+
+		init();	// TODO Auto-generated constructor stub
+	}
+	
+	private void init() {
+		// TODO Auto-generated method stub
+
 		g = new Graph();
 
 		paint = new Paint();
@@ -43,7 +51,7 @@ public class GView extends View {
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStrokeJoin(Paint.Join.ROUND);
 		paint.setAntiAlias(true);
-		
+
 		auxP = new Paint();
 		auxP.setStrokeWidth(10f);
 		auxP.setStyle(Paint.Style.STROKE);
@@ -54,17 +62,16 @@ public class GView extends View {
 		fontPaint = new Paint();
 		fontPaint.setTextAlign(Align.CENTER);
 		fontPaint.setTextSize(20);
-
-		// TODO Auto-generated constructor stub
-
+		
 	}
-	
-	public boolean xmlToGraph(String storage, String xml){
+
+	public boolean xmlToGraph(String storage, String xml) {
 		boolean task = true;
 		XMLParser xmlp = new XMLParser(storage, xml);
 		xmlp.setDisplacement(width, height, density);
 		try {
-			g = xmlp.parseGraph(g); // El grafo instaciado previamente, ahora actualiza sus datos
+			g = xmlp.parseGraph(g); // El grafo instaciado previamente, ahora
+									// actualiza sus datos
 		} catch (Exception e) {
 			// El unico error que puede suceder es que no exista el archivo xml
 			Log.d("XMLParser", "Error: " + e.getMessage());
@@ -73,13 +80,11 @@ public class GView extends View {
 		return task;
 	}
 
+	@SuppressLint("DrawAllocation")
 	@Override
 	public void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		canvas.drawColor(Color.WHITE);
-		
-		height = this.getHeight();
-		width = this.getWidth();
 
 		for (int i = 0; i < g.getArrows().size(); i++) {
 			Arrow a = g.getArrows().get(i);
@@ -130,6 +135,7 @@ public class GView extends View {
 	}
 
 	public void Kruskal() {
+		restore();
 		if (g.getArrows().size() >= g.getVertex().size() - 1) {
 			for (int i = 0; i < g.getArrows().size(); i++) {
 				for (int j = 0; j < gKruskal.getArrows().size(); j++) {
@@ -218,8 +224,16 @@ public class GView extends View {
 			g.getArrows().get(i).color = Color.BLACK;
 		}
 	}
-	public void dijkstra(){
+
+	public void dijkstra() {
 		Dijkstra d = new Dijkstra(g);
 		d.dijkstra(g);
+	}
+
+	@Override
+	public void onSizeChanged(int w, int h, int oldw, int oldh) {
+		super.onSizeChanged(w, h, oldw, oldh);
+		width = w;
+		height = h;
 	}
 }

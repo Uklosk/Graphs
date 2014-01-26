@@ -149,7 +149,7 @@ public class Graph implements Cloneable {
 
 		if (a != null) {
 			int i = buscarIndice(a.getWeight());
-
+						
 			if (i == -1)
 				arrows.add(a);
 			else

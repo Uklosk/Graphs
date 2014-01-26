@@ -220,8 +220,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			// *****************************************************************************
 			if(view.xmlToGraph(storage, "graph.xml"))
 				Toast.makeText(getBaseContext(), "El grafo se ha cargado, toca la pantalla para visualizarlo.",Toast.LENGTH_LONG).show();
+			view.invalidate();
 			// *****************************************************************************
-			
 			return true;
 		case R.id.action_save:
 			if(!isExternalStorageWritable()){

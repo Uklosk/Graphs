@@ -175,7 +175,7 @@ public class XMLParser {
         }
 		
 		Log.d(TAG,"grafo generado a partir del xml");
-		
+		gr.update();
 		return gr;
 	}
 	
