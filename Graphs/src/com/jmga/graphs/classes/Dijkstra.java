@@ -13,40 +13,38 @@ import java.util.Set;
 
 public class Dijkstra {
 
-  private ArrayList<Node> nodes;
   private ArrayList<Arrow> arrows;
-  private Hashtable<String,Node> vertex;
-  private Set<Node> settledNodes;
-  private Set<Node> unSettledNodes;
-  private Map<Node, Node> predecessors;
-  private Map<Node, Integer> distance;
+  private ArrayList<String> vertex;
+  private Set<String> settledNodes;
+  private Set<String> unSettledNodes;
+  private Map<String, String> predecessors;
+  private Map<String, Integer> distance;
 
   public Dijkstra(Graph graph) {
     // create a copy of the array so that we can operate on this array
     this.arrows = graph.getArrows();
-    this.vertex = graph.getVertex();
-    this.nodes = new ArrayList<Node>(vertex.values());
+    this.vertex = graph.getNombres();
   }
 
-  public void execute(Node source) {
-    settledNodes = new HashSet<Node>();
-    unSettledNodes = new HashSet<Node>();
-    distance = new HashMap<Node, Integer>();
-    predecessors = new HashMap<Node, Node>();
+  public void execute(String source) {
+    settledNodes = new HashSet<String>();
+    unSettledNodes = new HashSet<String>();
+    distance = new HashMap<String, Integer>();
+    predecessors = new HashMap<String, String>();
     distance.put(source, 0);
     unSettledNodes.add(source);
     while (unSettledNodes.size() > 0) {
-      Node node = getMinimum(unSettledNodes);
+      String node = getMinimum(unSettledNodes);
       settledNodes.add(node);
       unSettledNodes.remove(node);
       findMinimalDistances(node);
     }
-    System.out.println(distance.values());
+    System.out.println("Distancia de B al resto  " + distance.values());
   }
 
-  private void findMinimalDistances(Node node) {
-    List<Node> adjacentNodes = getNeighbors(node);
-    for (Node target : adjacentNodes) {
+  private void findMinimalDistances(String node) {
+    List<String> adjacentStrings = getNeighbors(node);
+    for (String target : adjacentStrings) {
       if (getShortestDistance(target) > getShortestDistance(node)
           + getDistance(node, target)) {
         distance.put(target, getShortestDistance(node)
@@ -58,46 +56,46 @@ public class Dijkstra {
 
   }
 
-  private int getDistance(Node node, Node target) {
+  private int getDistance(String node, String target) {
     for (Arrow arrow : arrows) {
-      if (vertex.get(arrow.getIdi()).equals(node)
-          && vertex.get(arrow.getIdf()).equals(target)) {
+      if (arrow.getIdi().equals(node)
+          && arrow.getIdf().equals(target)) {
         return arrow.getWeight();
       }
     }
     throw new RuntimeException("Should not happen");
   }
 
-  private List<Node> getNeighbors(Node node) {
-    List<Node> neighbors = new ArrayList<Node>();
+  private List<String> getNeighbors(String node) {
+    List<String> neighbors = new ArrayList<String>();
     for (Arrow arrow : arrows) {
-      if (vertex.get(arrow.getIdi()).equals(node)
-          && !isSettled(vertex.get(arrow.getIdf()))) {
-        neighbors.add(vertex.get(arrow.getIdf()));
+      if (arrow.getIdi().equals(node)
+          && !isSettled(arrow.getIdf())) {
+        neighbors.add(arrow.getIdf());
       }
     }
     return neighbors;
   }
 
-  private Node getMinimum(Set<Node> Nodees) {
-    Node minimum = null;
-    for (Node Node : Nodees) {
+  private String getMinimum(Set<String> nodes) {
+    String minimum = null;
+    for (String String : nodes) {
       if (minimum == null) {
-        minimum = Node;
+        minimum = String;
       } else {
-        if (getShortestDistance(Node) < getShortestDistance(minimum)) {
-          minimum = Node;
+        if (getShortestDistance(String) < getShortestDistance(minimum)) {
+          minimum = String;
         }
       }
     }
     return minimum;
   }
 
-  private boolean isSettled(Node Node) {
-    return settledNodes.contains(Node);
+  private boolean isSettled(String String) {
+    return settledNodes.contains(String);
   }
 
-  private int getShortestDistance(Node destination) {
+  private int getShortestDistance(String destination) {
     Integer d = distance.get(destination);
     if (d == null) {
       return Integer.MAX_VALUE;
@@ -110,9 +108,9 @@ public class Dijkstra {
    * This method returns the path from the source to the selected target and
    * NULL if no path exists
    */
-  public LinkedList<Node> getPath(Node target) {
-    LinkedList<Node> path = new LinkedList<Node>();
-    Node step = target;
+  public LinkedList<String> getPath(String target) {
+    LinkedList<String> path = new LinkedList<String>();
+    String step = target;
     // check if a path exists
     if (predecessors.get(step) == null) {
       return null;
