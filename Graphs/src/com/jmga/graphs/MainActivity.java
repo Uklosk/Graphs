@@ -1,5 +1,7 @@
 package com.jmga.graphs;
 
+import java.util.Hashtable;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentTransaction;
@@ -23,6 +25,7 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.jmga.graphs.classes.GView;
+import com.jmga.graphs.classes.Graph;
 import com.jmga.graphs.classes.Node;
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
@@ -542,4 +545,5 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	}
 
+	
 }

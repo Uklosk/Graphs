@@ -220,6 +220,6 @@ public class GView extends View {
 	}
 	public void dijkstra(){
 		Dijkstra d = new Dijkstra(g);
-		d.execute("B");
+		d.dijkstra(g);
 	}
 }
