@@ -24,6 +24,7 @@ public class Dijkstra {
 		// create a copy of the array so that we can operate on this array
 		this.arrows = graph.getArrows();
 		this.nodes = graph.getNombres();
+		nodes.remove("nulo");
 	}
 
 	public void execute(String source) {
