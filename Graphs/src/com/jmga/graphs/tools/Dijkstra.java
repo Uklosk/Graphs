@@ -1,4 +1,4 @@
-package com.jmga.graphs.classes;
+package com.jmga.graphs.tools;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,6 +9,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.Gravity;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+
+import com.jmga.graphs.classes.Arrow;
+import com.jmga.graphs.classes.Graph;
 
 public class Dijkstra {
 
@@ -24,7 +34,6 @@ public class Dijkstra {
 		// create a copy of the array so that we can operate on this array
 		this.arrows = graph.getArrows();
 		this.nodes = graph.getNombres();
-		nodes.remove("nulo");
 	}
 
 	public void execute(String source) {
@@ -135,11 +144,26 @@ public class Dijkstra {
 			Hashtable<String, Integer> table = new Hashtable<String, Integer>();
 			execute(name);
 			for (String name2 : nodes) {
-				table.put(name2, distance.get(name2));
+				if(distance.get(name2)==null){
+					table.put(name2, -1);
+
+				}else{
+					table.put(name2, distance.get(name2));
+
+				}
 			}
 			disT.put(name, table);
 		}
 
+	}
+	
+	public FlowTable getTableDistance(Context context){
+		FlowTable dTable = new FlowTable(context,nodes);
+		for(String name : nodes){
+			dTable.addContent(name, disT.get(name));
+		}
+		return dTable;
+		
 	}
 
 }

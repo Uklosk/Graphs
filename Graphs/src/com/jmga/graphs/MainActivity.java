@@ -1,9 +1,8 @@
 package com.jmga.graphs;
 
-import java.util.Hashtable;
-
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.jmga.graphs.classes.GView;
-import com.jmga.graphs.classes.Graph;
 import com.jmga.graphs.classes.Node;
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
@@ -244,11 +242,26 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			} else {
 				isKruskal = true;
 				view.Kruskal();
-				view.dijkstra();
 			}
 			view.invalidate();
 			return true;
 			
+		case R.id.action_distance_table:
+			// 1. Instantiate an AlertDialog.Builder with its constructor
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+			// 2. Chain together various setter methods to set the dialog characteristics
+			//builder.setTitle(R.string.dialog_title);
+			builder.setTitle("Tabla de distancias");
+			
+			builder.setView(view.dijkstra(getApplicationContext()));
+			
+			// 3. Get the AlertDialog from create()
+			AlertDialog dialog = builder.create();
+			
+			dialog.show();
+			
+			return true;
 		case R.id.action_clear:
 			view.clear();
 			return true;

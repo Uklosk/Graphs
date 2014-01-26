@@ -4,17 +4,16 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class Graph implements Cloneable {
-	private final String[] ids = {"A","B","C","D","E","F","G","H","I",
-								"J","K","L","M","N","O","P","Q","R","S",
-								"T","U","V","W","X","Y","Z",
-								"a","b","c","d","e","f","g","h","i","j","k",
-								"l","m","n","o","p","q","r","s","t","u",
-								"v","w","x","y","z"};
-	
-	public String getId(int i){
+	private final String[] ids = { "A", "B", "C", "D", "E", "F", "G", "H", "I",
+			"J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
+			"W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i",
+			"j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v",
+			"w", "x", "y", "z" };
+
+	public String getId(int i) {
 		return ids[i];
 	}
-	
+
 	private Hashtable<String, Integer[]> distancesT;
 	private ArrayList<String> nombres;
 	private Hashtable<String, Node> vertex;
@@ -46,7 +45,7 @@ public class Graph implements Cloneable {
 
 		nodes = vertex.size();
 	}
-	
+
 	/*
 	 * GETTERS AND SETTERS
 	 * 
@@ -116,7 +115,9 @@ public class Graph implements Cloneable {
 			}
 		}
 		Node n = new Node(0, 0, "nulo");
+
 		vertex.put(name, n);
+		nombres.remove("nulo");
 	}
 
 	/*
@@ -149,7 +150,7 @@ public class Graph implements Cloneable {
 
 		if (a != null) {
 			int i = buscarIndice(a.getWeight());
-						
+
 			if (i == -1)
 				arrows.add(a);
 			else
@@ -182,12 +183,14 @@ public class Graph implements Cloneable {
 		}
 	}
 
-	public int compararPeso(Arrow a1, Arrow a2){
-		if (a1.getWeight()<a2.getWeight())return 1;
-		if (a1.getWeight()>a2.getWeight())return 2;
+	public int compararPeso(Arrow a1, Arrow a2) {
+		if (a1.getWeight() < a2.getWeight())
+			return 1;
+		if (a1.getWeight() > a2.getWeight())
+			return 2;
 		return 3;
 	}
-	
+
 	public void changeWeight(String idi, String idf, int weight) {
 		for (int i = 0; i < arrows.size(); i++) {
 			Arrow a = arrows.get(i);
@@ -212,22 +215,24 @@ public class Graph implements Cloneable {
 	}
 
 	public void ordenarArrows() {
-		for(int i=0;i<arrows.size();i++){
-			for(int j=0;j<arrows.size();j++){
-				switch(compararPeso(arrows.get(i), arrows.get(j))){
+		for (int i = 0; i < arrows.size(); i++) {
+			for (int j = 0; j < arrows.size(); j++) {
+				switch (compararPeso(arrows.get(i), arrows.get(j))) {
 				case 1:
-					if(i>j){arrows.add(j, arrows.get(i));
-					arrows.remove(i+1);}
+					if (i > j) {
+						arrows.add(j, arrows.get(i));
+						arrows.remove(i + 1);
+					}
 					break;
 				case 2:
-					
+
 					break;
 				case 3:
-					
+
 					break;
 				default:
 					break;
-						
+
 				}
 			}
 		}
@@ -272,11 +277,11 @@ public class Graph implements Cloneable {
 		}
 		return false;
 	}
-	
-	public void updateDistances(){
-		
+
+	public void updateDistances() {
+
 	}
-	
+
 	public Arrow getAux() {
 		return aux;
 	}

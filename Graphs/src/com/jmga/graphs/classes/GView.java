@@ -13,6 +13,9 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.jmga.graphs.tools.Dijkstra;
+import com.jmga.graphs.tools.FlowTable;
+import com.jmga.graphs.tools.Kruskal;
 import com.jmga.graphs.tools.XMLParser;
 
 public class GView extends View {
@@ -205,8 +208,8 @@ public class GView extends View {
 
 	public void update() {
 		g.update();
-		if (g.getArrows().size() >= g.getVertex().size() - 1
-				&& g.getVertex().size() > 0 && g.getArrows().size() > 0) {
+		if (g.getArrows().size() >= g.getNombres().size() - 1
+				&& g.getNombres().size() > 0 && g.getArrows().size() > 0) {
 			gKruskal = aplicarKruskal(g);
 			isKruskal = true;
 		} else
@@ -225,9 +228,10 @@ public class GView extends View {
 		}
 	}
 
-	public void dijkstra() {
+	public FlowTable dijkstra(Context context) {
 		Dijkstra d = new Dijkstra(g);
 		d.dijkstra(g);
+		return d.getTableDistance(context);
 	}
 
 	@Override

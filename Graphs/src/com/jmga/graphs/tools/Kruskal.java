@@ -1,6 +1,11 @@
-package com.jmga.graphs.classes;
+package com.jmga.graphs.tools;
 
 import java.util.ArrayList;
+
+import com.jmga.graphs.classes.Arrow;
+import com.jmga.graphs.classes.Graph;
+import com.jmga.graphs.classes.Link;
+import com.jmga.graphs.classes.Node;
 
 public class Kruskal {
 
