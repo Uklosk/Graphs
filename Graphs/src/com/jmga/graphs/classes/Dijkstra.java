@@ -43,8 +43,8 @@ public class Dijkstra {
   }
 
   private void findMinimalDistances(String node) {
-    List<String> adjacentStrings = getNeighbors(node);
-    for (String target : adjacentStrings) {
+    List<String> adjacentNodes = getNeighbors(node);
+    for (String target : adjacentNodes) {
       if (getShortestDistance(target) > getShortestDistance(node)
           + getDistance(node, target)) {
         distance.put(target, getShortestDistance(node)
@@ -61,6 +61,8 @@ public class Dijkstra {
       if (arrow.getIdi().equals(node)
           && arrow.getIdf().equals(target)) {
         return arrow.getWeight();
+      } else if (arrow.getIdf().equals(node) && arrow.getIdi().equals(target)){
+    	  return arrow.getWeight();
       }
     }
     throw new RuntimeException("Should not happen");
@@ -72,6 +74,8 @@ public class Dijkstra {
       if (arrow.getIdi().equals(node)
           && !isSettled(arrow.getIdf())) {
         neighbors.add(arrow.getIdf());
+      } else if(arrow.getIdf().equals(node) && !isSettled(arrow.getIdi())){
+    	  neighbors.add(arrow.getIdi());
       }
     }
     return neighbors;
@@ -79,20 +83,20 @@ public class Dijkstra {
 
   private String getMinimum(Set<String> nodes) {
     String minimum = null;
-    for (String String : nodes) {
+    for (String node : nodes) {
       if (minimum == null) {
-        minimum = String;
+        minimum = node;
       } else {
-        if (getShortestDistance(String) < getShortestDistance(minimum)) {
-          minimum = String;
+        if (getShortestDistance(node) < getShortestDistance(minimum)) {
+          minimum = node;
         }
       }
     }
     return minimum;
   }
 
-  private boolean isSettled(String String) {
-    return settledNodes.contains(String);
+  private boolean isSettled(String node) {
+    return settledNodes.contains(node);
   }
 
   private int getShortestDistance(String destination) {

@@ -167,7 +167,7 @@ public class GView extends View {
 
 	public void addArrow(Node n1, Node n2) {
 		if (n1 != null && n2 != null) {
-			g.addLink(n1.getId(), n2.getId(), 0);
+			g.addLink(n1.getId(), n2.getId(), 1);
 		}
 	}
 
