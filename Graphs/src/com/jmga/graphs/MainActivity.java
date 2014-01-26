@@ -165,11 +165,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 
 		if (gMode == GRAPH_MODE_WEIGHTS) {
-			menu.clear();
+			menu.findItem(R.id.action_add).setVisible(false);
+			menu.findItem(R.id.action_remove).setVisible(false);
+			menu.findItem(R.id.action_edit).setVisible(true);
 
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.menu_2, menu);
-
+			
 			View v = (View) menu.findItem(R.id.action_edit).getActionView();
 			EditText text = (EditText) v.findViewById(R.id.weightText);
 
@@ -186,16 +186,20 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				}
 			});
 		} else {
-			stop(TOGGLE_ADD, (MenuItem) menu.findItem(R.id.action_add));
-			stop(TOGGLE_REMOVE, (MenuItem) menu.findItem(R.id.action_remove));
-			menu.clear();
-
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.menu_1, menu);
-			menu.findItem(R.id.action_kruskal).setEnabled(view.isKruskal);
-			menu.findItem(R.id.action_kruskal).setChecked(isKruskal);
+			
+			
+			
+			menu.findItem(R.id.action_add).setVisible(true);
+			menu.findItem(R.id.action_remove).setVisible(true);
+			menu.findItem(R.id.action_edit).setVisible(false);
+			
 
 		}
+		stop(TOGGLE_ADD, (MenuItem) menu.findItem(R.id.action_add));
+		stop(TOGGLE_REMOVE, (MenuItem) menu.findItem(R.id.action_remove));
+		menu.findItem(R.id.action_kruskal).setEnabled(view.isKruskal);
+		menu.findItem(R.id.action_kruskal).setChecked(isKruskal);
+		
 		this.menu = menu;
 		return super.onPrepareOptionsMenu(menu);
 

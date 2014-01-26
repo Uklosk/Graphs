@@ -11,6 +11,11 @@
         android:icon="@drawable/ic_action_discard"
         android:showAsAction="ifRoom"
         android:title="@string/action_remove"/>
+    <item
+        android:id="@+id/action_edit"
+        android:icon="@drawable/ic_action_edit"
+        android:showAsAction="ifRoom"
+        android:actionLayout="@layout/edit_weight_layout"/>
     
     <item 
         android:id="@+id/action_load"
