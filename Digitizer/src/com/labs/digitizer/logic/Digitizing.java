@@ -265,8 +265,6 @@ public class Digitizing {
 	
 			serializer.endTag(null, "graph");
 	
-			Log.i(TAG," xml: "+serializer.toString());
-			
 			serializer.endDocument();
 			serializer.flush();
 			fout.close();

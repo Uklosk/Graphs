@@ -1,16 +1,26 @@
 package com.jmga.graphs.tools;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlSerializer;
 
 import android.util.Log;
 import android.util.Xml;
 
+import com.jmga.graphs.classes.Arrow;
 import com.jmga.graphs.classes.Graph;
+import com.jmga.graphs.classes.Link;
+import com.jmga.graphs.classes.Node;
 
 public class XMLParser {
 	private static final String TAG = "XMLParser";
@@ -72,6 +82,65 @@ public class XMLParser {
 		density = d;
 	}
 	
+	public void generateXmlFromGraph(Graph g){
+		Hashtable<String, Node> v = new Hashtable<String, Node>();
+		ArrayList<Arrow> a = new ArrayList<Arrow>();
+		
+		File file = new File(storage_path, "temp-graph.xml");
+		FileOutputStream fout = null;
+		try {
+			fout = new FileOutputStream(file, false);
+	    } catch (FileNotFoundException e) {
+	    	e.printStackTrace();
+	    }
+		XmlSerializer serializer = Xml.newSerializer();
+		
+	    try {
+			serializer.setOutput(fout, "UTF-8");
+		    serializer.startDocument(null, true);
+		    serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
+		    
+			serializer.startTag(null, "graph");
+			serializer.attribute(null, "v", Integer.toString(v.size()));
+			serializer.attribute(null, "a", Integer.toString(a.size()));
+			
+			String[] keys = (String[]) data.keySet().toArray(new String[0]);  
+	        Arrays.sort(keys);  
+	        
+	        for(String key : keys){
+	        	Node v_ = (Node)v.get(key);
+				serializer.startTag(null, "vertex");
+				serializer.attribute(null, "id", key+"");
+				serializer.attribute(null, "x", Double.toString(v_.getCenterX()));
+				serializer.attribute(null, "y", Double.toString(v_.getCenterY()));
+				serializer.attribute(null, "r", Double.toString(v_.getRadius()));
+				String adjacent = "";
+				ArrayList<Link> links = v_.getEnlaces();
+				Iterator<Link> ln = links.iterator();
+				while(ln.hasNext()){
+					Link l = (Link)ln.next();
+					adjacent += l.getIdf() + ",";
+				}
+				if(adjacent.length() > 0)
+					adjacent = adjacent.substring(0, adjacent.lastIndexOf(","));serializer.attribute(null, "adjacent", adjacent);
+				serializer.endTag(null, "vertex");
+				adjacent = "";
+	        }
+
+			serializer.endTag(null, "graph");
+			
+			serializer.endDocument();
+			serializer.flush();
+			fout.close();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 	public Graph parseGraph(Graph gr) throws Exception{
 		FileInputStream fis = null;
@@ -145,11 +214,8 @@ public class XMLParser {
         	tam[i] = max[i] + min[i];
         	displacement[i] = (displacement[i] - tam[i])/2;
         }
-        Log.d(TAG,"Maximo X: "+max[0]+" Minimo X: "+min[0]);
-        Log.d(TAG,"Maximo Y: "+max[1]+" Minimo Y: "+min[1]);
-        Log.d(TAG,"Tamaño X del grafo: "+tam[0]+" Pantalla X: "+displacement[0]);
-        Log.d(TAG,"Tamaño Y del grafo: "+tam[1]+" Pantalla Y: "+displacement[1]);
         
+        // Generando el objeto grafo
         for(String id : keys) {  
 			ArrayList<String> xmlitem = (ArrayList<String>)data.get(id);
 			gr.addNode(Integer.parseInt(xmlitem.get(0))+displacement[0],
@@ -174,7 +240,7 @@ public class XMLParser {
 						gr.addLink(id, adj, 1);
         }
 		
-		Log.d(TAG,"grafo generado a partir del xml");
+		Log.d(TAG,"Grafo generado a partir del xml");
 		gr.update();
 		return gr;
 	}
