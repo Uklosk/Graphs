@@ -304,6 +304,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		case R.id.action_add:
 			toggle(TOGGLE_ADD, item);
 			stop(TOGGLE_REMOVE, (MenuItem) menu.findItem(R.id.action_remove));
+			
 			return true;
 
 		default:

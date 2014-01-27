@@ -45,7 +45,7 @@ public class Bipartite {
 		visited.put(start, 1);
 		A.add(g.getNode(start));
 		Node n = new Node();
-		n = (Node)g.getNode(start);
+		n = g.getNode(start);
 		for(Link lk : n.getEnlaces()){
 			temp.put(lk.getIdf(), 2);
 			B.add(g.getNode(lk.getIdf()));

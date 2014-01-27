@@ -45,7 +45,6 @@ public class GView extends View {
 	public GView(Context context) {
 		super(context);
 
-		subSets = new Hashtable<String, Integer>();
 
 		init();
 	}
@@ -289,7 +288,7 @@ public class GView extends View {
 		} else {
 			isBipartite = false;
 		}
-		//invalidate();
+		invalidate();
 	}
 
 	public void clear() {
