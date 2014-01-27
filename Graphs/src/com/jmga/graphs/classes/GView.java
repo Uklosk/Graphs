@@ -123,13 +123,11 @@ public class GView extends View {
 					aux.stop[1], auxP);
 		}
 
-		for (int i = 0; i < g.getVertex().size(); i++) {
-			Node n = g.getVertex().get(g.getId(i));
-			if (n != null && !n.getId().equals("nulo")) {
-				n.draw(canvas);
-				canvas.drawText(n.getId(), n.getCenterX(), n.getCenterY()
-						- n.radius - 20, fontPaint);
-			}
+		for(String ns : g.getNombres()){
+			Node n = g.getVertex().get(ns);
+			n.draw(canvas);
+			canvas.drawText(n.getId(), n.getCenterX(), n.getCenterY()
+					- n.radius - 20, fontPaint);
 		}
 
 	}
@@ -149,7 +147,7 @@ public class GView extends View {
 
 	public void Kruskal() {
 		restore();
-		if (g.getArrows().size() >= g.getVertex().size() - 1) {
+		if (g.getArrows().size() >= g.getNombres().size() - 1) {
 			for (int i = 0; i < g.getArrows().size(); i++) {
 				for (int j = 0; j < gKruskal.getArrows().size(); j++) {
 					Arrow a = g.getArrows().get(i);
