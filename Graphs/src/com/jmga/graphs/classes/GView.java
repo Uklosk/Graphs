@@ -1,5 +1,8 @@
 package com.jmga.graphs.classes;
 
+import java.util.Enumeration;
+import java.util.Hashtable;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,6 +15,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.jmga.graphs.tools.Dijkstra;
 import com.jmga.graphs.tools.FlowTable;
@@ -26,6 +30,9 @@ public class GView extends View {
 	private Path path;
 
 	public boolean isKruskal = false;
+	public boolean isBipartite = false;
+	public boolean printBipatite = false;
+	private Hashtable<String,Integer> subSets;
 
 	private int height, width;
 	private float density;
@@ -34,6 +41,9 @@ public class GView extends View {
 
 	public GView(Context context) {
 		super(context);
+
+		subSets = new Hashtable<String, Integer>();
+		
 		init();
 	}
 
@@ -41,11 +51,12 @@ public class GView extends View {
 		super(context);
 		density = density_;
 
-		init();	// TODO Auto-generated constructor stub
+		subSets = new Hashtable<String, Integer>();
+		
+		init();	
 	}
 	
 	private void init() {
-		// TODO Auto-generated method stub
 
 		g = new Graph();
 
@@ -73,10 +84,8 @@ public class GView extends View {
 		XMLParser xmlp = new XMLParser(storage, xml);
 		xmlp.setDisplacement(width, height, density);
 		try {
-			g = xmlp.parseGraph(g); // El grafo instaciado previamente, ahora
-									// actualiza sus datos
+			g = xmlp.parseGraph(g); 
 		} catch (Exception e) {
-			// El unico error que puede suceder es que no exista el archivo xml
 			Log.d("XMLParser", "Error: " + e.getMessage());
 			task = false;
 		}
@@ -155,6 +164,35 @@ public class GView extends View {
 			}
 		}
 	}
+	
+	public void Bipartite(){
+		Bipartite b = new Bipartite(g);
+		try {
+			printBipatite = b.execute();
+		} catch (Exception e) {
+			printBipatite = false;
+			e.printStackTrace();
+		}
+		if(printBipatite){
+			subSets = b.getSubSet();
+			Enumeration<String> keys = subSets.keys();
+			while(keys.hasMoreElements()){
+				String key = (String)keys.nextElement();
+				g.setColorOfNode(key, (subSets.get(key) == 1)?Color.YELLOW:Color.GREEN);
+			}
+		} else {
+			Toast.makeText(getContext(), "No es grafo bipartito!", Toast.LENGTH_LONG).show();
+			initializingNodesColor();
+		}
+	}
+	
+	public void offPrintBipartite() {
+		printBipatite = false;
+	}
+	
+	public void initializingNodesColor(){
+		g.colorRestorationNodes();
+	}
 
 	public Graph aplicarKruskal(Graph g) {
 		return Kruskal.aplicarKruskal(g);
@@ -212,8 +250,17 @@ public class GView extends View {
 				&& g.getNombres().size() > 0 && g.getArrows().size() > 0) {
 			gKruskal = aplicarKruskal(g);
 			isKruskal = true;
-		} else
+		} else 
 			isKruskal = false;
+		
+		if(g.getNombres().size() > 0 && g.getArrows().size() > 0){
+			isBipartite = true;
+			if(printBipatite)
+				Bipartite();
+		} else{
+			isBipartite = false;
+			printBipatite = false;
+		}
 	}
 
 	public void clear() {

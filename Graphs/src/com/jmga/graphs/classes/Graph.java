@@ -1,7 +1,10 @@
 package com.jmga.graphs.classes;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
+
+import android.graphics.Color;
 
 public class Graph implements Cloneable {
 	private final String[] ids = { "A", "B", "C", "D", "E", "F", "G", "H", "I",
@@ -90,6 +93,16 @@ public class Graph implements Cloneable {
 		Node n = vertex.get(name);
 		return n;
 
+	}
+	
+	public void colorRestorationNodes(){
+		Enumeration<Node> nodes = vertex.elements();
+		while(nodes.hasMoreElements())
+			((Node)(nodes.nextElement())).setColor(Color.BLACK);
+	}
+	
+	public void setColorOfNode(String id, int color){
+		((Node)vertex.get(id)).setColor(color);
 	}
 
 	public void addNode(String string) {

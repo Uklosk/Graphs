@@ -44,6 +44,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	private static final int TOGGLE_REMOVE = 1;
 
 	boolean isKruskal = false;
+	boolean isBipartite = false;
 	boolean toggle_remove = false;
 	boolean toggle_add = false;
 
@@ -185,18 +186,17 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			});
 		} else {
 			
-			
-			
 			menu.findItem(R.id.action_add).setVisible(true);
 			menu.findItem(R.id.action_remove).setVisible(true);
 			menu.findItem(R.id.action_edit).setVisible(false);
-			
 
 		}
 		stop(TOGGLE_ADD, (MenuItem) menu.findItem(R.id.action_add));
 		stop(TOGGLE_REMOVE, (MenuItem) menu.findItem(R.id.action_remove));
 		menu.findItem(R.id.action_kruskal).setEnabled(view.isKruskal);
 		menu.findItem(R.id.action_kruskal).setChecked(isKruskal);
+		menu.findItem(R.id.action_bipartit).setEnabled(view.isBipartite);
+		menu.findItem(R.id.action_bipartit).setChecked(isBipartite);
 		
 		this.menu = menu;
 		return super.onPrepareOptionsMenu(menu);
@@ -212,18 +212,13 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				Toast toast = Toast.makeText(getBaseContext(), getString(R.string.memory_not_available),Toast.LENGTH_LONG);
 				toast.show();
 				
-
 				return true;
 			}
-			// *****************************************************************************
-			// Esta sentencia sirve para cargar al grafo con los datos almacenados en el xml
-			// El grafo puede estar vacio o inicializado con aristas y vertices
-			// La sentencia tiene que estar en un Listener
-			// *****************************************************************************
-			if(view.xmlToGraph(storage, "graph.xml"))
-				Toast.makeText(getBaseContext(), "El grafo se ha cargado, toca la pantalla para visualizarlo.",Toast.LENGTH_LONG).show();
-			view.invalidate();
-			// *****************************************************************************
+			
+			if(view.xmlToGraph(storage, "graph.xml")){
+				view.invalidate();
+			}
+			
 			return true;
 		case R.id.action_save:
 			if(!isExternalStorageWritable()){
@@ -232,6 +227,19 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				return true;
 			}
 			
+			return true;
+
+		case R.id.action_bipartit:
+			if (isBipartite) {
+				isBipartite = false;
+				view.offPrintBipartite();
+				view.initializingNodesColor();
+				view.invalidate();
+			} else {
+				isBipartite = true;
+				view.Bipartite();
+				view.invalidate();
+			}
 			return true;
 		
 		case R.id.action_kruskal:
@@ -263,6 +271,10 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			
 			return true;
 		case R.id.action_clear:
+			isKruskal = false;
+			isBipartite = false;
+			view.offPrintBipartite();
+			view.initializingNodesColor();
 			view.clear();
 			return true;
 			

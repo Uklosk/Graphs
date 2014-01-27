@@ -15,14 +15,24 @@ public class Node extends ShapeDrawable {
 	public int radius = 50;
 	private String id;
 
+	private int color;
+	
 	/*
 	 * CONSTRUCTORES
 	 * 
 	 * CONSTRUCTOR NORMAL
 	 */
+	public Node(){
+		id = "";
+		enlacesExistentes = 0;
+		enlaces = new ArrayList<Link>();
+		color = Color.BLACK;
+	}
+	
 	public Node(int x, int y, String id) {
 		super(new OvalShape());
-		getPaint().setColor(Color.BLACK);
+		color = Color.BLACK;
+		getPaint().setColor(color);
 		getPaint().setAntiAlias(true);
 		setPos(x, y);
 		enlacesExistentes = -1;
@@ -36,7 +46,8 @@ public class Node extends ShapeDrawable {
 	 */
 	public Node(int x, int y) {
 		super(new OvalShape());
-		getPaint().setColor(Color.BLACK);
+		color = Color.BLACK;
+		getPaint().setColor(color);
 		getPaint().setAntiAlias(true);
 		setPos(x, y);
 		enlacesExistentes = -1;
@@ -87,13 +98,28 @@ public class Node extends ShapeDrawable {
 	public void setEnlacesExistentes(int enlacesExistentes) {
 		this.enlacesExistentes = enlacesExistentes;
 	}
+	
+	public int getRadius() {
+		return radius;
+	}
 
+	public void setRadius(int radius) {
+		this.radius = radius;
+	}
+
+	public int getColor() {
+		return color;
+	}
+
+	public void setColor(int color) {
+		this.color = color;
+		getPaint().setColor(color);
+	}	
+	
 	/*
 	 * ADICIONALES
 	 */
 
-	
-	
 	public void agregarEnlace(String idf, int weight) {
 		enlaces.add(new Link(idf,weight));
 

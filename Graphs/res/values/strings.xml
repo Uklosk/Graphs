@@ -9,6 +9,7 @@
     <string name="action_add">Add</string>
     <string name="action_remove">Remove</string>
     <string name="action_kruskal">Minimum spanning tree</string>
+    <string name="action_bipartite">See bipartition</string>
     <string name="action_clear">Clear</string>
     <string name="action_distance_table">Show table with distances</string>
 
