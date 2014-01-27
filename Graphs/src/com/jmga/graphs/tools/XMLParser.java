@@ -82,11 +82,42 @@ public class XMLParser {
 		density = d;
 	}
 	
-	public void generateXmlFromGraph(Graph g){
+	public boolean isGraph(String file){
+		String tag_control = "apk";
+		String name_apk = "Graphs.apk";
+		
+		FileInputStream fis = null;
+		XmlPullParser xml = Xml.newPullParser();
+
+		try {
+			fis = new FileInputStream(storage_path + current_xml);
+			xml.setInput(fis, "UTF-8");
+			
+			int event = xml.next();
+			while(event != XmlPullParser.END_DOCUMENT)
+				if(event == XmlPullParser.START_TAG){
+					for(int i = 0; i < xml.getAttributeCount(); i++)
+						if(xml.getName().equals( tag_control ))
+							if(xml.getAttributeName(i).equals( name_apk ))
+								return true;
+							else
+								return false;
+				} else 
+					return false;
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	public void saveGraph(Graph g, String name){
 		Hashtable<String, Node> v = new Hashtable<String, Node>();
 		ArrayList<Arrow> a = new ArrayList<Arrow>();
 		
-		File file = new File(storage_path, "temp-graph.xml");
+		File file = new File(storage_path, name + ".xml");
 		FileOutputStream fout = null;
 		try {
 			fout = new FileOutputStream(file, false);
@@ -148,8 +179,6 @@ public class XMLParser {
 
 		fis = new FileInputStream(storage_path + current_xml);
 		xml.setInput(fis, "UTF-8");
-		
-		Log.d(TAG,"Desplazamientos, x:"+displacement[0]+ " y:"+displacement[1] + " Density:"+ density);
 		
 		int event = xml.next();
 		while(event != XmlPullParser.END_DOCUMENT) {
