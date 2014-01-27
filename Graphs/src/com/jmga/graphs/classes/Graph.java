@@ -115,10 +115,10 @@ public class Graph implements Cloneable {
 	public void deleteNode(String name) {
 		for (int i = 0; i < arrows.size(); i++) {
 			Arrow a = arrows.get(i);
-			if (a.getIdi() == name || a.getIdf() == name || a.getIdi() == null
-					|| a.getIdi() == null) {
+			if (a.getIdi().equals(name) || a.getIdf().equals(name) || a.getIdi() == null
+					|| a.getIdf() == null) {
 				arrows.remove(i);
-				i = -1;
+				i = 0;
 			}
 		}
 		for (int i = 0; i < nombres.size(); i++) {

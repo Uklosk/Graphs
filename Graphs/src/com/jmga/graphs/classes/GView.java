@@ -34,8 +34,8 @@ public class GView extends View {
 	public boolean isKruskal = false;
 	public boolean isBipartite = false;
 	private boolean checked_kruskal = false;
-	private boolean checked_bipartite = false; 
-	private Hashtable<String,Integer> subSets;
+	private boolean checked_bipartite = false;
+	private Hashtable<String, Integer> subSets;
 
 	private int height, width;
 	private float density;
@@ -46,7 +46,7 @@ public class GView extends View {
 		super(context);
 
 		subSets = new Hashtable<String, Integer>();
-		
+
 		init();
 	}
 
@@ -54,30 +54,26 @@ public class GView extends View {
 		super(context);
 		density = density_;
 
-		
-		init();	
+		init();
 	}
-	
+
 	public GView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init();
 	}
 
 	public GView(Context context, AttributeSet attrs, int params) {
-		
+
 		super(context, attrs, params);
 		init();
 	}
 
-
-	
 	private void init() {
 
 		g = new Graph();
-
+		gKruskal = new Graph();
 		subSets = new Hashtable<String, Integer>();
 
-		
 		paint = new Paint();
 		paint.setStrokeWidth(6f);
 		paint.setStyle(Paint.Style.STROKE);
@@ -94,7 +90,7 @@ public class GView extends View {
 		fontPaint = new Paint();
 		fontPaint.setTextAlign(Align.CENTER);
 		fontPaint.setTextSize(20);
-		
+
 	}
 
 	public boolean xmlToGraph(String storage, String xml) {
@@ -102,7 +98,7 @@ public class GView extends View {
 		XMLParser xmlp = new XMLParser(storage, xml);
 		xmlp.setDisplacement(width, height, density);
 		try {
-			g = xmlp.parseGraph(g); 
+			g = xmlp.parseGraph(g);
 		} catch (Exception e) {
 			Log.d("XMLParser", "Error: " + e.getMessage());
 			task = false;
@@ -140,7 +136,7 @@ public class GView extends View {
 					aux.stop[1], auxP);
 		}
 
-		for(String ns : g.getNombres()){
+		for (String ns : g.getNombres()) {
 			Node n = g.getVertex().get(ns);
 			n.draw(canvas);
 			canvas.drawText(n.getId(), n.getCenterX(), n.getCenterY()
@@ -180,8 +176,8 @@ public class GView extends View {
 			}
 		}
 	}
-	
-	public void bipartite(){
+
+	public void bipartite() {
 		boolean printBipatite = false;
 		Bipartite b = new Bipartite(g);
 		try {
@@ -190,33 +186,36 @@ public class GView extends View {
 			printBipatite = false;
 			e.printStackTrace();
 		}
-		if(printBipatite){
+		if (printBipatite) {
 			subSets = b.getSubSet();
 			Enumeration<String> keys = subSets.keys();
-			while(keys.hasMoreElements()){
-				String key = (String)keys.nextElement();
-				g.setColorOfNode(key, (subSets.get(key) == 1)?Color.YELLOW:Color.GREEN);
+			while (keys.hasMoreElements()) {
+				String key = (String) keys.nextElement();
+				g.setColorOfNode(key, (subSets.get(key) == 1) ? Color.YELLOW
+						: Color.GREEN);
 			}
 		} else {
 			initializingNodesColor();
 		}
-		Log.d("COMPONENTES", "componentes conexas: " + b.getConnectedComponents());
+		Log.d("COMPONENTES",
+				"componentes conexas: " + b.getConnectedComponents());
 	}
-	
-	public int connectedComponents(){
+
+	public int connectedComponents() {
 		int cc = 0;
 		Bipartite b = new Bipartite(g);
 		try {
-			b.execute(false); 
-			// Con false como parametro, no calcula las adyacencias (Ejecuta 2 bucles menos, ahorra tiempo y memoria)
+			b.execute(false);
+			// Con false como parametro, no calcula las adyacencias (Ejecuta 2
+			// bucles menos, ahorra tiempo y memoria)
 			cc = b.getConnectedComponents();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return cc;
 	}
-	
-	public void initializingNodesColor(){
+
+	public void initializingNodesColor() {
 		g.colorRestorationNodes();
 	}
 
@@ -274,18 +273,23 @@ public class GView extends View {
 		g.update();
 		if (g.getArrows().size() >= g.getNombres().size() - 1
 				&& g.getNombres().size() > 0 && g.getArrows().size() > 0) {
-			gKruskal = aplicarKruskal(g);
+
 			isKruskal = true;
-		} else 
-			isKruskal = false;
-		
-		if(g.getNombres().size() > 0 && g.getArrows().size() > 0){
+			if (checked_kruskal){
+				gKruskal = aplicarKruskal(g);
+				Kruskal();
+			}
+
+		} else	isKruskal = false;
+
+		if (g.getNombres().size() > 0 && g.getArrows().size() > 0) {
 			isBipartite = true;
-			if(checked_bipartite)
+			if (checked_bipartite)
 				bipartite();
-		} else{
+		} else {
 			isBipartite = false;
 		}
+		//invalidate();
 	}
 
 	public void clear() {
@@ -312,8 +316,8 @@ public class GView extends View {
 		width = w;
 		height = h;
 	}
-	
-	public void setMenuStateChecked(boolean ck, boolean cb){
+
+	public void setMenuStateChecked(boolean ck, boolean cb) {
 		checked_kruskal = ck;
 		checked_bipartite = cb;
 	}

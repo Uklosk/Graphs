@@ -261,8 +261,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 			} else {
 				isKruskal = true;
-				view.Kruskal();
 			}
+			view.setMenuStateChecked(isKruskal, isBipartite);
 			view.update();
 			view.invalidate();
 			return true;
