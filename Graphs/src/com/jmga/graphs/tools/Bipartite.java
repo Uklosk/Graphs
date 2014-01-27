@@ -35,7 +35,7 @@ public class Bipartite {
 	public boolean execute() throws Exception{		
 		// Se inicializan los conjuntos
 		String start = "";
-		start = g.getId(0);
+		start = g.getNombres().get(0);
 		visited.put(start, 1);
 		A.add(g.getNode(start));
 		Node n = new Node();
@@ -69,11 +69,13 @@ public class Bipartite {
 			}
 		}
 		
+		/*
 		Enumeration<String> k = visited.keys();
 		while(k.hasMoreElements()){
 			String key = k.nextElement();
 			Log.d(TAG, key + ": " + visited.get(key));
 		}
+		*/
 		
 		// Comprobando que tanto los vertices del subconjunto A pertenecientes a V, 
 		// como los vertices del subconjunto B pertenecientes a V, son disjuntos
