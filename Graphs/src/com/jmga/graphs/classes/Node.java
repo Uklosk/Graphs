@@ -126,8 +126,12 @@ public class Node extends ShapeDrawable {
 	}
 
 	public void deleteEnlace(String idf){
-		enlaces.remove(idf);
-		
+		for(int i=0;i<enlaces.size();i++){
+			if (enlaces.get(i).getIdf()==idf) {
+				enlaces.remove(i);
+				i=0;
+			}
+		}		
 	}
 
 
