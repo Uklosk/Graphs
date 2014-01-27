@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.jmga.graphs.R;
 import com.jmga.graphs.tools.Bipartite;
 import com.jmga.graphs.tools.Dijkstra;
 import com.jmga.graphs.tools.FlowTable;
@@ -32,7 +33,8 @@ public class GView extends View {
 
 	public boolean isKruskal = false;
 	public boolean isBipartite = false;
-	public boolean printBipatite = false;
+	private boolean checked_kruskal = false;
+	private boolean checked_bipartite = false; 
 	private Hashtable<String,Integer> subSets;
 
 	private int height, width;
@@ -165,9 +167,10 @@ public class GView extends View {
 	}
 	
 	public void bipartite(){
+		boolean printBipatite = false;
 		Bipartite b = new Bipartite(g);
 		try {
-			printBipatite = b.execute();
+			printBipatite = b.execute(true);
 		} catch (Exception e) {
 			printBipatite = false;
 			e.printStackTrace();
@@ -180,13 +183,22 @@ public class GView extends View {
 				g.setColorOfNode(key, (subSets.get(key) == 1)?Color.YELLOW:Color.GREEN);
 			}
 		} else {
-			Toast.makeText(getContext(), "No es grafo bipartito!", Toast.LENGTH_LONG).show();
 			initializingNodesColor();
 		}
+		Log.d("COMPONENTES", "componentes conexas: " + b.getConnectedComponents());
 	}
 	
-	public void offPrintBipartite() {
-		printBipatite = false;
+	public int connectedComponents(){
+		int cc = 0;
+		Bipartite b = new Bipartite(g);
+		try {
+			b.execute(false); 
+			// Con false como parametro, no calcula las adyacencias (Ejecuta 2 bucles menos, ahorra tiempo y memoria)
+			cc = b.getConnectedComponents();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return cc;
 	}
 	
 	public void initializingNodesColor(){
@@ -254,11 +266,10 @@ public class GView extends View {
 		
 		if(g.getNombres().size() > 0 && g.getArrows().size() > 0){
 			isBipartite = true;
-			if(printBipatite)
+			if(checked_bipartite)
 				bipartite();
 		} else{
 			isBipartite = false;
-			printBipatite = false;
 		}
 	}
 
@@ -285,5 +296,10 @@ public class GView extends View {
 		super.onSizeChanged(w, h, oldw, oldh);
 		width = w;
 		height = h;
+	}
+	
+	public void setMenuStateChecked(boolean ck, boolean cb){
+		checked_kruskal = ck;
+		checked_bipartite = cb;
 	}
 }

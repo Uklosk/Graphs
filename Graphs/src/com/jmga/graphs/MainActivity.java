@@ -110,6 +110,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 					break;
 				}
 
+				view.setMenuStateChecked(isKruskal, isBipartite);
 				view.update();
 				view.invalidate();
 
@@ -238,7 +239,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		case R.id.action_bipartit:
 			if (isBipartite) {
 				isBipartite = false;
-				view.offPrintBipartite();
 				view.initializingNodesColor();
 				view.update();
 				view.invalidate();
@@ -281,8 +281,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			return true;
 		case R.id.action_clear:
 			isKruskal = false;
+			view.isKruskal = isKruskal;
 			isBipartite = false;
-			view.offPrintBipartite();
+			view.isBipartite = isBipartite;
 			UpdatingCheckboxMenu();
 			view.initializingNodesColor();
 			view.clear();
