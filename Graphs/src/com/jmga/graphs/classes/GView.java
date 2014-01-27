@@ -166,7 +166,7 @@ public class GView extends View {
 		}
 	}
 	
-	public void Bipartite(){
+	public void bipartite(){
 		Bipartite b = new Bipartite(g);
 		try {
 			printBipatite = b.execute();
@@ -257,7 +257,7 @@ public class GView extends View {
 		if(g.getNombres().size() > 0 && g.getArrows().size() > 0){
 			isBipartite = true;
 			if(printBipatite)
-				Bipartite();
+				bipartite();
 		} else{
 			isBipartite = false;
 			printBipatite = false;
