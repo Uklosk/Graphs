@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.jmga.graphs.tools.Bipartite;
 import com.jmga.graphs.tools.Dijkstra;
 import com.jmga.graphs.tools.FlowTable;
 import com.jmga.graphs.tools.Kruskal;

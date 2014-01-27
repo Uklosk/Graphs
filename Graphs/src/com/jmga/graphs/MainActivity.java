@@ -192,15 +192,20 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 		}
 		stop(TOGGLE_ADD, (MenuItem) menu.findItem(R.id.action_add));
+		
+		UpdatingCheckboxMenu();
+		
+		this.menu = menu;
+		return super.onPrepareOptionsMenu(menu);
+
+	}
+	
+	public void UpdatingCheckboxMenu(){
 		stop(TOGGLE_REMOVE, (MenuItem) menu.findItem(R.id.action_remove));
 		menu.findItem(R.id.action_kruskal).setEnabled(view.isKruskal);
 		menu.findItem(R.id.action_kruskal).setChecked(isKruskal);
 		menu.findItem(R.id.action_bipartit).setEnabled(view.isBipartite);
 		menu.findItem(R.id.action_bipartit).setChecked(isBipartite);
-		
-		this.menu = menu;
-		return super.onPrepareOptionsMenu(menu);
-
 	}
 
 	@Override
@@ -274,6 +279,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			isKruskal = false;
 			isBipartite = false;
 			view.offPrintBipartite();
+			UpdatingCheckboxMenu();
 			view.initializingNodesColor();
 			view.clear();
 			return true;

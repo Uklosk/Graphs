@@ -1,9 +1,13 @@
-package com.jmga.graphs.classes;
+package com.jmga.graphs.tools;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+
+import com.jmga.graphs.classes.Graph;
+import com.jmga.graphs.classes.Link;
+import com.jmga.graphs.classes.Node;
 
 import android.util.Log;
 
@@ -73,7 +77,7 @@ public class Bipartite {
 		
 		// Comprobando que tanto los vertices del subconjunto A pertenecientes a V, 
 		// como los vertices del subconjunto B pertenecientes a V, son disjuntos
-		// en ambos casos
+		// en ambos casos (G=(V,A))
 		Iterator<Node> na_ = A.iterator();
 		while(na_.hasNext()){
 			Node na = na_.next();
