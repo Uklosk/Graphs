@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.DisplayMetrics;
@@ -52,6 +53,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	public int weight = 0;
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
+
+	private static final int REQUEST_PATH = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -221,10 +224,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				return true;
 			}
 			
-			if(view.xmlToGraph(storage, "graph.xml")){
+		/*	if(view.xmlToGraph(storage, "graph.xml")){
 				view.update();
 				view.invalidate();
-			}
+			}*/
+			getfile();
 			
 			return true;
 		case R.id.action_save:
@@ -585,5 +589,22 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	}
 
+	protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        // See which child activity is calling us back.
+        if (requestCode == REQUEST_PATH){
+                if (resultCode == RESULT_OK) {
+                        view.xmlToGraph(data.getStringExtra("GetPath"),"");
+                        view.update();
+                        view.invalidate();
+                        
+                }
+         }
+    }
+  
+  public void getfile(){
+        Intent intent1 = new Intent(this, FileChooser.class);
+        startActivityForResult(intent1,REQUEST_PATH);
+    }
+	
 	
 }

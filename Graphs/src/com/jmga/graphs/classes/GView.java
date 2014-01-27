@@ -54,15 +54,30 @@ public class GView extends View {
 		super(context);
 		density = density_;
 
-		subSets = new Hashtable<String, Integer>();
 		
 		init();	
 	}
+	
+	public GView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		init();
+	}
+
+	public GView(Context context, AttributeSet attrs, int params) {
+		
+		super(context, attrs, params);
+		init();
+	}
+
+
 	
 	private void init() {
 
 		g = new Graph();
 
+		subSets = new Hashtable<String, Integer>();
+
+		
 		paint = new Paint();
 		paint.setStrokeWidth(6f);
 		paint.setStyle(Paint.Style.STROKE);
