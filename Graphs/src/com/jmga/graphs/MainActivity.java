@@ -32,9 +32,9 @@ import com.jmga.graphs.classes.Node;
 import com.jmga.graphs.tools.XMLParser;
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
-	
-	private final static String storage = Environment.getExternalStorageDirectory().toString() 
-			+ "/Graphs";
+
+	private final static String storage = Environment
+			.getExternalStorageDirectory().toString() + "/Graphs";
 
 	GView view;
 	Node nFocused;
@@ -152,9 +152,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 			}
 		});
-		
-		
-		
+
 	}
 
 	@Override
@@ -176,7 +174,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			menu.findItem(R.id.action_remove).setVisible(false);
 			menu.findItem(R.id.action_edit).setVisible(true);
 
-			
 			View v = (View) menu.findItem(R.id.action_edit).getActionView();
 			EditText text = (EditText) v.findViewById(R.id.weightText);
 
@@ -193,7 +190,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				}
 			});
 		} else {
-			
+
 			menu.findItem(R.id.action_add).setVisible(true);
 			menu.findItem(R.id.action_remove).setVisible(true);
 			menu.findItem(R.id.action_edit).setVisible(false);
@@ -201,21 +198,22 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		}
 
 		menu.findItem(R.id.action_kruskal).setEnabled(view.save_graph);
-		
+
 		updatingCheckboxMenu();
-		
+
 		this.menu = menu;
 		return super.onPrepareOptionsMenu(menu);
 
 	}
-	
-	public void updatingCheckboxMenu(){
+
+	public void updatingCheckboxMenu() {
 		stop(TOGGLE_ADD, (MenuItem) menu.findItem(R.id.action_add));
 		stop(TOGGLE_REMOVE, (MenuItem) menu.findItem(R.id.action_remove));
 		menu.findItem(R.id.action_kruskal).setEnabled(view.isKruskal);
 		menu.findItem(R.id.action_kruskal).setChecked(isKruskal);
 		menu.findItem(R.id.action_bipartit).setEnabled(view.isBipartite);
-		menu.findItem(R.id.action_bipartit).setChecked((view.isBipartite)?isBipartite:false);
+		menu.findItem(R.id.action_bipartit).setChecked(
+				(view.isBipartite) ? isBipartite : false);
 	}
 
 	@Override
@@ -223,20 +221,23 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.action_load:
-			if(!isExternalStorageWritable()){
-				Toast toast = Toast.makeText(getBaseContext(), getString(R.string.memory_not_available),Toast.LENGTH_LONG);
+			if (!isExternalStorageWritable()) {
+				Toast toast = Toast.makeText(getBaseContext(),
+						getString(R.string.memory_not_available),
+						Toast.LENGTH_LONG);
 				toast.show();
-				
+
 				return true;
 			}
-			clear();
 			getfile();
-			
+
 			return true;
-			
+
 		case R.id.action_save:
-			if(!isExternalStorageWritable()){
-				Toast toast = Toast.makeText(getBaseContext(), getString(R.string.memory_not_available),Toast.LENGTH_LONG);
+			if (!isExternalStorageWritable()) {
+				Toast toast = Toast.makeText(getBaseContext(),
+						getString(R.string.memory_not_available),
+						Toast.LENGTH_LONG);
 				toast.show();
 				return true;
 			}
@@ -245,25 +246,33 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			AlertDialog.Builder builder_ = new AlertDialog.Builder(this);
 			builder_.setTitle(R.string.file_titlesave);
 			builder_.setView(dialogView);
-			builder_.setPositiveButton(R.string.file_save, new DialogInterface.OnClickListener() {
-				 public void onClick(DialogInterface dialog, int id) {
-		               	EditText txtTexto = (EditText)dialogView.findViewById(R.id.text_filename);
-		               	String file_name = txtTexto.getText().toString();
-		                if(view.graphToXML(storage, file_name)){
-		               	 	Toast.makeText(getApplicationContext(), "Guardado con éxito!", Toast.LENGTH_LONG).show();
-		                	dialog.dismiss();
-		                }else
-		                	Toast.makeText(getApplicationContext(), "No ha podido guardarse, inténtelo de nuevo.", Toast.LENGTH_LONG).show();
-		         }
-            });
-            builder_.setNegativeButton(R.string.file_cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.cancel();
-                }
-            });
+			builder_.setPositiveButton(R.string.file_save,
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							EditText txtTexto = (EditText) dialogView
+									.findViewById(R.id.text_filename);
+							String file_name = txtTexto.getText().toString();
+							if (view.graphToXML(storage, file_name)) {
+								Toast.makeText(getApplicationContext(),
+										"Guardado con éxito!",
+										Toast.LENGTH_LONG).show();
+								dialog.dismiss();
+							} else
+								Toast.makeText(
+										getApplicationContext(),
+										"No ha podido guardarse, inténtelo de nuevo.",
+										Toast.LENGTH_LONG).show();
+						}
+					});
+			builder_.setNegativeButton(R.string.file_cancel,
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
 			AlertDialog dialog = builder_.create();
 			dialog.show();
-			
+
 			return true;
 
 		case R.id.action_bipartit:
@@ -277,7 +286,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				view.invalidate();
 			}
 			return true;
-		
+
 		case R.id.action_kruskal:
 			if (isKruskal) {
 				isKruskal = false;
@@ -290,19 +299,19 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			view.update();
 			view.invalidate();
 			return true;
-			
+
 		case R.id.action_distance_table:
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle("Tabla de distancias");
 			builder.setView(view.dijkstra(getApplicationContext()));
 			AlertDialog dialog_ = builder.create();
 			dialog_.show();
-			
+
 			return true;
 		case R.id.action_clear:
 			clear();
 			return true;
-			
+
 		case R.id.action_settings:
 			return true;
 
@@ -314,7 +323,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		case R.id.action_add:
 			toggle(TOGGLE_ADD, item);
 			stop(TOGGLE_REMOVE, (MenuItem) menu.findItem(R.id.action_remove));
-			
+
 			return true;
 
 		default:
@@ -322,7 +331,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		}
 	}
 
-	public void clear(){
+	public void clear() {
 		isKruskal = false;
 		view.isKruskal = isKruskal;
 		isBipartite = false;
@@ -331,7 +340,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		view.initializingNodesColor();
 		view.clear();
 	}
-	
+
 	public class CustomEditProvider extends ActionProvider {
 		public int weight = 0;
 		private EditText text;
@@ -564,13 +573,13 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	/* Checks if external storage is available for read and write */
 	public boolean isExternalStorageWritable() {
-	    String state = Environment.getExternalStorageState();
-	    if (Environment.MEDIA_MOUNTED.equals(state)) {
-	        return true;
-	    }
-	    return false;
+		String state = Environment.getExternalStorageState();
+		if (Environment.MEDIA_MOUNTED.equals(state)) {
+			return true;
+		}
+		return false;
 	}
-	
+
 	public void toggle(int toggle, MenuItem item) {
 		switch (toggle) {
 		case TOGGLE_ADD:
@@ -610,22 +619,23 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	}
 
-	protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        // See which child activity is calling us back.
-        if (requestCode == REQUEST_PATH){
-                if (resultCode == RESULT_OK) {
-                        view.xmlToGraph(data.getStringExtra("GetPath"),"");
-                        view.update();
-                        view.invalidate();
-                        
-                }
-         }
-    }
-  
-  public void getfile(){
-        Intent intent1 = new Intent(this, FileChooser.class);
-        startActivityForResult(intent1,REQUEST_PATH);
-    }
-	
-	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// See which child activity is calling us back.
+		if (requestCode == REQUEST_PATH) {
+			if (resultCode == RESULT_OK) {
+				clear();
+
+				view.xmlToGraph(data.getStringExtra("GetPath"), "");
+				view.update();
+				view.invalidate();
+
+			}
+		}
+	}
+
+	public void getfile() {
+		Intent intent1 = new Intent(this, FileChooser.class);
+		startActivityForResult(intent1, REQUEST_PATH);
+	}
+
 }
