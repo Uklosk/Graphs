@@ -33,6 +33,7 @@ public class GView extends View {
 
 
 	public boolean save_graph = false;
+	public boolean info_table = false;
 	
 	public boolean isKruskal = false;
 	public boolean isBipartite = false;
@@ -47,7 +48,6 @@ public class GView extends View {
 
 	public GView(Context context) {
 		super(context);
-
 		init();
 	}
 
@@ -286,17 +286,19 @@ public class GView extends View {
 	}
 
 	public void setPosition(int x, int y, Node n) {
-		// TODO Auto-generated method stub
 		n.setPos(x, y);
 	}
 
 	public void update() {
 		g.update();
 		
-		if(g.getNombres().size() > 0)
+		if(g.getNombres().size() > 0){
 			save_graph = true;
-		else
+			info_table = true;
+		}else{
 			save_graph = false;
+			info_table = false;
+		}
 		
 		if (g.getArrows().size() >= g.getNombres().size() - 1
 				&& g.getNombres().size() > 0 && g.getArrows().size() > 0) {

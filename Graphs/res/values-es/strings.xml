@@ -9,6 +9,7 @@
     <string name="action_remove">Eliminar</string>
     <string name="action_kruskal">Árbol recubridor mínimo</string>
     <string name="action_bipartite">Ver bipartición</string>
+    <string name="action_tableinfo">Información general</string>
     <string name="action_clear">Limpiar</string>
     <string name="memory_not_available">No se puede acceder a la memoria</string>
     <string name="action_distance_table">Ver tabla de distancias</string>
@@ -17,5 +18,12 @@
     <string name="file_extension">.xml</string>
     <string name="file_save">Guardar</string>
     <string name="file_cancel">Cancelar</string>
+    <string name="text_vertex">Vertices:</string>
+    <string name="text_edges">Aristas:</string>
+    <string name="text_components">Componentes conexas:</string>
+    <string name="text_bipartite">Bipartito:</string>
+    <string name="text_sumofdistances">Suma de pesos:</string>
+    <string name="text_regular">Regular:</string>
+    <string name="text_secuence">Secuencia de grados:</string>
 
 </resources>

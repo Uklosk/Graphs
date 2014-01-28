@@ -148,7 +148,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 					break;
 
 				}
-				// TODO Auto-generated method stub
 
 			}
 		});
@@ -197,16 +196,17 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 		}
 
-		menu.findItem(R.id.action_add).setEnabled(view.save_graph);
-
-		updatingCheckboxMenu();
+		updatingMenu();
 
 		this.menu = menu;
 		return super.onPrepareOptionsMenu(menu);
 
 	}
 
-	public void updatingCheckboxMenu() {
+	public void updatingMenu() {
+		menu.findItem(R.id.action_add).setEnabled(view.save_graph);
+		menu.findItem(R.id.action_add).setEnabled(view.info_table);
+		
 		stop(TOGGLE_ADD, (MenuItem) menu.findItem(R.id.action_add));
 		stop(TOGGLE_REMOVE, (MenuItem) menu.findItem(R.id.action_remove));
 		menu.findItem(R.id.action_kruskal).setEnabled(view.isKruskal);
@@ -269,8 +269,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 							dialog.cancel();
 						}
 					});
-			AlertDialog dialog = builder_.create();
-			dialog.show();
+			AlertDialog dialog_ = builder_.create();
+			dialog_.show();
 
 			return true;
 
@@ -303,10 +303,21 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle("Tabla de distancias");
 			builder.setView(view.dijkstra(getApplicationContext()));
-			AlertDialog dialog_ = builder.create();
-			dialog_.show();
+			AlertDialog dialog = builder.create();
+			dialog.show();
 
 			return true;
+
+		case R.id.action_tableinfo:
+			LayoutInflater factory_ = LayoutInflater.from(this);
+			final View dialogView_ = factory_.inflate(R.layout.information_graph, null);
+			AlertDialog.Builder builder__ = new AlertDialog.Builder(this);
+			builder__.setTitle(R.string.action_tableinfo);
+			builder__.setView(dialogView_);
+			AlertDialog dialog__ = builder__.create();
+			dialog__.show();
+			return true;
+			
 		case R.id.action_clear:
 			clear();
 			return true;
@@ -335,7 +346,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		view.isKruskal = isKruskal;
 		isBipartite = false;
 		view.isBipartite = isBipartite;
-		updatingCheckboxMenu();
+		updatingMenu();
 		view.initializingNodesColor();
 		view.clear();
 	}

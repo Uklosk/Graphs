@@ -4,5 +4,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="save_file">25dp</dimen>
+    <dimen name="info_table">12dp</dimen>
+    <dimen name="info_table_padding">2dp</dimen>
 
 </resources>

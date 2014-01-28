@@ -58,6 +58,12 @@
         android:title="@string/action_distance_table"/>
     
     <item
+        android:id="@+id/action_tableinfo"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_tableinfo"/>
+    
+    <item
         android:id="@+id/action_clear"
         android:orderInCategory="100"
         android:showAsAction="never"
