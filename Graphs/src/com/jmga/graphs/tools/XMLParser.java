@@ -99,15 +99,16 @@ public class XMLParser {
 					for(int i = 0; i < xml.getAttributeCount(); i++)
 						if(xml.getName().equals( tag_control ))
 							if(xml.getAttributeName(i).equals("name"))
-								if(xml.getAttributeValue(i).equals( name_apk ))
+								if(xml.getAttributeValue(i).equals( name_apk )){
+									fis.close();
 									return true;
-								else 
+								}else 
 									return false;
 							else
 								return false;
 				} else 
 					return false;
-			
+			fis.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
