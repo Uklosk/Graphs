@@ -61,6 +61,7 @@ public class FileArrayAdapter extends ArrayAdapter<Item> {
 			GView view = (GView) v.findViewById(R.id.fd_Icon2);
 
 			if (o.getDir()) {
+				
 				String uri = "drawable/ic_action_storage";
 				int imageResource = c.getResources().getIdentifier(uri, null,
 						c.getPackageName());
@@ -70,11 +71,10 @@ public class FileArrayAdapter extends ArrayAdapter<Item> {
 
 			} else {
 
-				view.xmlToGraph(o.getPath(), "");
-				view.invalidate();
+				/*view.xmlToGraph(o.getPath(), "");
+				view.invalidate();*/
 				o.setIsGraph(view.isXMLGraph(o.getPath()));
 				imageCity.setVisibility(View.GONE);
-
 
 			}
 

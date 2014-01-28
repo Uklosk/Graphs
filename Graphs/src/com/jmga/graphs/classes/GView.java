@@ -48,7 +48,6 @@ public class GView extends View {
 	public GView(Context context) {
 		super(context);
 
-
 		init();
 	}
 
@@ -61,12 +60,13 @@ public class GView extends View {
 
 	public GView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		
 		init();
 	}
 
 	public GView(Context context, AttributeSet attrs, int params) {
-
 		super(context, attrs, params);
+		
 		init();
 	}
 

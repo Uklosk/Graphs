@@ -86,6 +86,8 @@ public class XMLParser {
 	}
 	
 	public boolean isGraph(String file_path){
+		Log.d(TAG,"File path: " + file_path);
+		
 		boolean task = false;
 		FileInputStream fis = null;
 		XmlPullParser xml = Xml.newPullParser();
