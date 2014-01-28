@@ -51,7 +51,7 @@ public class FileArrayAdapter extends ArrayAdapter<Item> {
 		final Item o = items.get(position);
 		if (o != null) {
 
-			Log.d("isgraph", "dentro de FileArrayAdapter");
+			// Log.d("POKEMON",extension);
 
 			TextView t1 = (TextView) v.findViewById(R.id.TextView01);
 			TextView t2 = (TextView) v.findViewById(R.id.TextView02);
@@ -71,9 +71,8 @@ public class FileArrayAdapter extends ArrayAdapter<Item> {
 
 			} else {
 
-				view.xmlToGraph(o.getPath(), "");
-				view.invalidate();
-				Log.d("isgraph", "EEEOOO");
+				/*view.xmlToGraph(o.getPath(), "");
+				view.invalidate();*/
 				o.setIsGraph(view.isXMLGraph(o.getPath()));
 				imageCity.setVisibility(View.GONE);
 
