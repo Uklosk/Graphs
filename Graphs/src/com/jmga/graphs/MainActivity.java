@@ -246,14 +246,15 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			builder_.setTitle(R.string.file_titlesave);
 			builder_.setView(dialogView);
 			builder_.setPositiveButton(R.string.file_save, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-        			LayoutInflater factory = LayoutInflater.from(getApplicationContext());
-        			final View dialogView = factory.inflate(R.layout.save_dialog, null);
-                	EditText txtTexto = (EditText)dialogView.findViewById(R.id.text_filename);
-                	String file_name = txtTexto.getText().toString();
-                	if(view.graphToXML(storage, "file_name"))
-                		dialog.dismiss();
-                }
+				 public void onClick(DialogInterface dialog, int id) {
+		               	EditText txtTexto = (EditText)dialogView.findViewById(R.id.text_filename);
+		               	String file_name = txtTexto.getText().toString();
+		                if(view.graphToXML(storage, file_name)){
+		               	 	Toast.makeText(getApplicationContext(), "Guardado con éxito!", Toast.LENGTH_LONG).show();
+		                	dialog.dismiss();
+		                }else
+		                	Toast.makeText(getApplicationContext(), "No ha podido guardarse, inténtelo de nuevo.", Toast.LENGTH_LONG).show();
+		         }
             });
             builder_.setNegativeButton(R.string.file_cancel, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
