@@ -244,12 +244,10 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			if (isBipartite) {
 				isBipartite = false;
 				view.initializingNodesColor();
-				view.update();
 				view.invalidate();
 			} else {
 				isBipartite = true;
 				view.bipartite();
-				view.update();
 				view.invalidate();
 			}
 			return true;
