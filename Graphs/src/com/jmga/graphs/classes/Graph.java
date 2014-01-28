@@ -120,9 +120,9 @@ public class Graph implements Cloneable {
 				deleteLink(name, a.getIdf());
 
 				i = 0;
-			}
+			}else
 			if (a.getIdf().equals(name)) {
-				deleteLink(name, a.getIdi());
+				deleteLink(a.getIdi(),name);
 
 				i = 0;
 			}
