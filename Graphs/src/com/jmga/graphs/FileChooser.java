@@ -54,10 +54,13 @@ public class FileChooser extends ListActivity {
 
 					// String formated = lastModDate.toString();
 					dir.add(new Item(ff.getName(), num_item, date_modify, ff
-							.getAbsolutePath(), "directory_icon"));
+							.getAbsolutePath(), true));
 				} else {
-					fls.add(new Item(ff.getName(), ff.length() + " Byte",
-							date_modify, ff.getAbsolutePath(), "file_icon"));
+					Item it= new Item(ff.getName(), ff.length() + " Byte",
+							date_modify, ff.getAbsolutePath(), false);
+					if(it.getIsGraph()){
+						fls.add(it);
+					}		
 				}
 			}
 		} catch (Exception e) {
@@ -68,7 +71,7 @@ public class FileChooser extends ListActivity {
 		dir.addAll(fls);
 		if (!f.getName().equalsIgnoreCase("sdcard"))
 			dir.add(0, new Item("..", "Parent Directory", "", f.getParent(),
-					"directory_up"));
+					true));
 		adapter = new FileArrayAdapter(FileChooser.this, R.layout.file_view,
 				dir);
 		this.setListAdapter(adapter);
@@ -79,8 +82,7 @@ public class FileChooser extends ListActivity {
 		// TODO Auto-generated method stub
 		super.onListItemClick(l, v, position, id);
 		Item o = adapter.getItem(position);
-		if (o.getImage().equalsIgnoreCase("directory_icon")
-				|| o.getImage().equalsIgnoreCase("directory_up")) {
+		if (o.getDir()) {
 			currentDir = new File(o.getPath());
 			fill(currentDir);
 		} else {
