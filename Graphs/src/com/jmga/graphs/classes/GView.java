@@ -244,6 +244,8 @@ public class GView extends View {
 
 	public void deleteArrow(Node n1, Node n2) {
 		g.deleteLink(n1.getId(), n2.getId());
+		g.deleteLink(n2.getId(), n1.getId());
+
 	}
 
 	public void changeWeight(Node n1, Node n2, int weight) {

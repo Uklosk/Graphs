@@ -116,18 +116,14 @@ public class Graph implements Cloneable {
 	public void deleteNode(String name) {
 		for (int i = 0; i < arrows.size(); i++) {
 			Arrow a = arrows.get(i);
-			if (a.getIdi().equals(name)) {
-				deleteLink(name, a.getIdf());
-
-				i = 0;
-			}
-			if (a.getIdf().equals(name)) {
-				deleteLink(a.getIdi(),name);
-
+			if (a.getIdi().equals(name) || a.getIdf().equals(name) || a.getIdi() == null
+					|| a.getIdi() == null) {
+				deleteLink(a.getIdi(), a.getIdf());
+				deleteLink(a.getIdf(),a.getIdi());
+			//	arrows.remove(i);
 				i = 0;
 			}
 		}
-
 		for (int i = 0; i < nombres.size(); i++) {
 			if (nombres.get(i).equals(name)) {
 				nombres.remove(i);
@@ -135,7 +131,6 @@ public class Graph implements Cloneable {
 			}
 		}
 		Node n = new Node(0, 0, "nulo");
-
 		vertex.put(name, n);
 		nombres.remove("nulo");
 	}
