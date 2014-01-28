@@ -16,5 +16,6 @@
     <string name="file_hint">Grafo</string>
     <string name="file_extension">.xml</string>
     <string name="file_save">Guardar</string>
+    <string name="file_cancel">Cancelar</string>
 
 </resources>

@@ -28,6 +28,9 @@ public class XMLParser {
 	private String storage_path;
 	private String current_xml;
 	
+	private static final String tag_control = "apk";
+	private static final String name_apk = "Graphs.apk";
+	
 	private int[] displacement; /* [0]:x [1]:y */
 	private float density;
 	
@@ -83,9 +86,7 @@ public class XMLParser {
 	}
 	
 	public boolean isGraph(String file_path){
-		String tag_control = "apk";
-		String name_apk = "Graphs.apk";
-		
+		boolean task = false;
 		FileInputStream fis = null;
 		XmlPullParser xml = Xml.newPullParser();
 
@@ -94,86 +95,80 @@ public class XMLParser {
 			xml.setInput(fis, "UTF-8");
 			
 			int event = xml.next();
-			while(event != XmlPullParser.END_DOCUMENT)
+			while(event != XmlPullParser.END_DOCUMENT){
 				if(event == XmlPullParser.START_TAG){
-					for(int i = 0; i < xml.getAttributeCount(); i++)
-						if(xml.getName().equals( tag_control ))
-							if(xml.getAttributeName(i).equals("name"))
-								if(xml.getAttributeValue(i).equals( name_apk )){
-									fis.close();
-									return true;
-								}else 
-									return false;
-							else
-								return false;
-				} else 
-					return false;
+					if(xml.getName().equals( tag_control ))
+						if(xml.getAttributeName(0).equals("name"))
+							if(xml.getAttributeValue(0).equals( name_apk )){
+								fis.close();
+								return true;
+							}
+				}
+				event = xml.next();
+			}
 			fis.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		return false;
+		return task;
 	}
 	
-	public void saveGraph(Graph g, String name){
+	public void saveGraph(Graph g, String name) throws Exception{
+		Log.d(TAG,"File name: " + name);
 		Hashtable<String, Node> v = new Hashtable<String, Node>();
 		ArrayList<Arrow> a = new ArrayList<Arrow>();
 		
-		File file = new File(storage_path, name + ".xml");
+		v = g.getVertex();
+		a = g.getArrows();
+		
+		File file = new File(storage_path, name);
 		FileOutputStream fout = null;
-		try {
-			fout = new FileOutputStream(file, false);
-	    } catch (FileNotFoundException e) {
-	    	e.printStackTrace();
-	    }
+		fout = new FileOutputStream(file, false);
 		XmlSerializer serializer = Xml.newSerializer();
 		
-	    try {
-			serializer.setOutput(fout, "UTF-8");
-		    serializer.startDocument(null, true);
-		    serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
-		    
-			serializer.startTag(null, "graph");
-			serializer.attribute(null, "v", Integer.toString(v.size()));
-			serializer.attribute(null, "a", Integer.toString(a.size()));
-			
-			String[] keys = (String[]) data.keySet().toArray(new String[0]);  
-	        Arrays.sort(keys);  
-	        
-	        for(String key : keys){
-	        	Node v_ = (Node)v.get(key);
-				serializer.startTag(null, "vertex");
-				serializer.attribute(null, "id", key+"");
-				serializer.attribute(null, "x", Double.toString(v_.getCenterX()));
-				serializer.attribute(null, "y", Double.toString(v_.getCenterY()));
-				serializer.attribute(null, "r", Double.toString(v_.getRadius()));
-				String adjacent = "";
-				ArrayList<Link> links = v_.getEnlaces();
-				Iterator<Link> ln = links.iterator();
-				while(ln.hasNext()){
-					Link l = (Link)ln.next();
-					adjacent += l.getIdf() + ",";
-				}
-				if(adjacent.length() > 0)
-					adjacent = adjacent.substring(0, adjacent.lastIndexOf(","));serializer.attribute(null, "adjacent", adjacent);
-				serializer.endTag(null, "vertex");
-				adjacent = "";
-	        }
+		serializer.setOutput(fout, "UTF-8");
+	    serializer.startDocument(null, true);
+	    serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
 
-			serializer.endTag(null, "graph");
-			
-			serializer.endDocument();
-			serializer.flush();
+		// Control tag
+		serializer.startTag(null, tag_control);
+		serializer.attribute(null, "name", name_apk);
+		serializer.endTag(null, tag_control);
+	    
+		serializer.startTag(null, "graph");
+		serializer.attribute(null, "v", Integer.toString(v.size()));
+		serializer.attribute(null, "a", Integer.toString(a.size()));
+		
+		String[] keys = g.getNombres().toArray(new String[0]); 
+        Arrays.sort(keys);  		
+        for(String key : keys){
+        	Node v_ = new Node();
+        	v_ = (Node)v.get(key);
+			serializer.startTag(null, "vertex");
+			serializer.attribute(null, "id", key);
+			serializer.attribute(null, "x", Integer.toString(v_.getCenterX()));
+			serializer.attribute(null, "y", Integer.toString(v_.getCenterY()));
+			serializer.attribute(null, "r", Integer.toString(v_.getRadius()));
+			String adjacent = "";
+			ArrayList<Link> links = v_.getEnlaces();
+			Iterator<Link> ln = links.iterator();
+			while(ln.hasNext()){
+				Link l = (Link)ln.next();
+				adjacent += l.getIdf() + ",";
+			}
+			if(adjacent.length() > 0)
+				adjacent = adjacent.substring(0, adjacent.lastIndexOf(","));serializer.attribute(null, "adjacent", adjacent);
+			serializer.endTag(null, "vertex");
+			adjacent = "";
+        }
+
+		serializer.endTag(null, "graph");
+		
+		serializer.endDocument();
+		serializer.flush();
 			fout.close();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		
 	}
 	

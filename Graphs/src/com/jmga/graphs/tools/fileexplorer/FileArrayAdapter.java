@@ -72,7 +72,7 @@ public class FileArrayAdapter extends ArrayAdapter<Item> {
 
 				view.xmlToGraph(o.getPath(), "");
 				view.invalidate();
-				o.setIsGraph(view.isGraph(o.getPath(), ""));
+				o.setIsGraph(view.isXMLGraph(o.getPath()));
 				imageCity.setVisibility(View.GONE);
 
 

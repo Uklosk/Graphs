@@ -15,5 +15,6 @@
     <string name="file_hint">Graph</string>
     <string name="file_extension">.xml</string>
     <string name="file_save">Save</string>
+    <string name="file_cancel">Cancel</string>
 
 </resources>

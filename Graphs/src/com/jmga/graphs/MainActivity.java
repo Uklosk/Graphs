@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 
 import com.jmga.graphs.classes.GView;
 import com.jmga.graphs.classes.Node;
+import com.jmga.graphs.tools.XMLParser;
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
 	
@@ -197,6 +199,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			menu.findItem(R.id.action_edit).setVisible(false);
 
 		}
+
+		menu.findItem(R.id.action_kruskal).setEnabled(view.save_graph);
 		
 		updatingCheckboxMenu();
 		
@@ -226,10 +230,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				return true;
 			}
 			
-		/*	if(view.xmlToGraph(storage, "graph.xml")){
-				view.update();
-				view.invalidate();
-			}*/
 			getfile();
 			
 			return true;
@@ -244,6 +244,21 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			AlertDialog.Builder builder_ = new AlertDialog.Builder(this);
 			builder_.setTitle(R.string.file_titlesave);
 			builder_.setView(dialogView);
+			builder_.setPositiveButton(R.string.file_save, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+        			LayoutInflater factory = LayoutInflater.from(getApplicationContext());
+        			final View dialogView = factory.inflate(R.layout.save_dialog, null);
+                	EditText txtTexto = (EditText)dialogView.findViewById(R.id.text_filename);
+                	String file_name = txtTexto.getText().toString();
+                	if(view.graphToXML(storage, "file_name"))
+                		dialog.dismiss();
+                }
+            });
+            builder_.setNegativeButton(R.string.file_cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
 			AlertDialog dialog = builder_.create();
 			dialog.show();
 			

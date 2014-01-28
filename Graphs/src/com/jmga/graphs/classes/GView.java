@@ -31,6 +31,9 @@ public class GView extends View {
 	private Paint fontPaint;
 	private Path path;
 
+
+	public boolean save_graph = false;
+	
 	public boolean isKruskal = false;
 	public boolean isBipartite = false;
 	private boolean checked_kruskal = false;
@@ -91,6 +94,25 @@ public class GView extends View {
 		fontPaint.setTextSize(20);
 
 	}
+
+	public boolean graphToXML(String storage, String file_name){
+		boolean task = false;
+		g.update();
+        XMLParser p = new XMLParser(storage);
+        try {
+			p.saveGraph(g, "/" + file_name + ".xml");
+			task = true;
+		} catch (Exception e) {
+			task = false;
+			e.printStackTrace();
+		}
+        return task;
+	}
+	
+	public boolean isXMLGraph(String complete_path){
+		XMLParser p = new XMLParser();
+		return p.isGraph(complete_path);
+	}
 	
 	public boolean xmlToGraph(String storage, String xml) {
 		boolean task = true;
@@ -104,10 +126,7 @@ public class GView extends View {
 		}
 		return task;
 	}
-	public boolean isGraph(String storage, String xml){
-		XMLParser xmlp = new XMLParser(storage,xml);
-		return xmlp.isGraph(storage);
-	}
+
 	@SuppressLint("DrawAllocation")
 	@Override
 	public void onDraw(Canvas canvas) {
@@ -247,8 +266,6 @@ public class GView extends View {
 
 	public void deleteArrow(Node n1, Node n2) {
 		g.deleteLink(n1.getId(), n2.getId());
-		g.deleteLink(n2.getId(), n1.getId());
-
 	}
 
 	public void changeWeight(Node n1, Node n2, int weight) {
@@ -275,6 +292,12 @@ public class GView extends View {
 
 	public void update() {
 		g.update();
+		
+		if(g.getNombres().size() > 0)
+			save_graph = true;
+		else
+			save_graph = false;
+		
 		if (g.getArrows().size() >= g.getNombres().size() - 1
 				&& g.getNombres().size() > 0 && g.getArrows().size() > 0) {
 
@@ -293,6 +316,7 @@ public class GView extends View {
 		} else {
 			isBipartite = false;
 		}
+		
 		invalidate();
 	}
 
