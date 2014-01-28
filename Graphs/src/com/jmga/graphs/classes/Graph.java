@@ -5,6 +5,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import android.graphics.Color;
+import android.util.Log;
 
 public class Graph implements Cloneable {
 	private final String[] ids = { "A", "B", "C", "D", "E", "F", "G", "H", "I",
@@ -94,15 +95,15 @@ public class Graph implements Cloneable {
 		return n;
 
 	}
-	
-	public void colorRestorationNodes(){
+
+	public void colorRestorationNodes() {
 		Enumeration<Node> nodes = vertex.elements();
-		while(nodes.hasMoreElements())
-			((Node)(nodes.nextElement())).setColor(Color.BLACK);
+		while (nodes.hasMoreElements())
+			((Node) (nodes.nextElement())).setColor(Color.BLACK);
 	}
-	
-	public void setColorOfNode(String id, int color){
-		((Node)vertex.get(id)).setColor(color);
+
+	public void setColorOfNode(String id, int color) {
+		((Node) vertex.get(id)).setColor(color);
 	}
 
 	public void addNode(String string) {
@@ -115,12 +116,18 @@ public class Graph implements Cloneable {
 	public void deleteNode(String name) {
 		for (int i = 0; i < arrows.size(); i++) {
 			Arrow a = arrows.get(i);
-			if (a.getIdi().equals(name) || a.getIdf().equals(name) || a.getIdi() == null
-					|| a.getIdf() == null) {
-				arrows.remove(i);
+			if (a.getIdi().equals(name)) {
+				deleteLink(name, a.getIdf());
+
+				i = 0;
+			}
+			if (a.getIdf().equals(name)) {
+				deleteLink(name, a.getIdi());
+
 				i = 0;
 			}
 		}
+
 		for (int i = 0; i < nombres.size(); i++) {
 			if (nombres.get(i).equals(name)) {
 				nombres.remove(i);
@@ -274,6 +281,15 @@ public class Graph implements Cloneable {
 					iN.getCenterY() };
 			arrows.get(i).stop = new float[] { iF.getCenterX(), iF.getCenterY() };
 
+		}
+		for (Arrow aul : arrows) {
+			Log.d("digimon", " Arista " + aul.getIdi() + "--" + aul.getIdf());
+		}
+		for (String naul : nombres) {
+			for (int i = 0; i < vertex.get(naul).getEnlaces().size(); i++)
+				Log.d("digimon",
+						" Nodo " + naul + " enlace con "
+								+ vertex.get(naul).getEnlaces().get(i).getIdf());
 		}
 	}
 
