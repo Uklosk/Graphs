@@ -35,7 +35,11 @@ public class FileArrayAdapter extends ArrayAdapter<Item> {
 	public Item getItem(int i) {
 		return items.get(i);
 	}
+	public List<Item> getItems(){
+		return items;
+	}
 
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;
@@ -71,10 +75,9 @@ public class FileArrayAdapter extends ArrayAdapter<Item> {
 
 			} else {
 
-				/*view.xmlToGraph(o.getPath(), "");
-				view.invalidate();*/
-				o.setIsGraph(view.isXMLGraph(o.getPath()));
+				view.xmlToGraph(o.getPath(), "");
 				imageCity.setVisibility(View.GONE);
+				view.invalidate();
 
 			}
 

@@ -229,7 +229,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				
 				return true;
 			}
-			
+			clear();
 			getfile();
 			
 			return true;
@@ -300,13 +300,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			
 			return true;
 		case R.id.action_clear:
-			isKruskal = false;
-			view.isKruskal = isKruskal;
-			isBipartite = false;
-			view.isBipartite = isBipartite;
-			updatingCheckboxMenu();
-			view.initializingNodesColor();
-			view.clear();
+			clear();
 			return true;
 			
 		case R.id.action_settings:
@@ -328,6 +322,16 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		}
 	}
 
+	public void clear(){
+		isKruskal = false;
+		view.isKruskal = isKruskal;
+		isBipartite = false;
+		view.isBipartite = isBipartite;
+		updatingCheckboxMenu();
+		view.initializingNodesColor();
+		view.clear();
+	}
+	
 	public class CustomEditProvider extends ActionProvider {
 		public int weight = 0;
 		private EditText text;

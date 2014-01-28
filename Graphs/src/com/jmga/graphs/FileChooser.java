@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.jmga.graphs.tools.XMLParser;
 import com.jmga.graphs.tools.fileexplorer.FileArrayAdapter;
 import com.jmga.graphs.tools.fileexplorer.Item;
 
@@ -58,9 +59,11 @@ public class FileChooser extends ListActivity {
 				} else {
 					Item it= new Item(ff.getName(), ff.length() + " Byte",
 							date_modify, ff.getAbsolutePath(), false);
-					if(it.getIsGraph()){
+					XMLParser xmlp = new XMLParser();
+					it.setIsGraph(xmlp.isGraph(it.getPath()));
+					if(it.getIsGraph())
 						fls.add(it);
-					}		
+							
 				}
 			}
 		} catch (Exception e) {
