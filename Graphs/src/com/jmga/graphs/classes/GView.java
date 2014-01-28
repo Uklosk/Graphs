@@ -104,7 +104,10 @@ public class GView extends View {
 		}
 		return task;
 	}
-
+	public boolean isGraph(String storage, String xml){
+		XMLParser xmlp = new XMLParser(storage,xml);
+		return xmlp.isGraph(storage);
+	}
 	@SuppressLint("DrawAllocation")
 	@Override
 	public void onDraw(Canvas canvas) {
