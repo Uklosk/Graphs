@@ -196,20 +196,20 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 		}
 		
-		UpdatingCheckboxMenu();
+		updatingCheckboxMenu();
 		
 		this.menu = menu;
 		return super.onPrepareOptionsMenu(menu);
 
 	}
 	
-	public void UpdatingCheckboxMenu(){
+	public void updatingCheckboxMenu(){
 		stop(TOGGLE_ADD, (MenuItem) menu.findItem(R.id.action_add));
 		stop(TOGGLE_REMOVE, (MenuItem) menu.findItem(R.id.action_remove));
 		menu.findItem(R.id.action_kruskal).setEnabled(view.isKruskal);
 		menu.findItem(R.id.action_kruskal).setChecked(isKruskal);
 		menu.findItem(R.id.action_bipartit).setEnabled(view.isBipartite);
-		menu.findItem(R.id.action_bipartit).setChecked(isBipartite);
+		menu.findItem(R.id.action_bipartit).setChecked((view.isBipartite)?isBipartite:false);
 	}
 
 	@Override
@@ -237,6 +237,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				toast.show();
 				return true;
 			}
+			AlertDialog.Builder builder_ = new AlertDialog.Builder(this);
+			builder_.setTitle(R.string.file_titlesave);
+			//builder_.setView();
+			AlertDialog dialog = builder_.create();
+			dialog.show();
 			
 			return true;
 
@@ -266,19 +271,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			return true;
 			
 		case R.id.action_distance_table:
-			// 1. Instantiate an AlertDialog.Builder with its constructor
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-			// 2. Chain together various setter methods to set the dialog characteristics
-			//builder.setTitle(R.string.dialog_title);
 			builder.setTitle("Tabla de distancias");
-			
 			builder.setView(view.dijkstra(getApplicationContext()));
-			
-			// 3. Get the AlertDialog from create()
-			AlertDialog dialog = builder.create();
-			
-			dialog.show();
+			AlertDialog dialog_ = builder.create();
+			dialog_.show();
 			
 			return true;
 		case R.id.action_clear:
@@ -286,7 +283,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			view.isKruskal = isKruskal;
 			isBipartite = false;
 			view.isBipartite = isBipartite;
-			UpdatingCheckboxMenu();
+			updatingCheckboxMenu();
 			view.initializingNodesColor();
 			view.clear();
 			return true;
