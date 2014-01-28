@@ -233,6 +233,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			getfile();
 			
 			return true;
+			
 		case R.id.action_save:
 			if(!isExternalStorageWritable()){
 				Toast toast = Toast.makeText(getBaseContext(), getString(R.string.memory_not_available),Toast.LENGTH_LONG);
