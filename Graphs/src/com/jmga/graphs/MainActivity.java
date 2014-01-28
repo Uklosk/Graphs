@@ -197,7 +197,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 		}
 
-		menu.findItem(R.id.action_kruskal).setEnabled(view.save_graph);
+		menu.findItem(R.id.action_add).setEnabled(view.save_graph);
 
 		updatingCheckboxMenu();
 
@@ -212,8 +212,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		menu.findItem(R.id.action_kruskal).setEnabled(view.isKruskal);
 		menu.findItem(R.id.action_kruskal).setChecked(isKruskal);
 		menu.findItem(R.id.action_bipartit).setEnabled(view.isBipartite);
-		menu.findItem(R.id.action_bipartit).setChecked(
-				(view.isBipartite) ? isBipartite : false);
+		menu.findItem(R.id.action_bipartit).setChecked((view.isBipartite) ? isBipartite : false);
 	}
 
 	@Override
