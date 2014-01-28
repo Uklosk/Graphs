@@ -82,7 +82,7 @@ public class XMLParser {
 		density = d;
 	}
 	
-	public boolean isGraph(String file){
+	public boolean isGraph(String file_path){
 		String tag_control = "apk";
 		String name_apk = "Graphs.apk";
 		
@@ -90,7 +90,7 @@ public class XMLParser {
 		XmlPullParser xml = Xml.newPullParser();
 
 		try {
-			fis = new FileInputStream(storage_path + current_xml);
+			fis = new FileInputStream(file_path);
 			xml.setInput(fis, "UTF-8");
 			
 			int event = xml.next();

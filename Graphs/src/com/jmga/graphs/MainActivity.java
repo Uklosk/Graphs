@@ -1,5 +1,7 @@
 package com.jmga.graphs;
 
+import java.util.zip.Inflater;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -237,9 +239,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				toast.show();
 				return true;
 			}
+			LayoutInflater factory = LayoutInflater.from(this);
+			final View dialogView = factory.inflate(R.layout.save_dialog, null);
 			AlertDialog.Builder builder_ = new AlertDialog.Builder(this);
 			builder_.setTitle(R.string.file_titlesave);
-			//builder_.setView();
+			builder_.setView(dialogView);
 			AlertDialog dialog = builder_.create();
 			dialog.show();
 			
