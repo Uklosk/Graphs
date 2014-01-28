@@ -91,7 +91,7 @@ public class GView extends View {
 		fontPaint.setTextSize(20);
 
 	}
-
+	
 	public boolean xmlToGraph(String storage, String xml) {
 		boolean task = true;
 		XMLParser xmlp = new XMLParser(storage, xml);
