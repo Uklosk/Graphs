@@ -368,12 +368,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	}
 
 	public void clear() {
-		isKruskal = false;
-		view.isKruskal = isKruskal;
-		isBipartite = false;
-		view.isBipartite = isBipartite;
-		view.cleangraph = false;
-		view.table_dist = false;
+		isKruskal =  isBipartite = false;
 		updatingMenu();
 		view.initializingNodesColor();
 		view.clear();

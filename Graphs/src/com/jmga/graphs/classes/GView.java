@@ -348,6 +348,7 @@ public class GView extends View {
 	public void clear() {
 		g = new Graph();
 		gKruskal = new Graph();
+		isKruskal = isBipartite = cleangraph = table_dist = save_graph = info_table = false;
 		invalidate();
 	}
 
