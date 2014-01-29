@@ -3,6 +3,8 @@ package com.jmga.graphs.tools;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import com.jmga.graphs.R;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
@@ -32,6 +34,7 @@ public class FlowTable extends TableLayout {
 		mCurrentRow.addView(createAndFillTextView("\\")); // title for first row
 		for (String name : names) {
 			mCurrentRow.addView(createAndFillTextView(name));
+			mCurrentRow.setBackgroundResource(R.drawable.tablerow_border);
 		}
 		setStretchAllColumns(true);
 		setGravity(HORIZONTAL);
@@ -43,9 +46,10 @@ public class FlowTable extends TableLayout {
 		mCurrentRow.addView(createAndFillTextView(node));
 
 		for (String name : names) {
-
 			mCurrentRow.addView(createAndFillTextView(String.valueOf(data
 					.get(name))));
+			mCurrentRow.setBackgroundResource(R.drawable.tablerow_border);
+			mCurrentRow.setPadding(0, 2, 0, 0);
 		}
 		finishRowAndStartNew();
 

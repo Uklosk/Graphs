@@ -18,7 +18,7 @@
     <string name="file_extension">.xml</string>
     <string name="file_save">Guardar</string>
     <string name="file_cancel">Cancelar</string>
-    <string name="text_vertex">Vertices</string>
+    <string name="text_vertex">Vértices</string>
     <string name="text_edges">Aristas</string>
     <string name="text_components">Componentes conexas</string>
     <string name="text_bipartite">Bipartito</string>
