@@ -85,10 +85,18 @@ public class Graph implements Cloneable {
 		nodes++;
 	}
 
-	public void addNode(int x, int y) {
+	public void addNode(int x, int y,int viewportWidth, int viewportHeight) {
 		String nombre = ids[nodes];
 		nombres.add(nombre);
-		Node node = new Node(x, y, nombre);
+		Node node = new Node(x, y, nombre,viewportWidth, viewportHeight);
+		vertex.put(nombre, node);
+		nodes++;
+	}
+	
+	public void addNodeF(float posX, float posY, int viewportWidth, int viewportHeight){
+		String nombre = ids[nodes];
+		nombres.add(nombre);
+		Node node = new Node(posX, posY, nombre,viewportWidth, viewportHeight);
 		vertex.put(nombre, node);
 		nodes++;
 	}
@@ -111,7 +119,7 @@ public class Graph implements Cloneable {
 
 	public void addNode(String string) {
 		// TODO Auto-generated method stub
-		Node node = new Node(0, 0, string);
+		Node node = new Node(0, 0, string,1,1);
 		vertex.put(string, node);
 		nodes++;
 	}
@@ -146,7 +154,7 @@ public class Graph implements Cloneable {
 		}
 		nombres.remove(name);
 		vertex.get(name).initNode(name);
-		Node n = new Node(0, 0, "nulo");
+		Node n = new Node(0, 0, "nulo",1,1);
 		vertex.put(name, n);
 		/*for (int i = 0; i < arrows.size(); i++) {
 			Arrow a = arrows.get(i);

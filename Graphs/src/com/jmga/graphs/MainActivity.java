@@ -461,8 +461,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
 			if (node == null) {
-				Node v1 = new Node(x, y);
-				view.addNode(v1);
+				view.addNode(x,y);
 			} else {
 				nFocused = node;
 			}

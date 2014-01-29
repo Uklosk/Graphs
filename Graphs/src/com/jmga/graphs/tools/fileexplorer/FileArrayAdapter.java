@@ -63,7 +63,8 @@ public class FileArrayAdapter extends ArrayAdapter<Item> {
 			/* Take the ImageView from layout and set the city's image */
 			ImageView imageCity = (ImageView) v.findViewById(R.id.fd_Icon1);
 			GView view = (GView) v.findViewById(R.id.fd_Icon2);
-
+			view.setViewportHeight(50);
+			view.setViewportHeight(50);
 			if (o.getDir()) {
 				
 				String uri = "drawable/ic_action_storage";

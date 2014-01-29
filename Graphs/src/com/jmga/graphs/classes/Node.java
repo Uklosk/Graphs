@@ -5,15 +5,25 @@ import java.util.ArrayList;
 import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.util.Log;
 
 public class Node extends ShapeDrawable {
 
 	private ArrayList<Link> enlaces;
 
 
+	float posX,posY;
 	private int enlacesExistentes;
 	public int radius = 50;
 	private String id;
+
+	public float getPosX() {
+		return posX;
+	}
+
+	public float getPosY() {
+		return posY;
+	}
 
 	private int color;
 	
@@ -29,12 +39,12 @@ public class Node extends ShapeDrawable {
 		color = Color.BLACK;
 	}
 	
-	public Node(int x, int y, String id) {
+	public Node(int x, int y, String id, int viewportWidth, int viewportHeight) {
 		super(new OvalShape());
 		color = Color.BLACK;
 		getPaint().setColor(color);
 		getPaint().setAntiAlias(true);
-		setPos(x, y);
+		setPos(x, y, viewportWidth, viewportHeight);
 		enlacesExistentes = -1;
 		enlaces = new ArrayList<Link>();
 		this.id = id;
@@ -44,15 +54,27 @@ public class Node extends ShapeDrawable {
 	/*
 	 * CONSTRUCTOR AUXILIAR
 	 */
-	public Node(int x, int y) {
+	public Node(int x, int y, float viewportWidth, float viewportHeight) {
 		super(new OvalShape());
 		color = Color.BLACK;
 		getPaint().setColor(color);
 		getPaint().setAntiAlias(true);
-		setPos(x, y);
+		setPos(x, y, viewportWidth, viewportHeight);
 		enlacesExistentes = -1;
 		enlaces = new ArrayList<Link>();
 		id = "aux";
+
+	}
+	
+	public Node(float posX, float posY, String id, int viewportWidth, int viewportHeight) {
+		super(new OvalShape());
+		color = Color.BLACK;
+		getPaint().setColor(color);
+		getPaint().setAntiAlias(true);
+		setPosF(posX, posY, viewportWidth, viewportHeight);
+		enlacesExistentes = -1;
+		enlaces = new ArrayList<Link>();
+		this.id=id;
 
 	}
 
@@ -66,10 +88,17 @@ public class Node extends ShapeDrawable {
 	/*
 	 * ESTABLECER POSICION
 	 */
-	public void setPos(int x, int y) {
+	public void setPos(int x, int y, float viewportWidth, float viewportHeight) {
+		posX = x/viewportWidth;
+		posY = y/viewportHeight;
 		setBounds(x - radius, y - radius, x + radius, y + radius);
 	}
 
+	public void setPosF(float posX, float posY, int viewportWidth, int viewportHeight){
+		this.posX = posX;
+		this.posY = posY;
+		setBounds(Math.round(posX*viewportWidth) - radius,Math.round(posY*viewportHeight) - radius, Math.round(posX*viewportWidth)+radius,Math.round(posY*viewportHeight)+radius);
+	}
 	/*
 	 * GETTERS AND SETTERS
 	 */

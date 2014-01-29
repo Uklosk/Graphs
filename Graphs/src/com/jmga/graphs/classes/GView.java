@@ -43,7 +43,22 @@ public class GView extends View {
 	private boolean checked_bipartite = false;
 	private Hashtable<String, Integer> subSets;
 
-	private int height, width;
+	private int viewportHeight, viewportWidth;
+	public int getViewportHeight() {
+		return viewportHeight;
+	}
+
+	public int getViewportWidth() {
+		return viewportWidth;
+	}
+
+	public void setViewportHeight(int Y){
+		viewportHeight = Y;
+	}
+	public void setViewportWidth(int X){
+		viewportWidth = X;
+	}
+	
 	private float density;
 
 	Arrow aux;
@@ -100,7 +115,7 @@ public class GView extends View {
 	public boolean graphToXML(String storage, String file_name){
 		boolean task = false;
 		g.update();
-        XMLParser p = new XMLParser(storage);
+        XMLParser p = new XMLParser(storage,this);
         try {
 			p.saveGraph(g, "/" + file_name + ".xml");
 			task = true;
@@ -112,14 +127,17 @@ public class GView extends View {
 	}
 	
 	public boolean isXMLGraph(String complete_path){
-		XMLParser p = new XMLParser();
+		XMLParser p = new XMLParser(this);
 		return p.isGraph(complete_path);
 	}
 	
 	public boolean xmlToGraph(String storage, String xml) {
 		boolean task = true;
-		XMLParser xmlp = new XMLParser(storage, xml);
-		xmlp.setDisplacement(width, height, density);
+		XMLParser xmlp = new XMLParser(storage, xml,this);
+		if(viewportHeight == 0 || viewportWidth ==0){
+			viewportHeight = 100; viewportWidth = 100;
+		}
+		xmlp.setDisplacement(viewportWidth, viewportHeight, density);
 		try {
 			g = xmlp.parseGraph(g);
 		} catch (Exception e) {
@@ -271,11 +289,11 @@ public class GView extends View {
 	}
 
 	public void addNode(int x, int y) {
-		g.addNode(x, y);
+		g.addNode(x, y,viewportWidth,viewportHeight);
 	}
 
 	public void addNode(Node n) {
-		g.addNode(n.getCenterX(), n.getCenterY());
+		g.addNode(n.getCenterX(), n.getCenterY(), viewportWidth,viewportHeight);
 	}
 
 	public void deleteNode(Node n) {
@@ -312,7 +330,7 @@ public class GView extends View {
 	}
 
 	public void setPosition(int x, int y, Node n) {
-		n.setPos(x, y);
+		n.setPos(x, y, viewportWidth, viewportHeight);
 	}
 
 	public void update() {
@@ -367,8 +385,8 @@ public class GView extends View {
 	@Override
 	public void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
-		width = w;
-		height = h;
+		viewportWidth = w;
+		viewportHeight = h;
 	}
 
 	public void setMenuStateChecked(boolean ck, boolean cb) {

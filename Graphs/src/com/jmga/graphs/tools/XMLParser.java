@@ -18,6 +18,7 @@ import android.util.Log;
 import android.util.Xml;
 
 import com.jmga.graphs.classes.Arrow;
+import com.jmga.graphs.classes.GView;
 import com.jmga.graphs.classes.Graph;
 import com.jmga.graphs.classes.Link;
 import com.jmga.graphs.classes.Node;
@@ -31,39 +32,44 @@ public class XMLParser {
 	private static final String attribute_control = "apk";
 	private static final String val_control = "Graphs";
 	
-	private int[] displacement; /* [0]:x [1]:y */
+	private float[] displacement; /* [0]:x [1]:y */
 	private float density;
-	
+	private GView view;
 	private int[] cardinals;
 	private Hashtable<String, ArrayList<String>> data;
 	
-	public XMLParser(){
+	public XMLParser(GView view){
 		storage_path = "";
 		current_xml = "";
 		
-		displacement = new int[2];
+		this.view = view;
+		
+		displacement = new float[2];
 		displacement[0] = displacement[1] = 0;
 		
 		cardinals = new int[2];
 		data = new Hashtable<String, ArrayList<String>>();
 	}
 	
-	public XMLParser(String storage){
+	public XMLParser(String storage, GView view){
 		storage_path = storage + "/";
 		current_xml = "";
 
-		displacement = new int[2];
+		this.view = view;
+		
+		displacement = new float[2];
 		displacement[0] = displacement[1] = 0;
 
 		cardinals = new int[2];
 		data = new Hashtable<String, ArrayList<String>>();
 	}
 	
-	public XMLParser(String storage, String xml){
+	public XMLParser(String storage, String xml, GView view){
 		storage_path = storage + "/";
 		current_xml = xml;
 
-		displacement = new int[2];
+		this.view = view;
+		displacement = new float[2];
 		displacement[0] = displacement[1] = 0;
 
 		cardinals = new int[2];
@@ -85,7 +91,7 @@ public class XMLParser {
 		density = d;
 	}
 	
-	public boolean isGraph(String file_path){
+	public static boolean isGraph(String file_path){
 		Log.d(TAG,"File path: " + file_path);
 		
 		boolean task = false;
@@ -148,8 +154,8 @@ public class XMLParser {
         	v_ = (Node)v.get(key);
 			serializer.startTag(null, "vertex");
 			serializer.attribute(null, "id", key);
-			serializer.attribute(null, "x", Integer.toString(v_.getCenterX()));
-			serializer.attribute(null, "y", Integer.toString(v_.getCenterY()));
+			serializer.attribute(null, "x", Float.toString(v_.getPosX()));
+			serializer.attribute(null, "y", Float.toString(v_.getPosY()));
 			serializer.attribute(null, "r", Integer.toString(v_.getRadius()));
 			String adjacent = "";
 			ArrayList<Link> links = v_.getEnlaces();
@@ -194,9 +200,7 @@ public class XMLParser {
 							data.put(xml.getAttributeValue(i), xmldata);
 						}else{
 							if(xml.getAttributeValue(i) != null){
-								xmldata.add((xml.getAttributeValue(i).indexOf(".") > 0)
-											?xml.getAttributeValue(i).substring(0, xml.getAttributeValue(i).indexOf("."))
-											:xml.getAttributeValue(i));
+								xmldata.add(xml.getAttributeValue(i));
 							}
 							else
 								xmldata.add("");
@@ -215,28 +219,28 @@ public class XMLParser {
         // Actualizando la posicion
         boolean load = false;
         // [0]:x  [1]:y
-        int[] max = new int[2];
-        int[] min = new int[2];
+        float[] max = new float[2];
+        float[] min = new float[2];
         max[0] = max[1] = min[0] = min[1] = 0; 
         for(String id : keys) {
 			ArrayList<String> xmlitem = (ArrayList<String>)data.get(id);
 			if(!load){
-		        max[0] = min[0] = Integer.parseInt(xmlitem.get(0));
-		        max[1] = min[1] = Integer.parseInt(xmlitem.get(1)); 
+		        max[0] = min[0] = Float.parseFloat(xmlitem.get(0));
+		        max[1] = min[1] = Float.parseFloat(xmlitem.get(1)); 
 		        load = true;
 			}else{
 				for(int i=0; i<2; i++){
-					if(Integer.parseInt(xmlitem.get(i)) > max[i])
-						max[i] = Integer.parseInt(xmlitem.get(i));
-					if(Integer.parseInt(xmlitem.get(i)) < min[i])
-						min[i] = Integer.parseInt(xmlitem.get(i));
+					if(Float.parseFloat(xmlitem.get(i)) > max[i])
+						max[i] = Float.parseFloat(xmlitem.get(i));
+					if(Float.parseFloat(xmlitem.get(i)) < min[i])
+						min[i] = Float.parseFloat(xmlitem.get(i));
 				}
 			}
         }
         // Calculando el tamaño que ocupa el grafo
         // Y actualizando el desplazamiento de los vertices respecto del tamaño del canvas
         // [0]:width  [1]:height
-        int[] tam = new int[2];
+        float[] tam = new float[2];
         for(int i=0; i<2; i++){
         	//tam[i] = max[i] - min[i];
         	tam[i] = max[i] + min[i];
@@ -246,9 +250,11 @@ public class XMLParser {
         // Generando el objeto grafo
         for(String id : keys) {  
 			ArrayList<String> xmlitem = (ArrayList<String>)data.get(id);
-			gr.addNode(Integer.parseInt(xmlitem.get(0))+displacement[0],
-						Integer.parseInt(xmlitem.get(1))+displacement[1]);
-		}
+			gr.addNodeF(Float.parseFloat(xmlitem.get(0))/*+displacement[0]*/,
+						Float.parseFloat(xmlitem.get(1))/*+displacement[1]*/,view.getViewportWidth(),view.getViewportHeight());
+			Log.d("pene","NODO CREADO EN " + Float.parseFloat(xmlitem.get(0))+displacement[0]);
+
+        }
         for(String id : keys) {  
 			ArrayList<String> xmlitem = (ArrayList<String>)data.get(id);
 			aux_read.add(id);

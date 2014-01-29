@@ -59,8 +59,7 @@ public class FileChooser extends ListActivity {
 				} else {
 					Item it= new Item(ff.getName(), ff.length() + " Byte",
 							date_modify, ff.getAbsolutePath(), false);
-					XMLParser xmlp = new XMLParser();
-					it.setIsGraph(xmlp.isGraph(it.getPath()));
+					it.setIsGraph(XMLParser.isGraph(it.getPath()));
 					if(it.getIsGraph())
 						fls.add(it);
 							
