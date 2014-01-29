@@ -333,10 +333,8 @@ public class GView extends View {
 		
 		if(g.getNombres().size() > 0)
 			save_graph = info_table = table_dist = cleangraph = true;
-		else{
+		else
 			save_graph = info_table = table_dist = cleangraph = false;
-			initializingNodesColor();
-		}
 		
 		if (g.getArrows().size() >= g.getNombres().size() - 1
 				&& g.getNombres().size() > 0 && g.getArrows().size() > 0) {
@@ -355,6 +353,7 @@ public class GView extends View {
 				bipartite(true);
 		} else {
 			isBipartite = false;
+			initializingNodesColor();
 		}
 		
 		invalidate();
