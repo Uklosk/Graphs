@@ -43,6 +43,7 @@ public class XMLParser {
 		current_xml = "";
 		
 		this.view = view;
+		density = view.getDensity();
 		
 		displacement = new float[2];
 		displacement[0] = displacement[1] = 1;
@@ -56,6 +57,7 @@ public class XMLParser {
 		current_xml = "";
 
 		this.view = view;
+		density = view.getDensity();
 		
 		displacement = new float[2];
 		displacement[0] = displacement[1] = 1;
@@ -69,6 +71,7 @@ public class XMLParser {
 		current_xml = xml;
 
 		this.view = view;
+		density = view.getDensity();
 		displacement = new float[2];
 		displacement[0] = displacement[1] = 1;
 
@@ -246,7 +249,8 @@ public class XMLParser {
         for(String id : keys) {  
 			ArrayList<String> xmlitem = (ArrayList<String>)data.get(id);
 			gr.addNodeF(Float.parseFloat(xmlitem.get(0))+displacement[0],
-						Float.parseFloat(xmlitem.get(1))+displacement[1],view.getViewportWidth(),view.getViewportHeight());
+						Float.parseFloat(xmlitem.get(1))+displacement[1],view.getViewportWidth(),view.getViewportHeight(),density);
+			Log.d("pene2",String.valueOf(Float.parseFloat(xmlitem.get(0))+displacement[0]));
 		}
         for(String id : keys) {  
 			ArrayList<String> xmlitem = (ArrayList<String>)data.get(id);

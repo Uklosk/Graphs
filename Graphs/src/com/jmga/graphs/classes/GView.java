@@ -31,12 +31,11 @@ public class GView extends View {
 	private Paint fontPaint;
 	private Path path;
 
-
 	public boolean save_graph = false;
 	public boolean info_table = false;
 	public boolean cleangraph = false;
 	public boolean table_dist = false;
-	
+
 	public boolean isKruskal = false;
 	public boolean isBipartite = false;
 	private boolean checked_kruskal = false;
@@ -44,6 +43,7 @@ public class GView extends View {
 	private Hashtable<String, Integer> subSets;
 
 	private int viewportHeight, viewportWidth;
+
 	public int getViewportHeight() {
 		return viewportHeight;
 	}
@@ -52,14 +52,19 @@ public class GView extends View {
 		return viewportWidth;
 	}
 
-	public void setViewportHeight(int Y){
+	public void setViewportHeight(int Y) {
 		viewportHeight = Y;
 	}
-	public void setViewportWidth(int X){
+
+	public void setViewportWidth(int X) {
 		viewportWidth = X;
 	}
-	
+
 	private float density;
+
+	public float getDensity() {
+		return density;
+	}
 
 	Arrow aux;
 
@@ -70,24 +75,25 @@ public class GView extends View {
 
 	public GView(Context context, float density_) {
 		super(context);
-		density = density_;
 
 		init();
 	}
 
 	public GView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		
+
 		init();
 	}
 
 	public GView(Context context, AttributeSet attrs, int params) {
 		super(context, attrs, params);
-		
+
 		init();
 	}
 
 	private void init() {
+
+		density = getResources().getDisplayMetrics().density;
 
 		g = new Graph();
 		gKruskal = new Graph();
@@ -112,27 +118,34 @@ public class GView extends View {
 
 	}
 
-	public boolean graphToXML(String storage, String file_name){
+	public boolean graphToXML(String storage, String file_name) {
 		boolean task = false;
 		g.update();
-        XMLParser p = new XMLParser(storage,this);
-        try {
+		XMLParser p = new XMLParser(storage, this);
+		try {
 			p.saveGraph(g, "/" + file_name + ".xml");
 			task = true;
 		} catch (Exception e) {
 			task = false;
 			e.printStackTrace();
 		}
-        return task;
+		return task;
 	}
-	
-	public boolean isXMLGraph(String complete_path){
+
+	public boolean isXMLGraph(String complete_path) {
 		return XMLParser.isGraph(complete_path);
 	}
-	
+
 	public boolean xmlToGraph(String storage, String xml) {
 		boolean task = true;
-		XMLParser xmlp = new XMLParser(storage, xml,this);
+		if (viewportHeight == 0 || viewportWidth == 0) {
+			viewportHeight = (int) (47.5 * density + 0.5f);
+			viewportWidth = (int) (47.5 * density + 0.5f);
+			paint.setStrokeWidth(0);
+			fontPaint.setTextSize(0);
+
+		}
+		XMLParser xmlp = new XMLParser(storage, xml, this);
 		try {
 			g = xmlp.parseGraph(g);
 		} catch (Exception e) {
@@ -234,7 +247,7 @@ public class GView extends View {
 			subSets = new Hashtable<String, Integer>();
 			initializingNodesColor();
 		}
-		
+
 		return printBipatite;
 	}
 
@@ -251,28 +264,31 @@ public class GView extends View {
 		}
 		return cc;
 	}
-	
-	public Hashtable<String, String> getTableInfo(){
+
+	public Hashtable<String, String> getTableInfo() {
 		Hashtable<String, String> info = new Hashtable<String, String>();
-		
+
 		info.put("|V|", Integer.toString(g.getNombres().size()));
 		info.put("|A|", Integer.toString(g.getArrows().size()));
-		info.put("Bipartite", (bipartite(false)?"Si":"No"));
+		info.put("Bipartite", (bipartite(false) ? "Si" : "No"));
 		info.put("Components", Integer.toString(connectedComponents()));
 		info.put("Sum", Integer.toString(g.getTotalWeight()));
 		int degree = g.isRegular();
-		info.put("Regular", (degree>0)?"Si, regular de grado "+degree:"No");
-		info.put("Sequence", "{"+arrayParseString(g.getSequenceDegrees())+"}");
-		
+		info.put("Regular", (degree > 0) ? "Si, regular de grado " + degree
+				: "No");
+		info.put("Sequence", "{" + arrayParseString(g.getSequenceDegrees())
+				+ "}");
+
 		return info;
 	}
-	
-	private String arrayParseString(String[] array){
+
+	private String arrayParseString(String[] array) {
 		StringBuilder builder = new StringBuilder();
-		for(String s : array) {
-		    builder.append(s+",");
+		for (String s : array) {
+			builder.append(s + ",");
 		}
-		return builder.toString().substring(0, builder.toString().lastIndexOf(","));
+		return builder.toString().substring(0,
+				builder.toString().lastIndexOf(","));
 	}
 
 	public void initializingNodesColor() {
@@ -284,11 +300,12 @@ public class GView extends View {
 	}
 
 	public void addNode(int x, int y) {
-		g.addNode(x, y,viewportWidth,viewportHeight);
+		g.addNode(x, y, viewportWidth, viewportHeight, density);
 	}
 
 	public void addNode(Node n) {
-		g.addNode(n.getCenterX(), n.getCenterY(), viewportWidth,viewportHeight);
+		g.addNode(n.getCenterX(), n.getCenterY(), viewportWidth,
+				viewportHeight, density);
 	}
 
 	public void deleteNode(Node n) {
@@ -330,22 +347,23 @@ public class GView extends View {
 
 	public void update() {
 		g.update();
-		
-		if(g.getNombres().size() > 0)
+
+		if (g.getNombres().size() > 0)
 			save_graph = info_table = table_dist = cleangraph = true;
 		else
 			save_graph = info_table = table_dist = cleangraph = false;
-		
+
 		if (g.getArrows().size() >= g.getNombres().size() - 1
 				&& g.getNombres().size() > 0 && g.getArrows().size() > 0) {
 
 			isKruskal = true;
-			if (checked_kruskal){
+			if (checked_kruskal) {
 				gKruskal = aplicarKruskal(g);
 				Kruskal();
 			}
 
-		} else	isKruskal = false;
+		} else
+			isKruskal = false;
 
 		if (g.getNombres().size() > 0 && g.getArrows().size() > 0) {
 			isBipartite = true;
@@ -355,7 +373,7 @@ public class GView extends View {
 			isBipartite = false;
 			initializingNodesColor();
 		}
-		
+
 		invalidate();
 	}
 

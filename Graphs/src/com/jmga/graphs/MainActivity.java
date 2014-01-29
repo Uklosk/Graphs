@@ -79,7 +79,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 		metrics = getResources().getDisplayMetrics();
 
-		view = new GView(this, metrics.xdpi);
+		view = new GView(this);
 
 		setContentView(view);
 

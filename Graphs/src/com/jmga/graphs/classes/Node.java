@@ -14,7 +14,8 @@ public class Node extends ShapeDrawable {
 
 	float posX,posY;
 	private int enlacesExistentes;
-	public int radius = 50;
+	public int radius;
+	private final int DPS = 25;
 	private String id;
 
 	public float getPosX() {
@@ -39,8 +40,9 @@ public class Node extends ShapeDrawable {
 		color = Color.BLACK;
 	}
 	
-	public Node(int x, int y, String id, int viewportWidth, int viewportHeight) {
+	public Node(int x, int y, String id, int viewportWidth, int viewportHeight, float density) {
 		super(new OvalShape());
+		radius = (int) (DPS * density + 0.5f)*viewportWidth/700;
 		color = Color.BLACK;
 		getPaint().setColor(color);
 		getPaint().setAntiAlias(true);
@@ -54,8 +56,9 @@ public class Node extends ShapeDrawable {
 	/*
 	 * CONSTRUCTOR AUXILIAR
 	 */
-	public Node(int x, int y, float viewportWidth, float viewportHeight) {
+	public Node(int x, int y, int viewportWidth, int viewportHeight, float density) {
 		super(new OvalShape());
+		radius = (int) (DPS * density + 0.5f)*viewportWidth/700;
 		color = Color.BLACK;
 		getPaint().setColor(color);
 		getPaint().setAntiAlias(true);
@@ -66,8 +69,9 @@ public class Node extends ShapeDrawable {
 
 	}
 	
-	public Node(float posX, float posY, String id, int viewportWidth, int viewportHeight) {
+	public Node(float posX, float posY, String id, int viewportWidth, int viewportHeight, float density) {
 		super(new OvalShape());
+		radius = (int) (DPS * density + 0.5f)*viewportWidth/700;
 		color = Color.BLACK;
 		getPaint().setColor(color);
 		getPaint().setAntiAlias(true);
