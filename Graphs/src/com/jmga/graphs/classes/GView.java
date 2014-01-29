@@ -100,7 +100,7 @@ public class GView extends View {
 		subSets = new Hashtable<String, Integer>();
 
 		paint = new Paint();
-		paint.setStrokeWidth(6f);
+		paint.setStrokeWidth(4f);
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStrokeJoin(Paint.Join.ROUND);
 		paint.setAntiAlias(true);
@@ -139,8 +139,9 @@ public class GView extends View {
 	public boolean xmlToGraph(String storage, String xml) {
 		boolean task = true;
 		if (viewportHeight == 0 || viewportWidth == 0) {
-			viewportHeight = (int) (47.5 * density + 0.5f);
-			viewportWidth = (int) (47.5 * density + 0.5f);
+			viewportHeight = (int) (50 * density + 0.5f);
+			viewportWidth = (int) (50 * density + 0.5f);
+			Log.d("peawn",String.valueOf(viewportWidth));
 			paint.setStrokeWidth(0);
 			fontPaint.setTextSize(0);
 
