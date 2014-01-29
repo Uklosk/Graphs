@@ -27,9 +27,9 @@ public class XMLParser {
 
 	private String storage_path;
 	private String current_xml;
-	
-	private static final String tag_control = "apk";
-	private static final String name_apk = "Graphs.apk";
+
+	private static final String attribute_control = "apk";
+	private static final String val_control = "Graphs";
 	
 	private int[] displacement; /* [0]:x [1]:y */
 	private float density;
@@ -99,9 +99,9 @@ public class XMLParser {
 			int event = xml.next();
 			while(event != XmlPullParser.END_DOCUMENT){
 				if(event == XmlPullParser.START_TAG){
-					if(xml.getName().equals( tag_control ))
-						if(xml.getAttributeName(0).equals("name"))
-							if(xml.getAttributeValue(0).equals( name_apk )){
+					if(xml.getName().equals( "graph" ))
+						if(xml.getAttributeName(0).equals( attribute_control ))
+							if(xml.getAttributeValue(0).equals( val_control )){
 								fis.close();
 								return true;
 							}
@@ -133,13 +133,11 @@ public class XMLParser {
 		serializer.setOutput(fout, "UTF-8");
 	    serializer.startDocument(null, true);
 	    serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
-
-		// Control tag
-		serializer.startTag(null, tag_control);
-		serializer.attribute(null, "name", name_apk);
-		serializer.endTag(null, tag_control);
 	    
 		serializer.startTag(null, "graph");
+		// Control attribute
+		serializer.attribute(null, attribute_control, val_control);
+		// -----------------
 		serializer.attribute(null, "v", Integer.toString(v.size()));
 		serializer.attribute(null, "a", Integer.toString(a.size()));
 		
