@@ -117,17 +117,18 @@ public class Graph implements Cloneable {
 	}
 
 	public void deleteNode(String name) {
+		ArrayList<String[]> to_delete = new ArrayList<String[]>();
 		Node node = new Node();
 		node = vertex.get(name);
 		Iterator<Link> links = node.getEnlaces().iterator();
 		while(links.hasNext()){
 			Link link = links.next();
-			Node nodef = vertex.get(link.getIdf());
-			String idf = nodef.getId();
-			node.deleteEnlace(idf);
-			nodef.deleteEnlace(name);
-			deleteLink(name, idf);
-			deleteLink(idf, name);
+			String idf = link.getIdf();
+			Node nodef = vertex.get(idf);
+			String[] link_to_delete = new String[2];
+			link_to_delete[0] = name;
+			link_to_delete[1] = idf;
+			to_delete.add(link_to_delete);
 			Iterator<Link> links_ = nodef.getEnlaces().iterator();
 			nodef.initNode(idf);
 			while(links_.hasNext()){
@@ -135,6 +136,13 @@ public class Graph implements Cloneable {
 				if(!link_.getIdf().equals(name))
 					nodef.agregarEnlace(link_.getIdf(), (int)Math.floor(link_.getweight()));
 			}
+		}
+		Iterator<String[]> remove = to_delete.iterator();
+		while(remove.hasNext()){
+			String[] r = new String[2];
+			r = remove.next();
+			deleteLink(r[0], r[1]);
+			deleteLink(r[1], r[0]);
 		}
 		nombres.remove(name);
 		vertex.get(name).initNode(name);
