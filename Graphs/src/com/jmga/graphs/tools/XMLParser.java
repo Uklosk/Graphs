@@ -45,7 +45,7 @@ public class XMLParser {
 		this.view = view;
 		
 		displacement = new float[2];
-		displacement[0] = displacement[1] = 0;
+		displacement[0] = displacement[1] = 1;
 		
 		cardinals = new int[2];
 		data = new Hashtable<String, ArrayList<String>>();
@@ -58,7 +58,7 @@ public class XMLParser {
 		this.view = view;
 		
 		displacement = new float[2];
-		displacement[0] = displacement[1] = 0;
+		displacement[0] = displacement[1] = 1;
 
 		cardinals = new int[2];
 		data = new Hashtable<String, ArrayList<String>>();
@@ -70,7 +70,7 @@ public class XMLParser {
 
 		this.view = view;
 		displacement = new float[2];
-		displacement[0] = displacement[1] = 0;
+		displacement[0] = displacement[1] = 1;
 
 		cardinals = new int[2];
 		data = new Hashtable<String, ArrayList<String>>();
@@ -83,12 +83,6 @@ public class XMLParser {
 	
 	public void setXml(String xml){
 		current_xml = xml;
-	}
-	
-	public void setDisplacement(int x, int y, float d){
-		displacement[0] = x;
-		displacement[1] = y;
-		density = d;
 	}
 	
 	public static boolean isGraph(String file_path){
@@ -242,19 +236,18 @@ public class XMLParser {
         // [0]:width  [1]:height
         float[] tam = new float[2];
         for(int i=0; i<2; i++){
-        	//tam[i] = max[i] - min[i];
         	tam[i] = max[i] + min[i];
-        	displacement[i] = (displacement[i] - tam[i])/2;
+        	Log.d("pene","Value tamaño: " + tam[i] + " desde: " + max[i] + " hasta:" + min[i]);
+        	displacement[i] = (1 - tam[i])/2;
+        	Log.d("pene","Value: " + displacement[i]);
         }
         
         // Generando el objeto grafo
         for(String id : keys) {  
 			ArrayList<String> xmlitem = (ArrayList<String>)data.get(id);
-			gr.addNodeF(Float.parseFloat(xmlitem.get(0))/*+displacement[0]*/,
-						Float.parseFloat(xmlitem.get(1))/*+displacement[1]*/,view.getViewportWidth(),view.getViewportHeight());
-			Log.d("pene","NODO CREADO EN " + Float.parseFloat(xmlitem.get(0))+displacement[0]);
-
-        }
+			gr.addNodeF(Float.parseFloat(xmlitem.get(0))+displacement[0],
+						Float.parseFloat(xmlitem.get(1))+displacement[1],view.getViewportWidth(),view.getViewportHeight());
+		}
         for(String id : keys) {  
 			ArrayList<String> xmlitem = (ArrayList<String>)data.get(id);
 			aux_read.add(id);

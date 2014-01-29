@@ -127,17 +127,12 @@ public class GView extends View {
 	}
 	
 	public boolean isXMLGraph(String complete_path){
-		XMLParser p = new XMLParser(this);
-		return p.isGraph(complete_path);
+		return XMLParser.isGraph(complete_path);
 	}
 	
 	public boolean xmlToGraph(String storage, String xml) {
 		boolean task = true;
 		XMLParser xmlp = new XMLParser(storage, xml,this);
-		if(viewportHeight == 0 || viewportWidth ==0){
-			viewportHeight = 100; viewportWidth = 100;
-		}
-		xmlp.setDisplacement(viewportWidth, viewportHeight, density);
 		try {
 			g = xmlp.parseGraph(g);
 		} catch (Exception e) {
@@ -338,8 +333,10 @@ public class GView extends View {
 		
 		if(g.getNombres().size() > 0)
 			save_graph = info_table = table_dist = cleangraph = true;
-		else
+		else{
 			save_graph = info_table = table_dist = cleangraph = false;
+			initializingNodesColor();
+		}
 		
 		if (g.getArrows().size() >= g.getNombres().size() - 1
 				&& g.getNombres().size() > 0 && g.getArrows().size() > 0) {
