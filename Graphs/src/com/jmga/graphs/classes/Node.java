@@ -42,13 +42,9 @@ public class Node extends ShapeDrawable {
 	public Node(int x, int y, String id, int viewportWidth, int viewportHeight,
 			float density) {
 		super(new OvalShape());
-		if (Math.min((int) (DPS * density + 0.5f) * viewportWidth / 700,
-				(int) (DPS * density + 0.5f) * viewportHeight / 550) != 0)
-			radius = Math.min((int) (DPS * density + 0.5f) * viewportWidth
-					/ 700, (int) (DPS * density + 0.5f) * viewportHeight / 550);
-		else
-			radius = Math.max((int) (DPS * density + 0.5f) * viewportWidth
-					/ 700, (int) (DPS * density + 0.5f) * viewportHeight / 550);
+		if(!(((int) (DPS * density + 0.5f) * viewportWidth * viewportHeight / 787184	)==0)){
+			radius = ((int) (DPS * density + 0.5f) * viewportWidth * viewportHeight / 787184	);	
+				} else radius = ((int) (DPS * density + 0.5f) * viewportWidth / 700	);	
 		color = Color.BLACK;
 		getPaint().setColor(color);
 		getPaint().setAntiAlias(true);
@@ -65,13 +61,9 @@ public class Node extends ShapeDrawable {
 	public Node(int x, int y, int viewportWidth, int viewportHeight,
 			float density) {
 		super(new OvalShape());
-		if (Math.min((int) (DPS * density + 0.5f) * viewportWidth / 700,
-				(int) (DPS * density + 0.5f) * viewportHeight / 550) != 0)
-			radius = Math.min((int) (DPS * density + 0.5f) * viewportWidth
-					/ 700, (int) (DPS * density + 0.5f) * viewportHeight / 550);
-		else
-			radius = Math.max((int) (DPS * density + 0.5f) * viewportWidth
-					/ 700, (int) (DPS * density + 0.5f) * viewportHeight / 550);		
+		if(!(((int) (DPS * density + 0.5f) * viewportWidth * viewportHeight / 787184	)==0)){
+			radius = ((int) (DPS * density + 0.5f) * viewportWidth * viewportHeight / 787184	);	
+				} else radius = ((int) (DPS * density + 0.5f) * viewportWidth / 700	);	
 		color = Color.BLACK;
 		getPaint().setColor(color);
 		getPaint().setAntiAlias(true);
@@ -85,13 +77,10 @@ public class Node extends ShapeDrawable {
 	public Node(float posX, float posY, String id, int viewportWidth,
 			int viewportHeight, float density) {
 		super(new OvalShape());
-		if (Math.min((int) (DPS * density + 0.5f) * viewportWidth / 700,
-				(int) (DPS * density + 0.5f) * viewportHeight / 550) != 0)
-			radius = Math.min((int) (DPS * density + 0.5f) * viewportWidth
-					/ 700, (int) (DPS * density + 0.5f) * viewportHeight / 550);
-		else
-			radius = Math.max((int) (DPS * density + 0.5f) * viewportWidth
-					/ 700, (int) (DPS * density + 0.5f) * viewportHeight / 550);
+		if(!(((int) (DPS * density + 0.5f) * viewportWidth * viewportHeight / 787184	)==0)){
+			radius = ((int) (DPS * density + 0.5f) * viewportWidth * viewportHeight / 787184	);	
+				} else radius = ((int) (DPS * density + 0.5f) * viewportWidth / 700	);	
+
 		color = Color.BLACK;
 		getPaint().setColor(color);
 		getPaint().setAntiAlias(true);

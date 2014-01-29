@@ -402,6 +402,7 @@ public class GView extends View {
 		super.onSizeChanged(w, h, oldw, oldh);
 		viewportWidth = w;
 		viewportHeight = h;
+		Log.d("alalala",String.valueOf(w*h));
 	}
 
 	public void setMenuStateChecked(boolean ck, boolean cb) {
