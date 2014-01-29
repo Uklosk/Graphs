@@ -1,8 +1,10 @@
 package com.jmga.graphs.classes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 import android.graphics.Color;
 import android.util.Log;
@@ -304,6 +306,37 @@ public class Graph implements Cloneable {
 
 	public void updateDistances() {
 
+	}
+	
+	public int getTotalWeight(){
+		int total = 0;
+		
+		Iterator<Arrow> arrows_ = arrows.iterator();
+		while(arrows_.hasNext()){
+			total += arrows_.next().getWeight();
+		}
+		
+		return total;
+	}
+	
+	// return (n = 0) -> No regular
+	// return (n > 0) -> regular
+	public int isRegular(){
+		int degree = 0;
+		
+		String[] seq = new String[nombres.size()];
+		seq = getSequenceDegrees();
+		
+		return degree;
+	}
+	
+	public String[] getSequenceDegrees(){
+		String[] seq = new String[nombres.size()];
+		
+		
+		Arrays.sort(seq);
+		
+		return seq;
 	}
 
 	public Arrow getAux() {

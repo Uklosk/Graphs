@@ -204,8 +204,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	}
 
 	public void updatingMenu() {
-		menu.findItem(R.id.action_add).setEnabled(view.save_graph);
-		menu.findItem(R.id.action_add).setEnabled(view.info_table);
+		menu.findItem(R.id.action_save).setEnabled(view.save_graph);
+		menu.findItem(R.id.action_tableinfo).setEnabled(view.info_table);
 		
 		stop(TOGGLE_ADD, (MenuItem) menu.findItem(R.id.action_add));
 		stop(TOGGLE_REMOVE, (MenuItem) menu.findItem(R.id.action_remove));
@@ -281,7 +281,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				view.invalidate();
 			} else {
 				isBipartite = true;
-				view.bipartite();
+				view.bipartite(true);
 				view.invalidate();
 			}
 			return true;

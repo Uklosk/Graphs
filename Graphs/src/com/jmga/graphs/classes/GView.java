@@ -198,7 +198,7 @@ public class GView extends View {
 		}
 	}
 
-	public void bipartite() {
+	public boolean bipartite(boolean print) {
 		boolean printBipatite = false;
 		Bipartite b = new Bipartite(g);
 		try {
@@ -207,7 +207,7 @@ public class GView extends View {
 			printBipatite = false;
 			e.printStackTrace();
 		}
-		if (printBipatite) {
+		if (printBipatite && print) {
 			subSets = b.getSubSet();
 			Enumeration<String> keys = subSets.keys();
 			while (keys.hasMoreElements()) {
@@ -216,10 +216,11 @@ public class GView extends View {
 						: Color.GREEN);
 			}
 		} else {
+			subSets = new Hashtable<String, Integer>();
 			initializingNodesColor();
 		}
-		Log.d("COMPONENTES",
-				"componentes conexas: " + b.getConnectedComponents());
+		
+		return printBipatite;
 	}
 
 	public int connectedComponents() {
@@ -234,6 +235,20 @@ public class GView extends View {
 			e.printStackTrace();
 		}
 		return cc;
+	}
+	
+	public Hashtable<String, String> getTableInfo(){
+		Hashtable<String, String> info = new Hashtable<String, String>();
+		
+		info.put("|V|", Integer.toString(g.getNombres().size()));
+		info.put("|A|", Integer.toString(g.getArrows().size()));
+		info.put("Bipartite", (bipartite(false)?"Si":"No"));
+		info.put("Components", Integer.toString(connectedComponents()));
+		info.put("Sum", Integer.toString(g.getTotalWeight()));
+		info.put("Regular", Integer.toString(connectedComponents()));
+		info.put("Sequence", Integer.toString(connectedComponents()));
+		
+		return info;
 	}
 
 	public void initializingNodesColor() {
@@ -314,7 +329,7 @@ public class GView extends View {
 		if (g.getNombres().size() > 0 && g.getArrows().size() > 0) {
 			isBipartite = true;
 			if (checked_bipartite)
-				bipartite();
+				bipartite(true);
 		} else {
 			isBipartite = false;
 		}
