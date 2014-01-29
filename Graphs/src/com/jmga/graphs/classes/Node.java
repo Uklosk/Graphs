@@ -56,6 +56,13 @@ public class Node extends ShapeDrawable {
 
 	}
 
+	public void initNode(String id_){
+		id = id_;
+		enlacesExistentes = 0;
+		enlaces = new ArrayList<Link>();
+		color = Color.BLACK;
+	}	
+	
 	/*
 	 * ESTABLECER POSICION
 	 */
@@ -131,14 +138,12 @@ public class Node extends ShapeDrawable {
 				enlaces.remove(i);
 				i=0;
 			}
-		}		
+		}
 	}
 
 
-	public int existeEnlace(String idi)
- 	{
- 		for (int i = 0; i < enlaces.size(); i++)
- 		{
+	public int existeEnlace(String idi){
+ 		for (int i = 0; i < enlaces.size(); i++){
  			Link miEnlace;
  			miEnlace = enlaces.get(i);
  			if (miEnlace.getIdf().equals(idi))
