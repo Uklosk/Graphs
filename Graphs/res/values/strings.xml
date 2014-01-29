@@ -17,12 +17,13 @@
     <string name="file_extension">.xml</string>
     <string name="file_save">Save</string>
     <string name="file_cancel">Cancel</string>
-    <string name="text_vertex">Vertex:</string>
-    <string name="text_edges">Edges:</string>
-    <string name="text_components">Connected components:</string>
-    <string name="text_bipartite">Bipartite:</string>
-    <string name="text_sumofdistances">Sum of distances:</string>
-    <string name="text_regular">Regular:</string>
-    <string name="text_secuence">Sequence degrees:</string>
+    <string name="text_vertex">Vertex</string>
+    <string name="text_edges">Edges</string>
+    <string name="text_components">Connected components</string>
+    <string name="text_bipartite">Bipartite</string>
+    <string name="text_sumofdistances">Sum of distances</string>
+    <string name="text_regular">Regular</string>
+    <string name="text_secuence">Sequence degrees</string>
+    <string name="text_separator">:</string>
 
 </resources>

@@ -18,12 +18,13 @@
     <string name="file_extension">.xml</string>
     <string name="file_save">Guardar</string>
     <string name="file_cancel">Cancelar</string>
-    <string name="text_vertex">Vertices:</string>
-    <string name="text_edges">Aristas:</string>
-    <string name="text_components">Componentes conexas:</string>
-    <string name="text_bipartite">Bipartito:</string>
-    <string name="text_sumofdistances">Suma de pesos:</string>
-    <string name="text_regular">Regular:</string>
-    <string name="text_secuence">Secuencia de grados:</string>
+    <string name="text_vertex">Vertices</string>
+    <string name="text_edges">Aristas</string>
+    <string name="text_components">Componentes conexas</string>
+    <string name="text_bipartite">Bipartito</string>
+    <string name="text_sumofdistances">Suma de pesos</string>
+    <string name="text_regular">Regular</string>
+    <string name="text_secuence">Secuencia de grados</string>
+    <string name="text_separator">:</string>
 
 </resources>

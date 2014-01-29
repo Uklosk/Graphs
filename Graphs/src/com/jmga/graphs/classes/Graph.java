@@ -2,6 +2,7 @@ package com.jmga.graphs.classes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -326,15 +327,31 @@ public class Graph implements Cloneable {
 		
 		String[] seq = new String[nombres.size()];
 		seq = getSequenceDegrees();
+		if(seq.length==0)
+			return 0;
+		else if(seq.length==1)
+			return Integer.parseInt(seq[0]);
+		else{
+			boolean regular = true;
+			for(int i = 1; i < seq.length; i++)
+				if(!seq[0].equals(seq[i]))
+					regular = false;
+			if(regular)
+				degree = Integer.parseInt(seq[0]);
+		}
 		
 		return degree;
 	}
 	
 	public String[] getSequenceDegrees(){
 		String[] seq = new String[nombres.size()];
+		int c = 0;
 		
+		Iterator<String> nodes = nombres.iterator();
+		while(nodes.hasNext())
+			seq[c++] = Integer.toString(getNode(nodes.next()).getEnlaces().size());
 		
-		Arrays.sort(seq);
+		Arrays.sort(seq,Collections.reverseOrder());
 		
 		return seq;
 	}

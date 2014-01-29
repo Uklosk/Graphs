@@ -34,6 +34,8 @@ public class GView extends View {
 
 	public boolean save_graph = false;
 	public boolean info_table = false;
+	public boolean cleangraph = false;
+	public boolean table_dist = false;
 	
 	public boolean isKruskal = false;
 	public boolean isBipartite = false;
@@ -245,10 +247,19 @@ public class GView extends View {
 		info.put("Bipartite", (bipartite(false)?"Si":"No"));
 		info.put("Components", Integer.toString(connectedComponents()));
 		info.put("Sum", Integer.toString(g.getTotalWeight()));
-		info.put("Regular", Integer.toString(connectedComponents()));
-		info.put("Sequence", Integer.toString(connectedComponents()));
+		int degree = g.isRegular();
+		info.put("Regular", (degree>0)?"Si, regular de grado "+degree:"No");
+		info.put("Sequence", "{"+arrayParseString(g.getSequenceDegrees())+"}");
 		
 		return info;
+	}
+	
+	private String arrayParseString(String[] array){
+		StringBuilder builder = new StringBuilder();
+		for(String s : array) {
+		    builder.append(s+",");
+		}
+		return builder.toString().substring(0, builder.toString().lastIndexOf(","));
 	}
 
 	public void initializingNodesColor() {
@@ -307,13 +318,10 @@ public class GView extends View {
 	public void update() {
 		g.update();
 		
-		if(g.getNombres().size() > 0){
-			save_graph = true;
-			info_table = true;
-		}else{
-			save_graph = false;
-			info_table = false;
-		}
+		if(g.getNombres().size() > 0)
+			save_graph = info_table = table_dist = cleangraph = true;
+		else
+			save_graph = info_table = table_dist = cleangraph = false;
 		
 		if (g.getArrows().size() >= g.getNombres().size() - 1
 				&& g.getNombres().size() > 0 && g.getArrows().size() > 0) {

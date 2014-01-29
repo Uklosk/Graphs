@@ -1,5 +1,6 @@
 package com.jmga.graphs;
 
+import java.util.Hashtable;
 import java.util.zip.Inflater;
 
 import android.app.ActionBar;
@@ -206,6 +207,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	public void updatingMenu() {
 		menu.findItem(R.id.action_save).setEnabled(view.save_graph);
 		menu.findItem(R.id.action_tableinfo).setEnabled(view.info_table);
+		menu.findItem(R.id.action_distance_table).setEnabled(view.table_dist);
+		menu.findItem(R.id.action_clear).setEnabled(view.cleangraph);
 		
 		stop(TOGGLE_ADD, (MenuItem) menu.findItem(R.id.action_add));
 		stop(TOGGLE_REMOVE, (MenuItem) menu.findItem(R.id.action_remove));
@@ -238,6 +241,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 						getString(R.string.memory_not_available),
 						Toast.LENGTH_LONG);
 				toast.show();
+				
 				return true;
 			}
 			LayoutInflater factory = LayoutInflater.from(this);
@@ -284,6 +288,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				view.bipartite(true);
 				view.invalidate();
 			}
+			
 			return true;
 
 		case R.id.action_kruskal:
@@ -297,6 +302,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			view.setMenuStateChecked(isKruskal, isBipartite);
 			view.update();
 			view.invalidate();
+			
 			return true;
 
 		case R.id.action_distance_table:
@@ -313,13 +319,32 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			final View dialogView_ = factory_.inflate(R.layout.information_graph, null);
 			AlertDialog.Builder builder__ = new AlertDialog.Builder(this);
 			builder__.setTitle(R.string.action_tableinfo);
+			
+			Hashtable<String, String> info = view.getTableInfo();
+			TextView v = (TextView) dialogView_.findViewById(R.id.val_vertex);
+			v.setText(info.get("|V|"));
+			TextView a = (TextView) dialogView_.findViewById(R.id.val_edges);
+			a.setText(info.get("|A|"));
+			TextView b = (TextView) dialogView_.findViewById(R.id.val_bipartite);
+			b.setText(info.get("Bipartite"));
+			TextView c = (TextView) dialogView_.findViewById(R.id.val_component);
+			c.setText(info.get("Components"));
+			TextView s = (TextView) dialogView_.findViewById(R.id.val_sum);
+			s.setText(info.get("Sum"));
+			TextView r = (TextView) dialogView_.findViewById(R.id.val_regular);
+			r.setText(info.get("Regular"));
+			TextView d = (TextView) dialogView_.findViewById(R.id.val_sequence);
+			d.setText(info.get("Sequence"));			
+			
 			builder__.setView(dialogView_);
 			AlertDialog dialog__ = builder__.create();
 			dialog__.show();
+			
 			return true;
 			
 		case R.id.action_clear:
 			clear();
+			
 			return true;
 
 		case R.id.action_settings:
@@ -328,6 +353,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		case R.id.action_remove:
 			toggle(TOGGLE_REMOVE, item);
 			stop(TOGGLE_ADD, (MenuItem) menu.findItem(R.id.action_add));
+			
 			return true;
 
 		case R.id.action_add:
@@ -346,6 +372,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		view.isKruskal = isKruskal;
 		isBipartite = false;
 		view.isBipartite = isBipartite;
+		view.cleangraph = false;
+		view.table_dist = false;
 		updatingMenu();
 		view.initializingNodesColor();
 		view.clear();
