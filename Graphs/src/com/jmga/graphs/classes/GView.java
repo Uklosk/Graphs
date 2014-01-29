@@ -123,7 +123,7 @@ public class GView extends View {
 		g.update();
 		XMLParser p = new XMLParser(storage, this);
 		try {
-			p.saveGraph(g, "/" + file_name + ".xml");
+			p.saveGraph(g, "/" + file_name + ".graph");
 			task = true;
 		} catch (Exception e) {
 			task = false;

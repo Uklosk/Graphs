@@ -15,7 +15,6 @@
     <string name="action_distance_table">Ver tabla de distancias</string>
     <string name="file_titlesave">Guardar grafo</string>
     <string name="file_hint">Grafo</string>
-    <string name="file_extension">.xml</string>
     <string name="file_save">Guardar</string>
     <string name="file_cancel">Cancelar</string>
     <string name="text_vertex">Vértices</string>

@@ -14,7 +14,7 @@
     <string name="action_distance_table">Show table with distances</string>
     <string name="file_titlesave">Save graph</string>
     <string name="file_hint">Graph</string>
-    <string name="file_extension">.xml</string>
+    <string name="file_extension">.graph</string>
     <string name="file_save">Save</string>
     <string name="file_cancel">Cancel</string>
     <string name="text_vertex">Vertex</string>
