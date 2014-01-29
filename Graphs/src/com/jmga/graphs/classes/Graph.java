@@ -124,6 +124,8 @@ public class Graph implements Cloneable {
 			Link link = links.next();
 			Node nodef = vertex.get(link.getIdf());
 			String idf = nodef.getId();
+			node.deleteEnlace(idf);
+			nodef.deleteEnlace(name);
 			deleteLink(name, idf);
 			deleteLink(idf, name);
 			Iterator<Link> links_ = nodef.getEnlaces().iterator();
