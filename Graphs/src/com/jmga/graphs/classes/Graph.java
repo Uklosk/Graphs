@@ -156,25 +156,6 @@ public class Graph implements Cloneable {
 		vertex.get(name).initNode(name);
 		Node n = new Node(0, 0, "nulo",1,1);
 		vertex.put(name, n);
-		/*for (int i = 0; i < arrows.size(); i++) {
-			Arrow a = arrows.get(i);
-			if (a.getIdi().equals(name) || a.getIdf().equals(name) || a.getIdi() == null
-					|| a.getIdi() == null) {
-				deleteLink(a.getIdi(), a.getIdf());
-				deleteLink(a.getIdf(),a.getIdi());
-			//	arrows.remove(i);
-				i = 0;
-			}
-		}
-		for (int i = 0; i < nombres.size(); i++) {
-			if (nombres.get(i).equals(name)) {
-				nombres.remove(i);
-				nombres.add(i, "nulo");
-			}
-		}
-		Node n = new Node(0, 0, "nulo");
-		vertex.put(name, n);
-		nombres.remove("nulo");*/
 	}
 
 	/*
@@ -219,23 +200,33 @@ public class Graph implements Cloneable {
 	}
 
 	public void deleteLink(String idi, String idf) {
+		Node ni = vertex.get(idi);
+		Iterator<Link> lni = ni.getEnlaces().iterator();
+		ni.initNode(idi);
+		Node nf = vertex.get(idf);
+		Iterator<Link> lnf = nf.getEnlaces().iterator();
+		nf.initNode(idf);
+		while(lni.hasNext()){
+			Link li = lni.next();
+			if(!li.getIdf().equals(idf))
+				ni.agregarEnlace(li.getIdf(), (int)Math.floor(li.getweight()));
+		}
+		while(lnf.hasNext()){
+			Link lf = lnf.next();
+			if(!lf.getIdf().equals(idi))
+				nf.agregarEnlace(lf.getIdf(), (int)Math.floor(lf.getweight()));
+		}
 		for (int i = 0; i < arrows.size(); i++) {
 			Arrow a = arrows.get(i);
-			if (a.getIdi().equals(idi)) {
-				if (a.getIdf().equals(idf)) {
-					vertex.get(idi).deleteEnlace(idf);
+			if (a.getIdi().equals(idi) && (a.getIdf().equals(idf))){
 					vertex.get(idf).deleteEnlace(idi);
+					vertex.get(idi).deleteEnlace(idf);
 					arrows.remove(i);
-					i = 0;
-				}
 			}
-			if (a.getIdf().equals(idi)) {
-				if (a.getIdi().equals(idf)) {
+			if (a.getIdf().equals(idi) && a.getIdi().equals(idf)) {
 					vertex.get(idf).deleteEnlace(idi);
 					vertex.get(idi).deleteEnlace(idf);
 					arrows.remove(i);
-					i = 0;
-				}
 			}
 		}
 	}
