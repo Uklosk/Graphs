@@ -11,8 +11,7 @@ public class Node extends ShapeDrawable {
 
 	private ArrayList<Link> enlaces;
 
-
-	float posX,posY;
+	float posX, posY;
 	private int enlacesExistentes;
 	public int radius;
 	private final int DPS = 25;
@@ -27,22 +26,29 @@ public class Node extends ShapeDrawable {
 	}
 
 	private int color;
-	
+
 	/*
 	 * CONSTRUCTORES
 	 * 
 	 * CONSTRUCTOR NORMAL
 	 */
-	public Node(){
+	public Node() {
 		id = "";
 		enlacesExistentes = 0;
 		enlaces = new ArrayList<Link>();
 		color = Color.BLACK;
 	}
-	
-	public Node(int x, int y, String id, int viewportWidth, int viewportHeight, float density) {
+
+	public Node(int x, int y, String id, int viewportWidth, int viewportHeight,
+			float density) {
 		super(new OvalShape());
-		radius = (int) (DPS * density + 0.5f)*viewportWidth/700;
+		if (Math.min((int) (DPS * density + 0.5f) * viewportWidth / 700,
+				(int) (DPS * density + 0.5f) * viewportHeight / 550) != 0)
+			radius = Math.min((int) (DPS * density + 0.5f) * viewportWidth
+					/ 700, (int) (DPS * density + 0.5f) * viewportHeight / 550);
+		else
+			radius = Math.max((int) (DPS * density + 0.5f) * viewportWidth
+					/ 700, (int) (DPS * density + 0.5f) * viewportHeight / 550);
 		color = Color.BLACK;
 		getPaint().setColor(color);
 		getPaint().setAntiAlias(true);
@@ -56,9 +62,16 @@ public class Node extends ShapeDrawable {
 	/*
 	 * CONSTRUCTOR AUXILIAR
 	 */
-	public Node(int x, int y, int viewportWidth, int viewportHeight, float density) {
+	public Node(int x, int y, int viewportWidth, int viewportHeight,
+			float density) {
 		super(new OvalShape());
-		radius = (int) (DPS * density + 0.5f)*viewportWidth/700;
+		if (Math.min((int) (DPS * density + 0.5f) * viewportWidth / 700,
+				(int) (DPS * density + 0.5f) * viewportHeight / 550) != 0)
+			radius = Math.min((int) (DPS * density + 0.5f) * viewportWidth
+					/ 700, (int) (DPS * density + 0.5f) * viewportHeight / 550);
+		else
+			radius = Math.max((int) (DPS * density + 0.5f) * viewportWidth
+					/ 700, (int) (DPS * density + 0.5f) * viewportHeight / 550);		
 		color = Color.BLACK;
 		getPaint().setColor(color);
 		getPaint().setAntiAlias(true);
@@ -68,41 +81,53 @@ public class Node extends ShapeDrawable {
 		id = "aux";
 
 	}
-	
-	public Node(float posX, float posY, String id, int viewportWidth, int viewportHeight, float density) {
+
+	public Node(float posX, float posY, String id, int viewportWidth,
+			int viewportHeight, float density) {
 		super(new OvalShape());
-		radius = (int) (DPS * density + 0.5f)*viewportWidth/700;
+		if (Math.min((int) (DPS * density + 0.5f) * viewportWidth / 700,
+				(int) (DPS * density + 0.5f) * viewportHeight / 550) != 0)
+			radius = Math.min((int) (DPS * density + 0.5f) * viewportWidth
+					/ 700, (int) (DPS * density + 0.5f) * viewportHeight / 550);
+		else
+			radius = Math.max((int) (DPS * density + 0.5f) * viewportWidth
+					/ 700, (int) (DPS * density + 0.5f) * viewportHeight / 550);
 		color = Color.BLACK;
 		getPaint().setColor(color);
 		getPaint().setAntiAlias(true);
 		setPosF(posX, posY, viewportWidth, viewportHeight);
 		enlacesExistentes = -1;
 		enlaces = new ArrayList<Link>();
-		this.id=id;
+		this.id = id;
 
 	}
 
-	public void initNode(String id_){
+	public void initNode(String id_) {
 		id = id_;
 		enlacesExistentes = 0;
 		enlaces = new ArrayList<Link>();
 		color = Color.BLACK;
-	}	
-	
+	}
+
 	/*
 	 * ESTABLECER POSICION
 	 */
 	public void setPos(int x, int y, float viewportWidth, float viewportHeight) {
-		posX = x/viewportWidth;
-		posY = y/viewportHeight;
+		posX = x / viewportWidth;
+		posY = y / viewportHeight;
 		setBounds(x - radius, y - radius, x + radius, y + radius);
 	}
 
-	public void setPosF(float posX, float posY, int viewportWidth, int viewportHeight){
+	public void setPosF(float posX, float posY, int viewportWidth,
+			int viewportHeight) {
 		this.posX = posX;
 		this.posY = posY;
-		setBounds(Math.round(posX*viewportWidth) - radius,Math.round(posY*viewportHeight) - radius, Math.round(posX*viewportWidth)+radius,Math.round(posY*viewportHeight)+radius);
+		setBounds(Math.round(posX * viewportWidth) - radius,
+				Math.round(posY * viewportHeight) - radius,
+				Math.round(posX * viewportWidth) + radius,
+				Math.round(posY * viewportHeight) + radius);
 	}
+
 	/*
 	 * GETTERS AND SETTERS
 	 */
@@ -129,8 +154,7 @@ public class Node extends ShapeDrawable {
 	public void setEnlaces(ArrayList<Link> enlaces) {
 		this.enlaces = enlaces;
 	}
-	
-	
+
 	public int getEnlacesExistentes() {
 		return enlacesExistentes;
 	}
@@ -138,7 +162,7 @@ public class Node extends ShapeDrawable {
 	public void setEnlacesExistentes(int enlacesExistentes) {
 		this.enlacesExistentes = enlacesExistentes;
 	}
-	
+
 	public int getRadius() {
 		return radius;
 	}
@@ -154,42 +178,40 @@ public class Node extends ShapeDrawable {
 	public void setColor(int color) {
 		this.color = color;
 		getPaint().setColor(color);
-	}	
-	
+	}
+
 	/*
 	 * ADICIONALES
 	 */
 
 	public void agregarEnlace(String idf, int weight) {
-		enlaces.add(new Link(idf,weight));
+		enlaces.add(new Link(idf, weight));
 
 	}
 
-	public void deleteEnlace(String idf){
-		for(int i=0;i<enlaces.size();i++){
-			if (enlaces.get(i).getIdf()==idf) {
+	public void deleteEnlace(String idf) {
+		for (int i = 0; i < enlaces.size(); i++) {
+			if (enlaces.get(i).getIdf() == idf) {
 				enlaces.remove(i);
-				i=0;
+				i = 0;
 			}
 		}
 	}
 
+	public int existeEnlace(String idi) {
+		for (int i = 0; i < enlaces.size(); i++) {
+			Link miEnlace;
+			miEnlace = enlaces.get(i);
+			if (miEnlace.getIdf().equals(idi))
+				return i;
+		}
+		return -1;
+	}
 
-	public int existeEnlace(String idi){
- 		for (int i = 0; i < enlaces.size(); i++){
- 			Link miEnlace;
- 			miEnlace = enlaces.get(i);
- 			if (miEnlace.getIdf().equals(idi))
- 				return i;
- 		}
- 		return -1;
- 	}
-	
 	public String NodoPosicion(int posi) {
 		Link miEnlace;
 		miEnlace = enlaces.get(posi);
 		return miEnlace.getIdf();
 	}
-
 
 }
