@@ -358,9 +358,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			AlertDialog.Builder bu = new AlertDialog.Builder(this);
 			bu.setTitle(R.string.action_settings);		
 			SeekBar seekBar = (SeekBar)dv.findViewById(R.id.seekBar_zoom); 
-			seekBar.setProgress(size.getOld_percent());
+			seekBar.setProgress((size.getNew_percent()==0)?size.getOld_percent():size.getNew_percent());
 	        final TextView seekBarValue = (TextView)dv.findViewById(R.id.settings_zoom);
-	        seekBarValue.setText(Integer.toString(size.getOld_percent()));
+	        seekBarValue.setText(Integer.toString((size.getNew_percent()==0)?size.getOld_percent():size.getNew_percent()));
 	        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){ 
 			    @Override 
 			    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) { 
