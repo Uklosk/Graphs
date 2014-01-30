@@ -247,6 +247,22 @@ public class Graph implements Cloneable {
 				ordenarArrows();
 			}
 		}
+		Node n = new Node();
+		n = vertex.get(idi);
+		Iterator<Link> links = n.getEnlaces().iterator();
+		while(links.hasNext()){
+			Link link = links.next();
+			if(link.getIdf().equals(idf))
+				link.modificar(weight);
+			Node n_ = new Node();
+			n_ = vertex.get(link.getIdf());
+			Iterator<Link> links_ = n_.getEnlaces().iterator();
+			while(links_.hasNext()){
+				Link link_ = links_.next();
+				if(link_.getIdf().equals(idi))
+					link_.modificar(weight);
+			}
+		}
 	}
 
 	public boolean buscarArista(Arrow a) {

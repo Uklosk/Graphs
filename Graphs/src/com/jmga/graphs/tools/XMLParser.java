@@ -154,15 +154,20 @@ public class XMLParser {
 			serializer.attribute(null, "x", Float.toString(v_.getPosX()));
 			serializer.attribute(null, "y", Float.toString(v_.getPosY()));
 			serializer.attribute(null, "r", Integer.toString(v_.getRadius()));
-			String adjacent = "";
+			String adjacent = "", weights = "";
 			ArrayList<Link> links = v_.getEnlaces();
 			Iterator<Link> ln = links.iterator();
 			while(ln.hasNext()){
 				Link l = (Link)ln.next();
 				adjacent += l.getIdf() + ",";
+				weights += (int)l.getweight() + ",";
 			}
 			if(adjacent.length() > 0)
-				adjacent = adjacent.substring(0, adjacent.lastIndexOf(","));serializer.attribute(null, "adjacent", adjacent);
+				adjacent = adjacent.substring(0, adjacent.lastIndexOf(","));
+			serializer.attribute(null, "adjacent", adjacent);
+			if(weights.length() > 0)
+				weights = weights.substring(0, weights.lastIndexOf(","));
+			serializer.attribute(null, "weights", weights);
 			serializer.endTag(null, "vertex");
 			adjacent = "";
         }
@@ -260,15 +265,18 @@ public class XMLParser {
 			// principal (hash<"id principal", ArrayList>), la arista que pueda generarse con esos IDs
 			// ya existira y por tanto no se añadira
 			String adj = xmlitem.get(3);
+			String wei = xmlitem.get(4);
 			if(adj.length()>0)
 				if(adj.indexOf(",") != -1){
 					String[] adjacent = adj.split(",");
+					String[] weight = wei.split(",");
 					for(int i=0; i<adjacent.length; i++)
 						if(aux_read.contains(adjacent[i]) == false)
-							gr.addLink(id, adjacent[i], 1);
+							gr.addLink(id, adjacent[i], Integer.parseInt(weight[i]));
 				}else
-					if(aux_read.contains(adj) == false)
-						gr.addLink(id, adj, 1);
+					if(aux_read.contains(adj) == false){
+						gr.addLink(id, adj, Integer.parseInt(wei));
+					}
         }
 		
 		Log.d(TAG,"Grafo generado a partir del xml");
