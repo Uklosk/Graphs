@@ -251,9 +251,9 @@ public class XMLParser {
         // Generando el objeto grafo
         for(String id : keys) {  
 			ArrayList<String> xmlitem = (ArrayList<String>)data.get(id);
-			gr.addNodeF(Float.parseFloat(xmlitem.get(0))+displacement[0],
+			gr.addNodeF(id,Float.parseFloat(xmlitem.get(0))+displacement[0],
 						Float.parseFloat(xmlitem.get(1))+displacement[1],view.getViewportWidth(),view.getViewportHeight(),density);
-		}
+        }
         for(String id : keys) {  
 			ArrayList<String> xmlitem = (ArrayList<String>)data.get(id);
 			aux_read.add(id);
@@ -268,8 +268,9 @@ public class XMLParser {
 					String[] adjacent = adj.split(",");
 					String[] weight = wei.split(",");
 					for(int i=0; i<adjacent.length; i++)
-						if(aux_read.contains(adjacent[i]) == false)
+						if(aux_read.contains(adjacent[i]) == false){
 							gr.addLink(id, adjacent[i], Integer.parseInt(weight[i]));
+						}
 				}else
 					if(aux_read.contains(adj) == false){
 						gr.addLink(id, adj, Integer.parseInt(wei));

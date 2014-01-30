@@ -8,6 +8,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 import android.graphics.Color;
+import android.util.Log;
 
 public class Graph implements Cloneable {
 	private final String[] ids = { "A", "B", "C", "D", "E", "F", "G", "H", "I",
@@ -92,8 +93,8 @@ public class Graph implements Cloneable {
 		nodes++;
 	}
 	
-	public void addNodeF(float posX, float posY, int viewportWidth, int viewportHeight, float density){
-		String nombre = ids[nodes];
+	public void addNodeF(String id, float posX, float posY, int viewportWidth, int viewportHeight, float density){
+		String nombre = id;
 		nombres.add(nombre);
 		Node node = new Node(posX, posY, nombre,viewportWidth, viewportHeight, density);
 		vertex.put(nombre, node);
@@ -170,7 +171,6 @@ public class Graph implements Cloneable {
 
 	public void addLink(String idi, String idf, int weight) {
 		Arrow a = new Arrow(idi, idf, weight);
-
 		for (int i = 0; i < arrows.size(); i++) {
 			Arrow aa = arrows.get(i);
 			if (aa.getIdi().equals(idi)) {
@@ -187,7 +187,6 @@ public class Graph implements Cloneable {
 
 		if (a != null) {
 			int i = buscarIndice(a.getWeight());
-
 			if (i == -1)
 				arrows.add(a);
 			else

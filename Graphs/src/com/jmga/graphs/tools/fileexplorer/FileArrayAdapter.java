@@ -55,8 +55,6 @@ public class FileArrayAdapter extends ArrayAdapter<Item> {
 		final Item o = items.get(position);
 		if (o != null) {
 
-			Log.d("isgraph", "dentro de FileArrayAdapter");
-
 			TextView t1 = (TextView) v.findViewById(R.id.TextView01);
 			TextView t2 = (TextView) v.findViewById(R.id.TextView02);
 			TextView t3 = (TextView) v.findViewById(R.id.TextViewDate);
