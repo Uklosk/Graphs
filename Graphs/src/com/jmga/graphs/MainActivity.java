@@ -260,6 +260,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 										"Guardado con éxito!",
 										Toast.LENGTH_LONG).show();
 								dialog.dismiss();
+								view.clear();
 							} else
 								Toast.makeText(
 										getApplicationContext(),
@@ -348,6 +349,15 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			return true;
 
 		case R.id.action_settings:
+			LayoutInflater f = LayoutInflater.from(this);
+			final View dv = f.inflate(R.layout.menu_settings, null);
+			AlertDialog.Builder bu = new AlertDialog.Builder(this);
+			bu.setTitle(R.string.action_settings);		
+			
+			bu.setView(dv);
+			AlertDialog di = bu.create();
+			di.show();
+			
 			return true;
 
 		case R.id.action_remove:

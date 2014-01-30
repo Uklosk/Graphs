@@ -168,6 +168,8 @@ public class XMLParser {
 				adjacent += l.getIdf() + ",";
 				weights += (int)l.getweight() + ",";
 			}
+			Log.i(TAG, "Vertices: "+adjacent);
+			Log.i(TAG, "Pesos   : "+weights);
 			if(adjacent.length() > 0)
 				adjacent = adjacent.substring(0, adjacent.lastIndexOf(","));
 			serializer.attribute(null, "adjacent", adjacent);

@@ -12,6 +12,7 @@
     <string name="action_tableinfo">Information graph</string>
     <string name="action_clear">Clear</string>
     <string name="action_distance_table">Show table with distances</string>
+    <string name="separator">Dividing line</string>
     <string name="file_titlesave">Save graph</string>
     <string name="file_hint">Graph</string>
     <string name="file_extension">.graph</string>
@@ -25,5 +26,7 @@
     <string name="text_regular">Regular</string>
     <string name="text_secuence">Sequence degrees</string>
     <string name="text_separator">:</string>
+    <string name="text_zoom">Zoom screen</string>
+    <string name="text_percent">%</string>
 
 </resources>

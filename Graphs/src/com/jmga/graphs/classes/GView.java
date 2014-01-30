@@ -256,8 +256,6 @@ public class GView extends View {
 		Bipartite b = new Bipartite(g);
 		try {
 			b.execute(false);
-			// Con false como parametro, no calcula las adyacencias (Ejecuta 2
-			// bucles menos, ahorra tiempo y memoria)
 			cc = b.getConnectedComponents();
 		} catch (Exception e) {
 			e.printStackTrace();

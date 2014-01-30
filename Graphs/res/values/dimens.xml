@@ -7,5 +7,6 @@
     <dimen name="info_table">12dp</dimen>
     <dimen name="info_table_padding">2dp</dimen>
     <dimen name="info_table_val">10dp</dimen>
+    <dimen name="dialog_settings_margin">12dp</dimen>
 
 </resources>
