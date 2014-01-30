@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -31,15 +32,18 @@ import android.widget.Toast;
 import com.jmga.graphs.classes.GView;
 import com.jmga.graphs.classes.Node;
 import com.jmga.graphs.tools.XMLParser;
+import com.jmga.graphs.tools.auxiliary.SizeView;
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	private final static String storage = Environment
 			.getExternalStorageDirectory().toString() + "/Graphs";
 
-	GView view;
-	Node nFocused;
+	private GView view;
+	private Node nFocused;
 	private Menu menu;
+	
+	private final SizeView size = new SizeView();
 
 	private static final int GRAPH_MODE_NODES = 0;
 	private static final int GRAPH_MODE_ARROWS = 1;
@@ -257,10 +261,10 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 							String file_name = txtTexto.getText().toString();
 							if (view.graphToXML(storage, file_name)) {
 								Toast.makeText(getApplicationContext(),
-										"Guardado con éxito!",
+										"Guardado con éxito como " + file_name + ".graph",
 										Toast.LENGTH_LONG).show();
 								dialog.dismiss();
-								view.clear();
+								view.update();
 							} else
 								Toast.makeText(
 										getApplicationContext(),
@@ -348,12 +352,52 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			
 			return true;
 
-		case R.id.action_settings:
+		case R.id.action_settings: 
 			LayoutInflater f = LayoutInflater.from(this);
 			final View dv = f.inflate(R.layout.menu_settings, null);
 			AlertDialog.Builder bu = new AlertDialog.Builder(this);
 			bu.setTitle(R.string.action_settings);		
-			
+			SeekBar seekBar = (SeekBar)dv.findViewById(R.id.seekBar_zoom); 
+	        final TextView seekBarValue = (TextView)dv.findViewById(R.id.settings_zoom);
+	        seekBarValue.setText(Integer.toString(size.getOld_percent()));
+	        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){ 
+			    @Override 
+			    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) { 
+			    	seekBarValue.setText(String.valueOf(progress)); 
+			    } 
+			    @Override 
+			    public void onStartTrackingTouch(SeekBar seekBar) {
+			    	size.setOld_height(view.getViewportHeight());
+			    	size.setOld_width(view.getViewportWidth());
+			    	size.setOld_percent(Integer.parseInt(seekBarValue.getText().toString()));
+			    }
+			    @Override 
+			    public void onStopTrackingTouch(SeekBar seekBar) { 
+			    	int nw = size.getOld_width() * Integer.parseInt(seekBarValue.getText().toString())
+			    			/ size.getOld_percent();
+			    	int nh = size.getOld_height() * Integer.parseInt(seekBarValue.getText().toString())
+			    			/ size.getOld_percent();
+			    	size.setNew_width(nw);
+			    	size.setNew_height(nh);
+			    	size.setNew_percent(Integer.parseInt(seekBarValue.getText().toString()));
+			    } 
+		    });
+	        bu.setPositiveButton(R.string.file_save,
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+					    	view.onSizeChanged(size.getNew_width(), size.getNew_height(),
+					    			size.getOld_width(), size.getOld_height());
+					    	view.invalidate();
+					    	view.restore();
+					    	size.refreshData();
+						}
+					});
+			bu.setNegativeButton(R.string.file_cancel,
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
 			bu.setView(dv);
 			AlertDialog di = bu.create();
 			di.show();

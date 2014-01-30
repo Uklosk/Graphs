@@ -399,6 +399,7 @@ public class GView extends View {
 		super.onSizeChanged(w, h, oldw, oldh);
 		viewportWidth = w;
 		viewportHeight = h;
+		Log.d("tralara", "Height: " + viewportHeight + ", Width: " + viewportWidth);
 	}
 
 	public void setMenuStateChecked(boolean ck, boolean cb) {
