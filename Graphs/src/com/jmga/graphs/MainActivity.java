@@ -373,10 +373,10 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			    }
 			    @Override 
 			    public void onStopTrackingTouch(SeekBar seekBar) { 
-			    	int nw = size.getOld_width() * Integer.parseInt(seekBarValue.getText().toString())
-			    			/ size.getOld_percent();
-			    	int nh = size.getOld_height() * Integer.parseInt(seekBarValue.getText().toString())
-			    			/ size.getOld_percent();
+			    	int nw = size.getOld_width() * size.getOld_percent() /
+			    			Integer.parseInt(seekBarValue.getText().toString());
+			    	int nh = size.getOld_height() * size.getOld_percent() /
+			    			Integer.parseInt(seekBarValue.getText().toString());
 			    	size.setNew_width(nw);
 			    	size.setNew_height(nh);
 			    	size.setNew_percent(Integer.parseInt(seekBarValue.getText().toString()));
