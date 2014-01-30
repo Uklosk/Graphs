@@ -257,9 +257,10 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 							String file_name = txtTexto.getText().toString();
 							if (view.graphToXML(storage, file_name)) {
 								Toast.makeText(getApplicationContext(),
-										"Guardado con éxito como "+file_name+".graph",
+										"Guardado con éxito!",
 										Toast.LENGTH_LONG).show();
 								dialog.dismiss();
+								view.clear();
 							} else
 								Toast.makeText(
 										getApplicationContext(),
