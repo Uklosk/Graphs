@@ -104,8 +104,10 @@ public class Graph implements Cloneable {
 		nombres.add(nombre);
 		Node node = new Node(posX, posY, nombre,viewportWidth, viewportHeight, density);
 		vertex.put(nombre, node);
-		nodes++;
-	}
+		for(int i = 0; i< ids.length;i++){
+			if(ids[i].equals(id)) nodes = i;
+		}
+		nodes++;	}
 
 	public Node copiarNode(String name) {
 		Node n = vertex.get(name);
