@@ -141,7 +141,6 @@ public class GView extends View {
 		if (viewportHeight == 0 || viewportWidth == 0) {
 			viewportHeight = (int) (50 * density + 0.5f);
 			viewportWidth = (int) (50 * density + 0.5f);
-			Log.d("peawn",String.valueOf(viewportWidth));
 			paint.setStrokeWidth(0);
 			fontPaint.setTextSize(0);
 
@@ -150,7 +149,7 @@ public class GView extends View {
 		try {
 			g = xmlp.parseGraph(g);
 		} catch (Exception e) {
-			Log.d("XMLParser", "Error: " + e.getMessage());
+			e.printStackTrace();
 			task = false;
 		}
 		return task;
@@ -402,7 +401,6 @@ public class GView extends View {
 		super.onSizeChanged(w, h, oldw, oldh);
 		viewportWidth = w;
 		viewportHeight = h;
-		Log.d("alalala",String.valueOf(w*h));
 	}
 
 	public void setMenuStateChecked(boolean ck, boolean cb) {

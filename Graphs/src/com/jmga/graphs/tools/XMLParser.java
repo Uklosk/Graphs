@@ -245,9 +245,7 @@ public class XMLParser {
         float[] tam = new float[2];
         for(int i=0; i<2; i++){
         	tam[i] = max[i] + min[i];
-        	Log.d("pene","Value tamaño: " + tam[i] + " desde: " + max[i] + " hasta:" + min[i]);
         	displacement[i] = (1 - tam[i])/2;
-        	Log.d("pene","Value: " + displacement[i]);
         }
         
         // Generando el objeto grafo
@@ -255,7 +253,6 @@ public class XMLParser {
 			ArrayList<String> xmlitem = (ArrayList<String>)data.get(id);
 			gr.addNodeF(Float.parseFloat(xmlitem.get(0))+displacement[0],
 						Float.parseFloat(xmlitem.get(1))+displacement[1],view.getViewportWidth(),view.getViewportHeight(),density);
-			Log.d("pene2",String.valueOf(Float.parseFloat(xmlitem.get(0))+displacement[0]));
 		}
         for(String id : keys) {  
 			ArrayList<String> xmlitem = (ArrayList<String>)data.get(id);
@@ -279,7 +276,6 @@ public class XMLParser {
 					}
         }
 		
-		Log.d(TAG,"Grafo generado a partir del xml");
 		gr.update();
 		return gr;
 	}

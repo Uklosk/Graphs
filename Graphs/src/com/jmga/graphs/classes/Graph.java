@@ -8,7 +8,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 import android.graphics.Color;
-import android.util.Log;
 
 public class Graph implements Cloneable {
 	private final String[] ids = { "A", "B", "C", "D", "E", "F", "G", "H", "I",
@@ -325,15 +324,6 @@ public class Graph implements Cloneable {
 					iN.getCenterY() };
 			arrows.get(i).stop = new float[] { iF.getCenterX(), iF.getCenterY() };
 
-		}
-		for (Arrow aul : arrows) {
-			Log.d("digimon", " Arista " + aul.getIdi() + "--" + aul.getIdf());
-		}
-		for (String naul : nombres) {
-			for (int i = 0; i < vertex.get(naul).getEnlaces().size(); i++)
-				Log.d("digimon",
-						" Nodo " + naul + " enlace con "
-								+ vertex.get(naul).getEnlaces().get(i).getIdf());
 		}
 	}
 

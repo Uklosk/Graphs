@@ -58,18 +58,15 @@ public class Bipartite {
 		// dichas componentes por separado para crear la biparticion
 		// de cada una
 		while(g.getNombres().size() > visited.size()){
-			Log.d(TAG + "1", "Long total: " + g.getNombres().size() + " - Long visitados: " + visited.size());
 			Iterator<String> v = g.getNombres().iterator();
 			while(v.hasNext() && g.getNombres().size() > visited.size()){
 				String vid = v.next();
 				if(!visited.containsKey(vid)){
-					Log.d(TAG + "1", "Actual: " + vid);
 					visited.put(vid, 1);
 					A.add(g.getNode(vid));
 					Node no = new Node();
 					no = (Node)g.getNode(vid);
 					for(Link lk : no.getEnlaces()){
-						Log.d(TAG + "1", "Adyacente: " + lk.getIdf());
 						temp.put(lk.getIdf(), 2);
 						B.add(g.getNode(lk.getIdf()));
 					}
@@ -81,8 +78,6 @@ public class Bipartite {
 				}
 			}
 		}
-
-		Log.d(TAG + "1", "Componentes conexas " + connected_components);
 		
 		// Comprobando que tanto los vertices del subconjunto A pertenecientes a V, 
 		// como los vertices del subconjunto B pertenecientes a V, son disjuntos
@@ -91,14 +86,11 @@ public class Bipartite {
 			Iterator<Node> na_ = A.iterator();
 			while(na_.hasNext()){
 				Node na = na_.next();
-				Log.d(TAG, "(A) Actual: " + na.getId());
 				Iterator<Node> na__ = A.iterator();
 				while(na__.hasNext()){
 					Node n_ = na__.next();
-					Log.d(TAG, "(A) Estudiando: " + n_.getId());
 					if(!na.getId().equals(n_.getId()))
 						for(Link lk : na.getEnlaces()){
-							Log.d(TAG, "(A) Comparando: " + n_.getId() + " - " + lk.getIdf());
 							if(n_.getId().equals(lk.getIdf())){
 								return false;
 							}
@@ -108,14 +100,11 @@ public class Bipartite {
 			Iterator<Node> nb_ = B.iterator();
 			while(nb_.hasNext()){
 				Node nb = nb_.next();
-				Log.d(TAG, "(B) Actual: " + nb.getId());
 				Iterator<Node> nb__ = B.iterator();
 				while(nb__.hasNext()){
 					Node n_ = nb__.next();
-					Log.d(TAG, "(A) Estudiando: " + n_.getId());
 					if(!nb.getId().equals(n_.getId()))
 						for(Link lk : nb.getEnlaces()){
-							Log.d(TAG, "(B) Comparando: " + n_.getId() + " - " + lk.getIdf());
 							if(n_.getId().equals(lk.getIdf())){
 								return false;
 							}
