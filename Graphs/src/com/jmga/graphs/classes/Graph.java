@@ -85,6 +85,12 @@ public class Graph implements Cloneable {
 		nodes++;
 	}
 
+	public void addNode(String string) {
+		Node node = new Node(0, 0, string,1,1,1);
+		vertex.put(string, node);
+		nodes++;
+	}
+
 	public void addNode(int x, int y,int viewportWidth, int viewportHeight, float density) {
 		String nombre = ids[nodes];
 		nombres.add(nombre);
@@ -115,13 +121,6 @@ public class Graph implements Cloneable {
 
 	public void setColorOfNode(String id, int color) {
 		((Node) vertex.get(id)).setColor(color);
-	}
-
-	public void addNode(String string) {
-		// TODO Auto-generated method stub
-		Node node = new Node(0, 0, string,1,1,1);
-		vertex.put(string, node);
-		nodes++;
 	}
 
 	public void deleteNode(String name) {

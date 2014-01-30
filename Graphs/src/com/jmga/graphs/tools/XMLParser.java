@@ -54,6 +54,7 @@ public class XMLParser {
 	
 	public XMLParser(String storage, GView view){
 		storage_path = storage + "/";
+		checkTheDirectory();
 		current_xml = "";
 
 		this.view = view;
@@ -68,8 +69,9 @@ public class XMLParser {
 	
 	public XMLParser(String storage, String xml, GView view){
 		storage_path = storage + "/";
+		checkTheDirectory();
 		current_xml = xml;
-
+		
 		this.view = view;
 		density = view.getDensity();
 		displacement = new float[2];
@@ -79,6 +81,10 @@ public class XMLParser {
 		data = new Hashtable<String, ArrayList<String>>();
 	}
 	
+	private void checkTheDirectory(){
+		File folder = new File(storage_path);
+		folder.mkdirs();
+	}
 	
 	public void setStorage(String storage){
 		storage_path = storage;
