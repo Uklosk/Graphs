@@ -27,15 +27,12 @@ public class Kruskal {
 		}
 		Arrow pro = L.get(0);
 		arbol.addLink(pro.getIdi(), pro.getIdf(), pro.getWeight());
-		System.out.println("Inicializamos el algoritmo de Kruskal, partimos de la arista "+pro.getIdi()+"--"+pro.getIdf());
 		L.remove(pro);
 
 		while (L.size()>0) {
 			pro = L.get(0);
-			System.out.println("Iteramos con la arista "+pro.getIdi()+"--"+pro.getIdf());
 			
 			if (HayCiclo(arbol, pro, arbol.getNode(pro.getIdf()), pro.getIdf()) == false) {
-				System.out.println("La arista "+pro.getIdi()+"--"+pro.getIdf()+" no forma un ciclo");
 				arbol.addLink(pro.getIdi(), pro.getIdf(), pro.getWeight());
 			}
 
