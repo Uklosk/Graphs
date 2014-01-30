@@ -421,13 +421,6 @@ public class GView extends View {
 			xo = x * (float)s.getNew_width() / (float)s.getOld_width();
 			yo = y * (float)s.getNew_height() / (float)s.getOld_height();
 			node.setPosF(xo, yo, viewportWidth, viewportHeight);
-			/* Absoluta:
-			int x = node.getCenterX(), xo = 0;
-			int y = node.getCenterY(), yo = 0;
-			xo = x * s.getNew_width() / s.getOld_width();
-			yo = y * s.getNew_height() / s.getOld_height();
-			node.setPos(xo, yo, viewportWidth, viewportHeight);
-			 */
 		}
 		boolean load = false;
         // [0]:x  [1]:y

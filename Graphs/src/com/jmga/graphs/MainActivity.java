@@ -386,7 +386,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 						public void onClick(DialogInterface dialog, int id) {
 							view.resizeGraph(size);
 							view.invalidate();
-					    	size.refreshData();
 						}
 					});
 			bu.setNegativeButton(R.string.file_cancel,

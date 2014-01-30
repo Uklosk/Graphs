@@ -2,6 +2,9 @@ package com.jmga.graphs.tools.auxiliary;
 
 public class SizeView {
 
+	private int width;
+	private int height;
+	private int percent;
 	private int old_width;
 	private int old_height;
 	private int old_percent;
@@ -11,18 +14,33 @@ public class SizeView {
 	
 	public SizeView() {
 		super();
-		old_percent = 100;
-		old_height = 1;
-		old_width = 1;
+		percent = old_percent = 100;
+		height = old_height = 1;
+		width = old_width = 1;
 	}
 
-	public void refreshData(){
-		old_height = new_height;
-		new_height = 0;
-		old_width = new_width;
-		new_width = 0;
-		old_percent = new_percent;
-		new_percent = 0;
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public int getPercent() {
+		return percent;
+	}
+
+	public void setPercent(int percent) {
+		this.percent = percent;
 	}
 	
 	public int getOld_width() {
