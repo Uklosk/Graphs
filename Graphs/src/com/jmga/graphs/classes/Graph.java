@@ -49,7 +49,7 @@ public class Graph implements Cloneable {
 		this.vertex = vertex;
 		this.arrows = arrows;
 		distancesT = new Hashtable<String, Integer[]>();
-
+		nombres = Collections.list(vertex.keys());
 		nodes = vertex.size();
 	}
 
