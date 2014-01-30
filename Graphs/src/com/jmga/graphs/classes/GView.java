@@ -1,7 +1,9 @@
 package com.jmga.graphs.classes;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -23,6 +25,7 @@ import com.jmga.graphs.tools.Dijkstra;
 import com.jmga.graphs.tools.FlowTable;
 import com.jmga.graphs.tools.Kruskal;
 import com.jmga.graphs.tools.XMLParser;
+import com.jmga.graphs.tools.auxiliary.SizeView;
 
 public class GView extends View {
 	private Graph g;
@@ -44,6 +47,13 @@ public class GView extends View {
 
 	private int viewportHeight, viewportWidth;
 
+	final private SizeView size = new SizeView();
+	
+	public void setMenuStateChecked(boolean ck, boolean cb) {
+		checked_kruskal = ck;
+		checked_bipartite = cb;
+	}
+	
 	public int getViewportHeight() {
 		return viewportHeight;
 	}
@@ -399,11 +409,63 @@ public class GView extends View {
 		super.onSizeChanged(w, h, oldw, oldh);
 		viewportWidth = w;
 		viewportHeight = h;
-		Log.d("tralara", "Height: " + viewportHeight + ", Width: " + viewportWidth);
 	}
-
-	public void setMenuStateChecked(boolean ck, boolean cb) {
-		checked_kruskal = ck;
-		checked_bipartite = cb;
+	
+	public void resizeGraph(SizeView s){
+		Enumeration<Node> nodes = g.getVertex().elements();
+		while(nodes.hasMoreElements()){
+			Node node = new Node();
+			node = nodes.nextElement();
+			float x = node.getPosX(), xo = 0;
+			float y = node.getPosY(), yo = 0;
+			xo = x * (float)s.getNew_width() / (float)s.getOld_width();
+			yo = y * (float)s.getNew_height() / (float)s.getOld_height();
+			node.setPosF(xo, yo, viewportWidth, viewportHeight);
+			/* Absoluta:
+			int x = node.getCenterX(), xo = 0;
+			int y = node.getCenterY(), yo = 0;
+			xo = x * s.getNew_width() / s.getOld_width();
+			yo = y * s.getNew_height() / s.getOld_height();
+			node.setPos(xo, yo, viewportWidth, viewportHeight);
+			 */
+		}
+		boolean load = false;
+        // [0]:x  [1]:y
+		float[] displacement = new float[2];
+        float[] max = new float[2];
+        float[] min = new float[2];
+        max[0] = max[1] = min[0] = min[1] = 0; 
+        Iterator<String> keys = g.getNombres().iterator();
+        while(keys.hasNext()){
+        	String key = keys.next();
+			if(!load){
+		        max[0] = min[0] = g.getVertex().get(key).getPosX();
+		        max[1] = min[1] = g.getVertex().get(key).getPosY(); 
+		        load = true;
+			}else{
+				if(g.getVertex().get(key).getPosX() > max[0])
+					max[0] = g.getVertex().get(key).getPosX();
+				if(g.getVertex().get(key).getPosX() < min[0])
+					min[0] = g.getVertex().get(key).getPosX();
+				if(g.getVertex().get(key).getPosY() > max[1])
+					max[1] = g.getVertex().get(key).getPosY();
+				if(g.getVertex().get(key).getPosY() < min[1])
+					min[1] = g.getVertex().get(key).getPosY();
+			}
+        }
+        // [0]:width  [1]:height
+        float[] tam = new float[2];
+        for(int i=0; i<2; i++){
+        	tam[i] = max[i] + min[i];
+        	displacement[i] = (1 - tam[i])/2;
+        }
+		nodes = g.getVertex().elements();
+		while(nodes.hasMoreElements()){
+			Node node = new Node();
+			node = nodes.nextElement();
+			float x = node.getPosX() + displacement[0];
+			float y = node.getPosY() + displacement[1];
+			node.setPosF(x, y, viewportWidth, viewportHeight);
+		}
 	}
 }

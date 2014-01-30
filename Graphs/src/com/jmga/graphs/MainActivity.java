@@ -358,6 +358,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			AlertDialog.Builder bu = new AlertDialog.Builder(this);
 			bu.setTitle(R.string.action_settings);		
 			SeekBar seekBar = (SeekBar)dv.findViewById(R.id.seekBar_zoom); 
+			seekBar.setProgress(size.getOld_percent());
 	        final TextView seekBarValue = (TextView)dv.findViewById(R.id.settings_zoom);
 	        seekBarValue.setText(Integer.toString(size.getOld_percent()));
 	        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){ 
@@ -373,10 +374,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			    }
 			    @Override 
 			    public void onStopTrackingTouch(SeekBar seekBar) { 
-			    	int nw = size.getOld_width() * size.getOld_percent() /
-			    			Integer.parseInt(seekBarValue.getText().toString());
-			    	int nh = size.getOld_height() * size.getOld_percent() /
-			    			Integer.parseInt(seekBarValue.getText().toString());
+			    	int nw = size.getOld_width() * Integer.parseInt(seekBarValue.getText().toString()) / size.getOld_percent();
+			    	int nh = size.getOld_height() * Integer.parseInt(seekBarValue.getText().toString()) / size.getOld_percent();
 			    	size.setNew_width(nw);
 			    	size.setNew_height(nh);
 			    	size.setNew_percent(Integer.parseInt(seekBarValue.getText().toString()));
@@ -385,10 +384,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	        bu.setPositiveButton(R.string.file_save,
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int id) {
-					    	view.onSizeChanged(size.getNew_width(), size.getNew_height(),
-					    			size.getOld_width(), size.getOld_height());
-					    	view.invalidate();
-					    	view.restore();
+							view.resizeGraph(size);
+							view.invalidate();
 					    	size.refreshData();
 						}
 					});

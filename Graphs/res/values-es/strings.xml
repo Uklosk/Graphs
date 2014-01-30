@@ -25,6 +25,6 @@
     <string name="text_regular">Regular</string>
     <string name="text_secuence">Secuencia de grados</string>
     <string name="text_separator">:</string>
-    <string name="text_zoom">Zoom de pantalla</string>
+    <string name="text_zoom">Escala del grafo</string>
 
 </resources>
