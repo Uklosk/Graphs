@@ -2,47 +2,41 @@ package com.jmga.graphs.tools.auxiliary;
 
 public class SizeView {
 
-	private int width;
-	private int height;
-	private int percent;
+	// Scale graph
 	private int old_width;
 	private int old_height;
 	private int old_percent;
 	private int new_width;
 	private int new_height;
 	private int new_percent;
+	// Scale vertex
+	private int old_percent_vertex;
+	private int new_percent_vertex;
 	
 	public SizeView() {
 		super();
-		percent = old_percent = 100;
-		height = old_height = 1;
-		width = old_width = 1;
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
-	}
-
-	public int getPercent() {
-		return percent;
-	}
-
-	public void setPercent(int percent) {
-		this.percent = percent;
+		old_percent = 100;
+		old_height = 1;
+		old_width = 1;
+		old_percent_vertex = 100;
 	}
 	
+	public int getOld_percent_vertex() {
+		return old_percent_vertex;
+	}
+
+	public void setOld_percent_vertex(int old_percent_vertex) {
+		this.old_percent_vertex = old_percent_vertex;
+	}
+
+	public int getNew_percent_vertex() {
+		return new_percent_vertex;
+	}
+
+	public void setNew_percent_vertex(int new_percent_vertex) {
+		this.new_percent_vertex = new_percent_vertex;
+	}
+
 	public int getOld_width() {
 		return old_width;
 	}

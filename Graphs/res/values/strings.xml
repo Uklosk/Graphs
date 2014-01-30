@@ -26,7 +26,8 @@
     <string name="text_regular">Regular</string>
     <string name="text_secuence">Sequence degrees</string>
     <string name="text_separator">:</string>
-    <string name="text_zoom">Scale of the graph</string>
+    <string name="text_zoompos">Scale of the graph</string>
     <string name="text_percent">%</string>
+    <string name="text_zoomvertex">Scalar vertex</string>
 
 </resources>

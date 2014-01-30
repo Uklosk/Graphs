@@ -357,6 +357,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			final View dv = f.inflate(R.layout.menu_settings, null);
 			AlertDialog.Builder bu = new AlertDialog.Builder(this);
 			bu.setTitle(R.string.action_settings);		
+			/*
+			 * Scale graph
+			 */
 			SeekBar seekBar = (SeekBar)dv.findViewById(R.id.seekBar_zoom); 
 			seekBar.setProgress((size.getNew_percent()==0)?size.getOld_percent():size.getNew_percent());
 	        final TextView seekBarValue = (TextView)dv.findViewById(R.id.settings_zoom);
@@ -379,6 +382,28 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			    	size.setNew_width(nw);
 			    	size.setNew_height(nh);
 			    	size.setNew_percent(Integer.parseInt(seekBarValue.getText().toString()));
+			    } 
+		    });
+			/*
+			 * Scale vertex
+			 */
+			SeekBar seekBar_vertex = (SeekBar)dv.findViewById(R.id.seekBar_zoomvertex); 
+			seekBar_vertex.setProgress((size.getNew_percent_vertex()==0)?size.getOld_percent_vertex():size.getNew_percent_vertex());
+	        final TextView seekBarValue_vertex = (TextView)dv.findViewById(R.id.setting_zoomvertex);
+	        seekBarValue_vertex.setText(Integer.toString((size.getNew_percent_vertex()==0)?size.getOld_percent_vertex():size.getNew_percent_vertex()));
+	        seekBar_vertex.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){ 
+			    @Override 
+			    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) { 
+			    	seekBarValue_vertex.setText(String.valueOf(progress)); 
+			    } 
+			    @Override 
+			    public void onStartTrackingTouch(SeekBar seekBar) {
+			    	//
+			    }
+			    @Override 
+			    public void onStopTrackingTouch(SeekBar seekBar) { 
+			    	// 
+			    	size.setNew_percent_vertex(Integer.parseInt(seekBarValue_vertex.getText().toString()));
 			    } 
 		    });
 	        bu.setPositiveButton(R.string.file_save,
