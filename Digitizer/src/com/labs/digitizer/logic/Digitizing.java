@@ -20,12 +20,6 @@ public class Digitizing {
 	private static final String TAG = "Digitizing";
 	private static final int EXTRA_RADIUS = 1;
 	private Context con;
-	private static final char[] ids = {'A','B','C','D','E','F','G','H','I',
-										'J','K','L','M','N','O','P','Q','R','S',
-										'T','U','V','W','X','Y','Z',
-										'a','b','c','d','e','f','g','h','i','j','k',
-										'l','m','n','o','p','q','r','s','t','u',
-										'v','w','x','y','z'};
 	private String storage_path;
 	private String current_image;
 	private double[][] allvec;
@@ -107,7 +101,7 @@ public class Digitizing {
 		    Imgproc.cvtColor(m_img, m_gray, Imgproc.COLOR_BGR2GRAY);
 		    Imgproc.GaussianBlur( m_gray, m_gray, new Size(9, 9), 0, 0);
 		    Mat circles = new Mat();
-		    Imgproc.HoughCircles( m_gray, circles, Imgproc.CV_HOUGH_GRADIENT, 1, 80, 70, 10, 3, 15);
+		    Imgproc.HoughCircles( m_gray, circles, Imgproc.CV_HOUGH_GRADIENT, 1, 80, 70, 10, 4, 16);
 		    totalcir = circles.cols();
 		    allcir = new double[totalcir][3];
 		    for(int i = 0; i < totalcir; i++ ){
@@ -244,7 +238,7 @@ public class Digitizing {
 	
 			for(int i = 0; i < totalcir; i++){
 				serializer.startTag(null, "vertex");
-				serializer.attribute(null, "id", ids[i]+"");
+				serializer.attribute(null, "id", i+"");
 				serializer.attribute(null, "x", Double.toString(allcir[i][0]));
 				serializer.attribute(null, "y", Double.toString(allcir[i][1]));
 				serializer.attribute(null, "r", Double.toString(allcir[i][2]));
@@ -255,7 +249,7 @@ public class Digitizing {
 						for(int z = 0; z < totalcir; z++)
 							if(i!=z && (inVertex(allcir[z][0],allcir[z][1],allcir[z][2],allvec[j][0], allvec[j][1])
 									||inVertex(allcir[z][0],allcir[z][1],allcir[z][2],allvec[j][2], allvec[j][3])))
-								adjacent += ids[z]+",";
+								adjacent += z+",";
 				if(adjacent.indexOf(",")!=-1)
 					adjacent = adjacent.substring(0, adjacent.lastIndexOf(","));
 				serializer.attribute(null, "adjacent", adjacent);
