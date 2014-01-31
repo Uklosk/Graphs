@@ -205,8 +205,11 @@ public class GView extends View {
 	}
 
 	public Node checkBounds(int x, int y) {
-		for (int i = 0; i < g.getVertex().size(); i++) {
-			Node n = g.getVertex().get(g.getId(i));
+		Iterator<String> ids = g.getNombres().iterator();
+		while(ids.hasNext()){
+			String id = ids.next();
+			Node n = new Node();
+			n = g.getVertex().get(id);
 			if (n != null && !n.getId().equals("nulo")) {
 				if (n.getBounds().left < x && n.getBounds().right > x
 						&& n.getBounds().top < y && n.getBounds().bottom > y) {

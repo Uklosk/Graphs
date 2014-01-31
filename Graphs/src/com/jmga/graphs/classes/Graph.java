@@ -11,15 +11,21 @@ import android.graphics.Color;
 import android.util.Log;
 
 public class Graph implements Cloneable {
-	private final String[] ids = { "A", "B", "C", "D", "E", "F", "G", "H", "I",
+	private final String[] label = { "A", "B", "C", "D", "E", "F", "G", "H", "I",
 			"J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
-			"W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i",
-			"j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v",
-			"w", "x", "y", "z" };
+			"W", "X", "Y", "Z" };
 
-	public String getId(int i) {
-		return ids[i];
+	public String getLabel(int i) {
+		String lbl = "";
+		if(i>25){
+			
+		}
+		return lbl;
 	}
+	
+	/*private String moduleLabel(){
+		
+	}*/
 
 	private Hashtable<String, Integer[]> distancesT;
 	private ArrayList<String> nombres;
@@ -79,7 +85,7 @@ public class Graph implements Cloneable {
 	}
 
 	public void addNode(Node node) {
-		String nombre = ids[nodes];
+		String nombre = Integer.toString(nodes);
 		nombres.add(nombre);
 		vertex.put(nombre, node);
 		nodes++;
@@ -92,7 +98,7 @@ public class Graph implements Cloneable {
 	}
 
 	public void addNode(int x, int y,int viewportWidth, int viewportHeight, float density) {
-		String nombre = ids[nodes];
+		String nombre = Integer.toString(nodes);
 		nombres.add(nombre);
 		Node node = new Node(x, y, nombre,viewportWidth, viewportHeight, density);
 		vertex.put(nombre, node);
@@ -104,9 +110,6 @@ public class Graph implements Cloneable {
 		nombres.add(nombre);
 		Node node = new Node(posX, posY, nombre,viewportWidth, viewportHeight, density);
 		vertex.put(nombre, node);
-		for(int i = 0; i< ids.length;i++){
-			if(ids[i].equals(id)) nodes = i;
-		}
 		nodes++;	
 	}
 

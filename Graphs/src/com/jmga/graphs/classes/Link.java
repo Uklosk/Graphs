@@ -1,5 +1,7 @@
 package com.jmga.graphs.classes;
 
+import java.util.Iterator;
+
 public class Link {
 	private String idf;
 	private int weight;
@@ -24,6 +26,13 @@ public class Link {
 
 	public double getweight() {
 		return weight;
+	}
+	
+	public void changeIds(Graph g, String id, String new_idf){
+		Arrow a = g.buscarArista(id, idf);
+		a.setIdi(id);
+		a.setIdf(new_idf);
+		idf = new_idf;
 	}
 	
 }
