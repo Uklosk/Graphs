@@ -128,7 +128,7 @@ public class XMLParser {
 	
 	public void saveGraph(Graph g, String name) throws Exception{
 		Log.d(TAG,"File name: " + name);
-		Hashtable<String, Node> v = new Hashtable<String, Node>();
+		Hashtable<Integer, Node> v = new Hashtable<Integer, Node>();
 		ArrayList<Arrow> a = new ArrayList<Arrow>();
 		
 		v = g.getVertex();
@@ -150,11 +150,11 @@ public class XMLParser {
 		serializer.attribute(null, "v", Integer.toString(v.size()));
 		serializer.attribute(null, "a", Integer.toString(a.size()));
 		
-		String[] keys = g.getNombres().toArray(new String[0]); 
+		String[] keys = g.getNombresString().toArray(new String[0]); 
         Arrays.sort(keys);  		
         for(String key : keys){
         	Node v_ = new Node();
-        	v_ = (Node)v.get(key);
+        	v_ = (Node)v.get(Integer.parseInt(key));
 			serializer.startTag(null, "vertex");
 			serializer.attribute(null, "id", key);
 			serializer.attribute(null, "x", Float.toString(v_.getPosX()));
@@ -259,7 +259,7 @@ public class XMLParser {
         // Generando el objeto grafo
         for(String id : keys) {  
 			ArrayList<String> xmlitem = (ArrayList<String>)data.get(id);
-			gr.addNodeF(id,Float.parseFloat(xmlitem.get(0))+displacement[0],
+			gr.addNodeF(Integer.parseInt(id),Float.parseFloat(xmlitem.get(0))+displacement[0],
 						Float.parseFloat(xmlitem.get(1))+displacement[1],view.getViewportWidth(),view.getViewportHeight(),density);
         }
         for(String id : keys) {  
@@ -277,11 +277,11 @@ public class XMLParser {
 					String[] weight = wei.split(",");
 					for(int i=0; i<adjacent.length; i++)
 						if(aux_read.contains(adjacent[i]) == false){
-							gr.addLink(id, adjacent[i], Integer.parseInt(weight[i]));
+							gr.addLink(Integer.parseInt(id), Integer.parseInt(adjacent[i]), Integer.parseInt(weight[i]));
 						}
 				}else
 					if(aux_read.contains(adj) == false){
-						gr.addLink(id, adj, Integer.parseInt(wei));
+						gr.addLink(Integer.parseInt(id), Integer.parseInt(adj), Integer.parseInt(wei));
 					}
         }
 		

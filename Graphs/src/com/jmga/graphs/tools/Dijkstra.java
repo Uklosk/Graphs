@@ -18,17 +18,18 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.jmga.graphs.classes.Arrow;
+import com.jmga.graphs.classes.GView;
 import com.jmga.graphs.classes.Graph;
 
 public class Dijkstra {
 
 	private ArrayList<Arrow> arrows;
-	private ArrayList<String> nodes;
+	private ArrayList<Integer> nodes;
 	private Set<String> settledNodes;
 	private Set<String> unSettledNodes;
 	private Map<String, String> predecessors;
 	private Map<String, Integer> distance;
-	private Hashtable<String, Hashtable<String, Integer>> disT;
+	private Hashtable<Integer, Hashtable<Integer, Integer>> disT;
 
 	public Dijkstra(Graph graph) {
 		// create a copy of the array so that we can operate on this array
@@ -67,10 +68,10 @@ public class Dijkstra {
 
 	private int getDistance(String node, String target) {
 		for (Arrow arrow : arrows) {
-			if (arrow.getIdi().equals(node) && arrow.getIdf().equals(target)) {
+			if (String.valueOf(arrow.getIdi()).equals(node) && String.valueOf(arrow.getIdf()).equals(target)) {
 				return arrow.getWeight();
-			} else if (arrow.getIdf().equals(node)
-					&& arrow.getIdi().equals(target)) {
+			} else if (String.valueOf(arrow.getIdf()).equals(node)
+					&& String.valueOf(arrow.getIdi()).equals(target)) {
 				return arrow.getWeight();
 			}
 		}
@@ -80,11 +81,11 @@ public class Dijkstra {
 	private List<String> getNeighbors(String node) {
 		List<String> neighbors = new ArrayList<String>();
 		for (Arrow arrow : arrows) {
-			if (arrow.getIdi().equals(node) && !isSettled(arrow.getIdf())) {
-				neighbors.add(arrow.getIdf());
-			} else if (arrow.getIdf().equals(node)
-					&& !isSettled(arrow.getIdi())) {
-				neighbors.add(arrow.getIdi());
+			if (String.valueOf(arrow.getIdi()).equals(node) && !isSettled(String.valueOf(arrow.getIdf()))) {
+				neighbors.add(String.valueOf(arrow.getIdf()));
+			} else if (String.valueOf(arrow.getIdf()).equals(node)
+					&& !isSettled(String.valueOf(arrow.getIdi()))) {
+				neighbors.add(String.valueOf(arrow.getIdi()));
 			}
 		}
 		return neighbors;
@@ -139,11 +140,11 @@ public class Dijkstra {
 	}
 
 	public void dijkstra(Graph g) {
-		disT = new Hashtable<String, Hashtable<String, Integer>>();
-		for (String name : nodes) {
-			Hashtable<String, Integer> table = new Hashtable<String, Integer>();
-			execute(name);
-			for (String name2 : nodes) {
+		disT = new Hashtable<Integer, Hashtable<Integer, Integer>>();
+		for (int name : nodes) {
+			Hashtable<Integer, Integer> table = new Hashtable<Integer, Integer>();
+			execute(String.valueOf(name));
+			for (int name2 : nodes) {
 				if(distance.get(name2)==null){
 					table.put(name2, -1);
 
@@ -159,7 +160,7 @@ public class Dijkstra {
 	
 	public FlowTable getTableDistance(Context context){
 		FlowTable dTable = new FlowTable(context,nodes);
-		for(String name : nodes){
+		for(int name : nodes){
 			dTable.addContent(name, disT.get(name));
 		}
 		return dTable;

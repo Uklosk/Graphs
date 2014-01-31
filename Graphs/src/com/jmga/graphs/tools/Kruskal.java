@@ -12,7 +12,7 @@ public class Kruskal {
 	@SuppressWarnings("unchecked")
 	public static Graph aplicarKruskal(Graph grafo) {
 		Graph arbol = new Graph();
-		ArrayList<String> Nodes = grafo.getNombres();
+		ArrayList<Integer> Nodes = grafo.getNombres();
 
 		for (int j = 0; j < Nodes.size(); j++) {
 
@@ -42,7 +42,7 @@ public class Kruskal {
 		return arbol;
 	}
 
-	public static boolean HayCiclo(Graph g, Arrow aVerificar, Node Idf, String N) {
+	public static boolean HayCiclo(Graph g, Arrow aVerificar, Node Idf, int N) {
 		ArrayList<Link> aux = Idf.getEnlaces();
 
 		if (aux.size() == 0)
@@ -54,7 +54,7 @@ public class Kruskal {
 		for (int i = 0; i < aux.size(); i++) {
 			Link Node = aux.get(i);
 
-			if (Node.getIdf().equals(N) == false)
+			if (!(Node.getIdf()==N))
 				if (HayCiclo(g, aVerificar, g.getNode(Node.getIdf()),
 						Idf.getId()))
 					return true;

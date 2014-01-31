@@ -15,7 +15,7 @@ public class Node extends ShapeDrawable {
 	private int enlacesExistentes;
 	public int radius;
 	private final int DPS = 25;
-	private String id;
+	private int id;
 
 	public float getPosX() {
 		return posX;
@@ -33,13 +33,13 @@ public class Node extends ShapeDrawable {
 	 * CONSTRUCTOR NORMAL
 	 */
 	public Node() {
-		id = "";
+		id = -1;
 		enlacesExistentes = 0;
 		enlaces = new ArrayList<Link>();
 		color = Color.BLACK;
 	}
 
-	public Node(int x, int y, String id, int viewportWidth, int viewportHeight,
+	public Node(int x, int y, int id, int viewportWidth, int viewportHeight,
 			float density) {
 		super(new OvalShape());
 		if(!(((int) (DPS * density + 0.5f) * viewportWidth * viewportHeight / 787184	)==0)){
@@ -70,11 +70,11 @@ public class Node extends ShapeDrawable {
 		setPos(x, y, viewportWidth, viewportHeight);
 		enlacesExistentes = -1;
 		enlaces = new ArrayList<Link>();
-		id = "aux";
+		id = -1;
 
 	}
 
-	public Node(float posX, float posY, String id, int viewportWidth,
+	public Node(float posX, float posY, int id, int viewportWidth,
 			int viewportHeight, float density) {
 		super(new OvalShape());
 		if(!(((int) (DPS * density + 0.5f) * viewportWidth * viewportHeight / 787184	)==0)){
@@ -91,7 +91,7 @@ public class Node extends ShapeDrawable {
 
 	}
 
-	public void initNode(String id_) {
+	public void initNode(int id_) {
 		id = id_;
 		enlacesExistentes = 0;
 		enlaces = new ArrayList<Link>();
@@ -128,11 +128,11 @@ public class Node extends ShapeDrawable {
 		return getBounds().centerY();
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void String(String id) {
+	public void String(int id) {
 		this.id = id;
 	}
 
@@ -173,12 +173,12 @@ public class Node extends ShapeDrawable {
 	 * ADICIONALES
 	 */
 
-	public void agregarEnlace(String idf, int weight) {
+	public void agregarEnlace(int idf, int weight) {
 		enlaces.add(new Link(idf, weight));
 
 	}
 
-	public void deleteEnlace(String idf) {
+	public void deleteEnlace(int idf) {
 		for (int i = 0; i < enlaces.size(); i++) {
 			if (enlaces.get(i).getIdf() == idf) {
 				enlaces.remove(i);
@@ -187,17 +187,17 @@ public class Node extends ShapeDrawable {
 		}
 	}
 
-	public int existeEnlace(String idi) {
+	public int existeEnlace(int idi) {
 		for (int i = 0; i < enlaces.size(); i++) {
 			Link miEnlace;
 			miEnlace = enlaces.get(i);
-			if (miEnlace.getIdf().equals(idi))
+			if (miEnlace.getIdf()==idi)
 				return i;
 		}
 		return -1;
 	}
 
-	public String NodoPosicion(int posi) {
+	public int NodoPosicion(int posi) {
 		Link miEnlace;
 		miEnlace = enlaces.get(posi);
 		return miEnlace.getIdf();

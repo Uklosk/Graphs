@@ -3,7 +3,7 @@ package com.jmga.graphs.classes;
 import android.graphics.Color;
 
 public class Arrow {
-	private String idi, idf;
+	private int idi, idf;
 
 	public float[] start = new float[2];
 	public float[] stop = new float[2];
@@ -15,7 +15,7 @@ public class Arrow {
 	 * 
 	 * CONSTRUCTOR NORMAL
 	 */
-	public Arrow(String idi, String idf, int weight) {
+	public Arrow(int idi, int idf, int weight) {
 		this.idi = idi;
 		this.idf = idf;
 		this.weight = weight;
@@ -51,19 +51,19 @@ public class Arrow {
 		this.weight = weight;
 	}
 
-	public String getIdi() {
+	public int getIdi() {
 		return idi;
 	}
 
-	public void setIdi(String idi) {
+	public void setIdi(int idi) {
 		this.idi = idi;
 	}
 
-	public String getIdf() {
+	public int getIdf() {
 		return idf;
 	}
 
-	public void setIdf(String idf) {
+	public void setIdf(int idf) {
 		this.idf = idf;
 	}
 	

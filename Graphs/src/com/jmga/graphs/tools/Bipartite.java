@@ -15,22 +15,22 @@ public class Bipartite {
 
 	private static final String TAG = "Bipartite";	
 	private Graph g;
-	private Hashtable<String,Integer> visited;
-	private Hashtable<String,Integer> temp;
+	private Hashtable<Integer,Integer> visited;
+	private Hashtable<Integer,Integer> temp;
 	private ArrayList<Node> A;
 	private ArrayList<Node> B;
 	private int connected_components;
 	
 	public Bipartite(Graph g_){
 		g = g_;
-		visited = new Hashtable<String,Integer>();
-		temp = new Hashtable<String,Integer>();
+		visited = new Hashtable<Integer,Integer>();
+		temp = new Hashtable<Integer,Integer>();
 		A = new ArrayList<Node>();
 		B = new ArrayList<Node>();
 		connected_components = 1;
 	}
 	
-	public Hashtable<String,Integer> getSubSet(){
+	public Hashtable<Integer,Integer> getSubSet(){
 		return visited;
 	}
 	
@@ -40,7 +40,7 @@ public class Bipartite {
 	
 	public boolean execute(boolean bipartite) throws Exception{			
 		// Se inicializan los conjuntos
-		String start = "";
+		int start = -1;
 		start = g.getNombres().get(0);
 		visited.put(start, 1);
 		A.add(g.getNode(start));
@@ -58,9 +58,9 @@ public class Bipartite {
 		// dichas componentes por separado para crear la biparticion
 		// de cada una
 		while(g.getNombres().size() > visited.size()){
-			Iterator<String> v = g.getNombres().iterator();
+			Iterator<Integer> v = g.getNombres().iterator();
 			while(v.hasNext() && g.getNombres().size() > visited.size()){
-				String vid = v.next();
+				int vid = v.next();
 				if(!visited.containsKey(vid)){
 					visited.put(vid, 1);
 					A.add(g.getNode(vid));
@@ -74,7 +74,7 @@ public class Bipartite {
 					BreadthFirstSearch();
 					// Actualizando el número de componentes conexas
 					connected_components++;
-					temp = new Hashtable<String,Integer>();
+					temp = new Hashtable<Integer,Integer>();
 				}
 			}
 		}
@@ -89,9 +89,9 @@ public class Bipartite {
 				Iterator<Node> na__ = A.iterator();
 				while(na__.hasNext()){
 					Node n_ = na__.next();
-					if(!na.getId().equals(n_.getId()))
+					if(!(na.getId()==(n_.getId())))
 						for(Link lk : na.getEnlaces()){
-							if(n_.getId().equals(lk.getIdf())){
+							if(n_.getId()==(lk.getIdf())){
 								return false;
 							}
 						}
@@ -103,9 +103,9 @@ public class Bipartite {
 				Iterator<Node> nb__ = B.iterator();
 				while(nb__.hasNext()){
 					Node n_ = nb__.next();
-					if(!nb.getId().equals(n_.getId()))
+					if(!(nb.getId()==(n_.getId())))
 						for(Link lk : nb.getEnlaces()){
-							if(n_.getId().equals(lk.getIdf())){
+							if(n_.getId()==(lk.getIdf())){
 								return false;
 							}
 						}
@@ -116,10 +116,10 @@ public class Bipartite {
 	}
 	
 	private void BreadthFirstSearch(){
-		Enumeration<String> ks = temp.keys();
+		Enumeration<Integer> ks = temp.keys();
 		int size = temp.size();
 		while(ks.hasMoreElements()){
-			String key = (String)ks.nextElement();
+			int key = (int)ks.nextElement();
 			visited.put(key, temp.get(key));
 			Node n_ = (Node)g.getNode(key);
 			for(Link lk : n_.getEnlaces()){

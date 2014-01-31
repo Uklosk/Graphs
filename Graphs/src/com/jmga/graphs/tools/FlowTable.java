@@ -4,26 +4,28 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import com.jmga.graphs.R;
+import com.jmga.graphs.classes.GView;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 public class FlowTable extends TableLayout {
 	private TableRow mCurrentRow;
-	private ArrayList<String> names;
+	private ArrayList<Integer> names;
 
 	public FlowTable(Context context, AttributeSet attrs,
-			ArrayList<String> names) {
+			ArrayList<Integer> names) {
 		super(context, attrs);
 		this.names = names;
 		init();
 	}
 
-	public FlowTable(Context context, ArrayList<String> names) {
+	public FlowTable(Context context, ArrayList<Integer> names) {
 		super(context);
 		this.names = names;
 		init();
@@ -32,8 +34,8 @@ public class FlowTable extends TableLayout {
 	private void init() {
 		mCurrentRow = new TableRow(getContext());
 		mCurrentRow.addView(createAndFillTextView("\\")); // title for first row
-		for (String name : names) {
-			mCurrentRow.addView(createAndFillTextView(name));
+		for (int name : names) {
+			mCurrentRow.addView(createAndFillTextView(GView.getLabel(name)));
 			mCurrentRow.setBackgroundResource(R.drawable.tablerow_border);
 		}
 		setStretchAllColumns(true);
@@ -42,12 +44,12 @@ public class FlowTable extends TableLayout {
 		finishRowAndStartNew();
 	}
 
-	public void addContent(String node, Hashtable<String, Integer> data) {
-		mCurrentRow.addView(createAndFillTextView(node));
+	public void addContent(int node, Hashtable<Integer, Integer> data) {
+		mCurrentRow.addView(createAndFillTextView(GView.getLabel(node)));
 
-		for (String name : names) {
-			mCurrentRow.addView(createAndFillTextView(String.valueOf(data
-					.get(name))));
+		for (int name : names) {
+			
+			mCurrentRow.addView(createAndFillTextView(String.valueOf(data.get(name))));
 			mCurrentRow.setBackgroundResource(R.drawable.tablerow_border);
 			mCurrentRow.setPadding(0, 2, 0, 0);
 		}

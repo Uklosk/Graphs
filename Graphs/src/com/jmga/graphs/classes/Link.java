@@ -3,15 +3,15 @@ package com.jmga.graphs.classes;
 import java.util.Iterator;
 
 public class Link {
-	private String idf;
+	private int idf;
 	private int weight;
 
-	public Link(String idf, int weight) {
+	public Link(int idf, int weight) {
 		this.idf = idf;
 		this.weight = weight;
 	}
 
-	public Link(String idf) {
+	public Link(int idf) {
 		this.idf = idf;
 		weight = -1;
 	}
@@ -20,7 +20,7 @@ public class Link {
 		this.weight=weight;
 	}
 
-	public String getIdf() {
+	public int getIdf() {
 		return idf;
 	}
 
@@ -28,7 +28,7 @@ public class Link {
 		return weight;
 	}
 	
-	public void changeIds(Graph g, String id, String new_idf){
+	public void changeIds(Graph g, int id, int new_idf){
 		Arrow a = g.buscarArista(id, idf);
 		a.setIdi(id);
 		a.setIdf(new_idf);

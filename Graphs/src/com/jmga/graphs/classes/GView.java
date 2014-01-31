@@ -43,12 +43,205 @@ public class GView extends View {
 	public boolean isBipartite = false;
 	private boolean checked_kruskal = false;
 	private boolean checked_bipartite = false;
-	private Hashtable<String, Integer> subSets;
+	private Hashtable<Integer, Integer> subSets;
 
 	private int viewportHeight, viewportWidth;
 
 	final private SizeView size = new SizeView();
-	
+	private static final String[] label = { "A", "B", "C", "D", "E", "F", "G",
+		"H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+		"U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g",
+		"h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+		"u", "v", "w", "x", "y", "z", "AA", "AB", "AC", "AD", "AE", "AF",
+		"AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ",
+		"AR", "AS", "AT", "AU", "AV", "AW", "AX", "AY", "AZ", "Aa", "Ab",
+		"Ac", "Ad", "Ae", "Af", "Ag", "Ah", "Ai", "Aj", "Ak", "Al", "Am",
+		"An", "Ao", "Ap", "Aq", "Ar", "As", "At", "Au", "Av", "Aw", "Ax",
+		"Ay", "Az", "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH", "BI",
+		"BJ", "BK", "BL", "BM", "BN", "BO", "BP", "BQ", "BR", "BS", "BT",
+		"BU", "BV", "BW", "BX", "BY", "BZ", "Ba", "Bb", "Bc", "Bd", "Be",
+		"Bf", "Bg", "Bh", "Bi", "Bj", "Bk", "Bl", "Bm", "Bn", "Bo", "Bp",
+		"Bq", "Br", "Bs", "Bt", "Bu", "Bv", "Bw", "Bx", "By", "Bz", "CA",
+		"CB", "CC", "CD", "CE", "CF", "CG", "CH", "CI", "CJ", "CK", "CL",
+		"CM", "CN", "CO", "CP", "CQ", "CR", "CS", "CT", "CU", "CV", "CW",
+		"CX", "CY", "CZ", "Ca", "Cb", "Cc", "Cd", "Ce", "Cf", "Cg", "Ch",
+		"Ci", "Cj", "Ck", "Cl", "Cm", "Cn", "Co", "Cp", "Cq", "Cr", "Cs",
+		"Ct", "Cu", "Cv", "Cw", "Cx", "Cy", "Cz", "DA", "DB", "DC", "DD",
+		"DE", "DF", "DG", "DH", "DI", "DJ", "DK", "DL", "DM", "DN", "DO",
+		"DP", "DQ", "DR", "DS", "DT", "DU", "DV", "DW", "DX", "DY", "DZ",
+		"Da", "Db", "Dc", "Dd", "De", "Df", "Dg", "Dh", "Di", "Dj", "Dk",
+		"Dl", "Dm", "Dn", "Do", "Dp", "Dq", "Dr", "Ds", "Dt", "Du", "Dv",
+		"Dw", "Dx", "Dy", "Dz", "EA", "EB", "EC", "ED", "EE", "EF", "EG",
+		"EH", "EI", "EJ", "EK", "EL", "EM", "EN", "EO", "EP", "EQ", "ER",
+		"ES", "ET", "EU", "EV", "EW", "EX", "EY", "EZ", "Ea", "Eb", "Ec",
+		"Ed", "Ee", "Ef", "Eg", "Eh", "Ei", "Ej", "Ek", "El", "Em", "En",
+		"Eo", "Ep", "Eq", "Er", "Es", "Et", "Eu", "Ev", "Ew", "Ex", "Ey",
+		"Ez", "FA", "FB", "FC", "FD", "FE", "FF", "FG", "FH", "FI", "FJ",
+		"FK", "FL", "FM", "FN", "FO", "FP", "FQ", "FR", "FS", "FT", "FU",
+		"FV", "FW", "FX", "FY", "FZ", "Fa", "Fb", "Fc", "Fd", "Fe", "Ff",
+		"Fg", "Fh", "Fi", "Fj", "Fk", "Fl", "Fm", "Fn", "Fo", "Fp", "Fq",
+		"Fr", "Fs", "Ft", "Fu", "Fv", "Fw", "Fx", "Fy", "Fz", "GA", "GB",
+		"GC", "GD", "GE", "GF", "GG", "GH", "GI", "GJ", "GK", "GL", "GM",
+		"GN", "GO", "GP", "GQ", "GR", "GS", "GT", "GU", "GV", "GW", "GX",
+		"GY", "GZ", "Ga", "Gb", "Gc", "Gd", "Ge", "Gf", "Gg", "Gh", "Gi",
+		"Gj", "Gk", "Gl", "Gm", "Gn", "Go", "Gp", "Gq", "Gr", "Gs", "Gt",
+		"Gu", "Gv", "Gw", "Gx", "Gy", "Gz", "HA", "HB", "HC", "HD", "HE",
+		"HF", "HG", "HH", "HI", "HJ", "HK", "HL", "HM", "HN", "HO", "HP",
+		"HQ", "HR", "HS", "HT", "HU", "HV", "HW", "HX", "HY", "HZ", "Ha",
+		"Hb", "Hc", "Hd", "He", "Hf", "Hg", "Hh", "Hi", "Hj", "Hk", "Hl",
+		"Hm", "Hn", "Ho", "Hp", "Hq", "Hr", "Hs", "Ht", "Hu", "Hv", "Hw",
+		"Hx", "Hy", "Hz", "IA", "IB", "IC", "ID", "IE", "IF", "IG", "IH",
+		"II", "IJ", "IK", "IL", "IM", "IN", "IO", "IP", "IQ", "IR", "IS",
+		"IT", "IU", "IV", "IW", "IX", "IY", "IZ", "Ia", "Ib", "Ic", "Id",
+		"Ie", "If", "Ig", "Ih", "Ii", "Ij", "Ik", "Il", "Im", "In", "Io",
+		"Ip", "Iq", "Ir", "Is", "It", "Iu", "Iv", "Iw", "Ix", "Iy", "Iz",
+		"JA", "JB", "JC", "JD", "JE", "JF", "JG", "JH", "JI", "JJ", "JK",
+		"JL", "JM", "JN", "JO", "JP", "JQ", "JR", "JS", "JT", "JU", "JV",
+		"JW", "JX", "JY", "JZ", "Ja", "Jb", "Jc", "Jd", "Je", "Jf", "Jg",
+		"Jh", "Ji", "Jj", "Jk", "Jl", "Jm", "Jn", "Jo", "Jp", "Jq", "Jr",
+		"Js", "Jt", "Ju", "Jv", "Jw", "Jx", "Jy", "Jz", "KA", "KB", "KC",
+		"KD", "KE", "KF", "KG", "KH", "KI", "KJ", "KK", "KL", "KM", "KN",
+		"KO", "KP", "KQ", "KR", "KS", "KT", "KU", "KV", "KW", "KX", "KY",
+		"KZ", "Ka", "Kb", "Kc", "Kd", "Ke", "Kf", "Kg", "Kh", "Ki", "Kj",
+		"Kk", "Kl", "Km", "Kn", "Ko", "Kp", "Kq", "Kr", "Ks", "Kt", "Ku",
+		"Kv", "Kw", "Kx", "Ky", "Kz", "LA", "LB", "LC", "LD", "LE", "LF",
+		"LG", "LH", "LI", "LJ", "LK", "LL", "LM", "LN", "LO", "LP", "LQ",
+		"LR", "LS", "LT", "LU", "LV", "LW", "LX", "LY", "LZ", "La", "Lb",
+		"Lc", "Ld", "Le", "Lf", "Lg", "Lh", "Li", "Lj", "Lk", "Ll", "Lm",
+		"Ln", "Lo", "Lp", "Lq", "Lr", "Ls", "Lt", "Lu", "Lv", "Lw", "Lx",
+		"Ly", "Lz", "MA", "MB", "MC", "MD", "ME", "MF", "MG", "MH", "MI",
+		"MJ", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT",
+		"MU", "MV", "MW", "MX", "MY", "MZ", "Ma", "Mb", "Mc", "Md", "Me",
+		"Mf", "Mg", "Mh", "Mi", "Mj", "Mk", "Ml", "Mm", "Mn", "Mo", "Mp",
+		"Mq", "Mr", "Ms", "Mt", "Mu", "Mv", "Mw", "Mx", "My", "Mz", "NA",
+		"NB", "NC", "ND", "NE", "NF", "NG", "NH", "NI", "NJ", "NK", "NL",
+		"NM", "NN", "NO", "NP", "NQ", "NR", "NS", "NT", "NU", "NV", "NW",
+		"NX", "NY", "NZ", "Na", "Nb", "Nc", "Nd", "Ne", "Nf", "Ng", "Nh",
+		"Ni", "Nj", "Nk", "Nl", "Nm", "Nn", "No", "Np", "Nq", "Nr", "Ns",
+		"Nt", "Nu", "Nv", "Nw", "Nx", "Ny", "Nz", "OA", "OB", "OC", "OD",
+		"OE", "OF", "OG", "OH", "OI", "OJ", "OK", "OL", "OM", "ON", "OO",
+		"OP", "OQ", "OR", "OS", "OT", "OU", "OV", "OW", "OX", "OY", "OZ",
+		"Oa", "Ob", "Oc", "Od", "Oe", "Of", "Og", "Oh", "Oi", "Oj", "Ok",
+		"Ol", "Om", "On", "Oo", "Op", "Oq", "Or", "Os", "Ot", "Ou", "Ov",
+		"Ow", "Ox", "Oy", "Oz", "PA", "PB", "PC", "PD", "PE", "PF", "PG",
+		"PH", "PI", "PJ", "PK", "PL", "PM", "PN", "PO", "PP", "PQ", "PR",
+		"PS", "PT", "PU", "PV", "PW", "PX", "PY", "PZ", "Pa", "Pb", "Pc",
+		"Pd", "Pe", "Pf", "Pg", "Ph", "Pi", "Pj", "Pk", "Pl", "Pm", "Pn",
+		"Po", "Pp", "Pq", "Pr", "Ps", "Pt", "Pu", "Pv", "Pw", "Px", "Py",
+		"Pz", "QA", "QB", "QC", "QD", "QE", "QF", "QG", "QH", "QI", "QJ",
+		"QK", "QL", "QM", "QN", "QO", "QP", "QQ", "QR", "QS", "QT", "QU",
+		"QV", "QW", "QX", "QY", "QZ", "Qa", "Qb", "Qc", "Qd", "Qe", "Qf",
+		"Qg", "Qh", "Qi", "Qj", "Qk", "Ql", "Qm", "Qn", "Qo", "Qp", "Qq",
+		"Qr", "Qs", "Qt", "Qu", "Qv", "Qw", "Qx", "Qy", "Qz", "RA", "RB",
+		"RC", "RD", "RE", "RF", "RG", "RH", "RI", "RJ", "RK", "RL", "RM",
+		"RN", "RO", "RP", "RQ", "RR", "RS", "RT", "RU", "RV", "RW", "RX",
+		"RY", "RZ", "Ra", "Rb", "Rc", "Rd", "Re", "Rf", "Rg", "Rh", "Ri",
+		"Rj", "Rk", "Rl", "Rm", "Rn", "Ro", "Rp", "Rq", "Rr", "Rs", "Rt",
+		"Ru", "Rv", "Rw", "Rx", "Ry", "Rz", "SA", "SB", "SC", "SD", "SE",
+		"SF", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SO", "SP",
+		"SQ", "SR", "SS", "ST", "SU", "SV", "SW", "SX", "SY", "SZ", "Sa",
+		"Sb", "Sc", "Sd", "Se", "Sf", "Sg", "Sh", "Si", "Sj", "Sk", "Sl",
+		"Sm", "Sn", "So", "Sp", "Sq", "Sr", "Ss", "St", "Su", "Sv", "Sw",
+		"Sx", "Sy", "Sz", "TA", "TB", "TC", "TD", "TE", "TF", "TG", "TH",
+		"TI", "TJ", "TK", "TL", "TM", "TN", "TO", "TP", "TQ", "TR", "TS",
+		"TT", "TU", "TV", "TW", "TX", "TY", "TZ", "Ta", "Tb", "Tc", "Td",
+		"Te", "Tf", "Tg", "Th", "Ti", "Tj", "Tk", "Tl", "Tm", "Tn", "To",
+		"Tp", "Tq", "Tr", "Ts", "Tt", "Tu", "Tv", "Tw", "Tx", "Ty", "Tz",
+		"UA", "UB", "UC", "UD", "UE", "UF", "UG", "UH", "UI", "UJ", "UK",
+		"UL", "UM", "UN", "UO", "UP", "UQ", "UR", "US", "UT", "UU", "UV",
+		"UW", "UX", "UY", "UZ", "Ua", "Ub", "Uc", "Ud", "Ue", "Uf", "Ug",
+		"Uh", "Ui", "Uj", "Uk", "Ul", "Um", "Un", "Uo", "Up", "Uq", "Ur",
+		"Us", "Ut", "Uu", "Uv", "Uw", "Ux", "Uy", "Uz", "VA", "VB", "VC",
+		"VD", "VE", "VF", "VG", "VH", "VI", "VJ", "VK", "VL", "VM", "VN",
+		"VO", "VP", "VQ", "VR", "VS", "VT", "VU", "VV", "VW", "VX", "VY",
+		"VZ", "Va", "Vb", "Vc", "Vd", "Ve", "Vf", "Vg", "Vh", "Vi", "Vj",
+		"Vk", "Vl", "Vm", "Vn", "Vo", "Vp", "Vq", "Vr", "Vs", "Vt", "Vu",
+		"Vv", "Vw", "Vx", "Vy", "Vz", "WA", "WB", "WC", "WD", "WE", "WF",
+		"WG", "WH", "WI", "WJ", "WK", "WL", "WM", "WN", "WO", "WP", "WQ",
+		"WR", "WS", "WT", "WU", "WV", "WW", "WX", "WY", "WZ", "Wa", "Wb",
+		"Wc", "Wd", "We", "Wf", "Wg", "Wh", "Wi", "Wj", "Wk", "Wl", "Wm",
+		"Wn", "Wo", "Wp", "Wq", "Wr", "Ws", "Wt", "Wu", "Wv", "Ww", "Wx",
+		"Wy", "Wz", "XA", "XB", "XC", "XD", "XE", "XF", "XG", "XH", "XI",
+		"XJ", "XK", "XL", "XM", "XN", "XO", "XP", "XQ", "XR", "XS", "XT",
+		"XU", "XV", "XW", "XX", "XY", "XZ", "Xa", "Xb", "Xc", "Xd", "Xe",
+		"Xf", "Xg", "Xh", "Xi", "Xj", "Xk", "Xl", "Xm", "Xn", "Xo", "Xp",
+		"Xq", "Xr", "Xs", "Xt", "Xu", "Xv", "Xw", "Xx", "Xy", "Xz", "YA",
+		"YB", "YC", "YD", "YE", "YF", "YG", "YH", "YI", "YJ", "YK", "YL",
+		"YM", "YN", "YO", "YP", "YQ", "YR", "YS", "YT", "YU", "YV", "YW",
+		"YX", "YY", "YZ", "Ya", "Yb", "Yc", "Yd", "Ye", "Yf", "Yg", "Yh",
+		"Yi", "Yj", "Yk", "Yl", "Ym", "Yn", "Yo", "Yp", "Yq", "Yr", "Ys",
+		"Yt", "Yu", "Yv", "Yw", "Yx", "Yy", "Yz", "ZA", "ZB", "ZC", "ZD",
+		"ZE", "ZF", "ZG", "ZH", "ZI", "ZJ", "ZK", "ZL", "ZM", "ZN", "ZO",
+		"ZP", "ZQ", "ZR", "ZS", "ZT", "ZU", "ZV", "ZW", "ZX", "ZY", "ZZ",
+		"Za", "Zb", "Zc", "Zd", "Ze", "Zf", "Zg", "Zh", "Zi", "Zj", "Zk",
+		"Zl", "Zm", "Zn", "Zo", "Zp", "Zq", "Zr", "Zs", "Zt", "Zu", "Zv",
+		"Zw", "Zx", "Zy", "Zz", "Aa", "Ab", "Ac", "Ad", "Ae", "Af", "Ag",
+		"Ah", "Ai", "Aj", "Ak", "Al", "Am", "An", "Ao", "Ap", "Aq", "Ar",
+		"As", "At", "Au", "Av", "Aw", "Ax", "Ay", "Az", "Ba", "Bb", "Bc",
+		"Bd", "Be", "Bf", "Bg", "Bh", "Bi", "Bj", "Bk", "Bl", "Bm", "Bn",
+		"Bo", "Bp", "Bq", "Br", "Bs", "Bt", "Bu", "Bv", "Bw", "Bx", "By",
+		"Bz", "Ca", "Cb", "Cc", "Cd", "Ce", "Cf", "Cg", "Ch", "Ci", "Cj",
+		"Ck", "Cl", "Cm", "Cn", "Co", "Cp", "Cq", "Cr", "Cs", "Ct", "Cu",
+		"Cv", "Cw", "Cx", "Cy", "Cz", "Da", "Db", "Dc", "Dd", "De", "Df",
+		"Dg", "Dh", "Di", "Dj", "Dk", "Dl", "Dm", "Dn", "Do", "Dp", "Dq",
+		"Dr", "Ds", "Dt", "Du", "Dv", "Dw", "Dx", "Dy", "Dz", "Ea", "Eb",
+		"Ec", "Ed", "Ee", "Ef", "Eg", "Eh", "Ei", "Ej", "Ek", "El", "Em",
+		"En", "Eo", "Ep", "Eq", "Er", "Es", "Et", "Eu", "Ev", "Ew", "Ex",
+		"Ey", "Ez", "Fa", "Fb", "Fc", "Fd", "Fe", "Ff", "Fg", "Fh", "Fi",
+		"Fj", "Fk", "Fl", "Fm", "Fn", "Fo", "Fp", "Fq", "Fr", "Fs", "Ft",
+		"Fu", "Fv", "Fw", "Fx", "Fy", "Fz", "Ga", "Gb", "Gc", "Gd", "Ge",
+		"Gf", "Gg", "Gh", "Gi", "Gj", "Gk", "Gl", "Gm", "Gn", "Go", "Gp",
+		"Gq", "Gr", "Gs", "Gt", "Gu", "Gv", "Gw", "Gx", "Gy", "Gz", "Ha",
+		"Hb", "Hc", "Hd", "He", "Hf", "Hg", "Hh", "Hi", "Hj", "Hk", "Hl",
+		"Hm", "Hn", "Ho", "Hp", "Hq", "Hr", "Hs", "Ht", "Hu", "Hv", "Hw",
+		"Hx", "Hy", "Hz", "Ia", "Ib", "Ic", "Id", "Ie", "If", "Ig", "Ih",
+		"Ii", "Ij", "Ik", "Il", "Im", "In", "Io", "Ip", "Iq", "Ir", "Is",
+		"It", "Iu", "Iv", "Iw", "Ix", "Iy", "Iz", "Ja", "Jb", "Jc", "Jd",
+		"Je", "Jf", "Jg", "Jh", "Ji", "Jj", "Jk", "Jl", "Jm", "Jn", "Jo",
+		"Jp", "Jq", "Jr", "Js", "Jt", "Ju", "Jv", "Jw", "Jx", "Jy", "Jz",
+		"Ka", "Kb", "Kc", "Kd", "Ke", "Kf", "Kg", "Kh", "Ki", "Kj", "Kk",
+		"Kl", "Km", "Kn", "Ko", "Kp", "Kq", "Kr", "Ks", "Kt", "Ku", "Kv",
+		"Kw", "Kx", "Ky", "Kz", "La", "Lb", "Lc", "Ld", "Le", "Lf", "Lg",
+		"Lh", "Li", "Lj", "Lk", "Ll", "Lm", "Ln", "Lo", "Lp", "Lq", "Lr",
+		"Ls", "Lt", "Lu", "Lv", "Lw", "Lx", "Ly", "Lz", "Ma", "Mb", "Mc",
+		"Md", "Me", "Mf", "Mg", "Mh", "Mi", "Mj", "Mk", "Ml", "Mm", "Mn",
+		"Mo", "Mp", "Mq", "Mr", "Ms", "Mt", "Mu", "Mv", "Mw", "Mx", "My",
+		"Mz", "Na", "Nb", "Nc", "Nd", "Ne", "Nf", "Ng", "Nh", "Ni", "Nj",
+		"Nk", "Nl", "Nm", "Nn", "No", "Np", "Nq", "Nr", "Ns", "Nt", "Nu",
+		"Nv", "Nw", "Nx", "Ny", "Nz", "Oa", "Ob", "Oc", "Od", "Oe", "Of",
+		"Og", "Oh", "Oi", "Oj", "Ok", "Ol", "Om", "On", "Oo", "Op", "Oq",
+		"Or", "Os", "Ot", "Ou", "Ov", "Ow", "Ox", "Oy", "Oz", "Pa", "Pb",
+		"Pc", "Pd", "Pe", "Pf", "Pg", "Ph", "Pi", "Pj", "Pk", "Pl", "Pm",
+		"Pn", "Po", "Pp", "Pq", "Pr", "Ps", "Pt", "Pu", "Pv", "Pw", "Px",
+		"Py", "Pz", "Qa", "Qb", "Qc", "Qd", "Qe", "Qf", "Qg", "Qh", "Qi",
+		"Qj", "Qk", "Ql", "Qm", "Qn", "Qo", "Qp", "Qq", "Qr", "Qs", "Qt",
+		"Qu", "Qv", "Qw", "Qx", "Qy", "Qz", "Ra", "Rb", "Rc", "Rd", "Re",
+		"Rf", "Rg", "Rh", "Ri", "Rj", "Rk", "Rl", "Rm", "Rn", "Ro", "Rp",
+		"Rq", "Rr", "Rs", "Rt", "Ru", "Rv", "Rw", "Rx", "Ry", "Rz", "Sa",
+		"Sb", "Sc", "Sd", "Se", "Sf", "Sg", "Sh", "Si", "Sj", "Sk", "Sl",
+		"Sm", "Sn", "So", "Sp", "Sq", "Sr", "Ss", "St", "Su", "Sv", "Sw",
+		"Sx", "Sy", "Sz", "Ta", "Tb", "Tc", "Td", "Te", "Tf", "Tg", "Th",
+		"Ti", "Tj", "Tk", "Tl", "Tm", "Tn", "To", "Tp", "Tq", "Tr", "Ts",
+		"Tt", "Tu", "Tv", "Tw", "Tx", "Ty", "Tz", "Ua", "Ub", "Uc", "Ud",
+		"Ue", "Uf", "Ug", "Uh", "Ui", "Uj", "Uk", "Ul", "Um", "Un", "Uo",
+		"Up", "Uq", "Ur", "Us", "Ut", "Uu", "Uv", "Uw", "Ux", "Uy", "Uz",
+		"Va", "Vb", "Vc", "Vd", "Ve", "Vf", "Vg", "Vh", "Vi", "Vj", "Vk",
+		"Vl", "Vm", "Vn", "Vo", "Vp", "Vq", "Vr", "Vs", "Vt", "Vu", "Vv",
+		"Vw", "Vx", "Vy", "Vz", "Wa", "Wb", "Wc", "Wd", "We", "Wf", "Wg",
+		"Wh", "Wi", "Wj", "Wk", "Wl", "Wm", "Wn", "Wo", "Wp", "Wq", "Wr",
+		"Ws", "Wt", "Wu", "Wv", "Ww", "Wx", "Wy", "Wz", "Xa", "Xb", "Xc",
+		"Xd", "Xe", "Xf", "Xg", "Xh", "Xi", "Xj", "Xk", "Xl", "Xm", "Xn",
+		"Xo", "Xp", "Xq", "Xr", "Xs", "Xt", "Xu", "Xv", "Xw", "Xx", "Xy",
+		"Xz", "Ya", "Yb", "Yc", "Yd", "Ye", "Yf", "Yg", "Yh", "Yi", "Yj",
+		"Yk", "Yl", "Ym", "Yn", "Yo", "Yp", "Yq", "Yr", "Ys", "Yt", "Yu",
+		"Yv", "Yw", "Yx", "Yy", "Yz", "Za", "Zb", "Zc", "Zd", "Ze", "Zf",
+		"Zg", "Zh", "Zi", "Zj", "Zk", "Zl", "Zm", "Zn", "Zo", "Zp", "Zq",
+		"Zr", "Zs", "Zt", "Zu", "Zv", "Zw", "Zx", "Zy", "Zz" };
+
+	public static String getLabel(int i) {
+
+	return label[i];
+}
 	public void setMenuStateChecked(boolean ck, boolean cb) {
 		checked_kruskal = ck;
 		checked_bipartite = cb;
@@ -107,7 +300,7 @@ public class GView extends View {
 
 		g = new Graph();
 		gKruskal = new Graph();
-		subSets = new Hashtable<String, Integer>();
+		subSets = new Hashtable<Integer, Integer>();
 
 		paint = new Paint();
 		paint.setStrokeWidth(4f);
@@ -195,22 +388,22 @@ public class GView extends View {
 					aux.stop[1], auxP);
 		}
 
-		for (String ns : g.getNombres()) {
+		for (int ns : g.getNombres()) {
 			Node n = g.getVertex().get(ns);
 			n.draw(canvas);
-			canvas.drawText(n.getId(), n.getCenterX(), n.getCenterY()
+			canvas.drawText(label[n.getId()], n.getCenterX(), n.getCenterY()
 					- n.radius - 20, fontPaint);
 		}
 
 	}
 
 	public Node checkBounds(int x, int y) {
-		Iterator<String> ids = g.getNombres().iterator();
+		Iterator<Integer> ids = g.getNombres().iterator();
 		while(ids.hasNext()){
-			String id = ids.next();
+			int id = ids.next();
 			Node n = new Node();
 			n = g.getVertex().get(id);
-			if (n != null && !n.getId().equals("nulo")) {
+			if (n != null && !(n.getId()==-1)) {
 				if (n.getBounds().left < x && n.getBounds().right > x
 						&& n.getBounds().top < y && n.getBounds().bottom > y) {
 					return n;
@@ -227,11 +420,11 @@ public class GView extends View {
 				for (int j = 0; j < gKruskal.getArrows().size(); j++) {
 					Arrow a = g.getArrows().get(i);
 					Arrow k = gKruskal.getArrows().get(j);
-					if (a.getIdi().equals(k.getIdi())
-							&& a.getIdf().equals(k.getIdf())) {
+					if (a.getIdi()==k.getIdi()
+							&& a.getIdf()==k.getIdf()) {
 						a.color = Color.BLUE;
-					} else if (a.getIdi().equals(k.getIdf())
-							&& a.getIdf().equals(k.getIdi())) {
+					} else if (a.getIdi()==k.getIdf()
+							&& a.getIdf()==k.getIdi()) {
 						a.color = Color.BLUE;
 					}
 				}
@@ -250,14 +443,14 @@ public class GView extends View {
 		}
 		if (printBipatite && print) {
 			subSets = b.getSubSet();
-			Enumeration<String> keys = subSets.keys();
+			Enumeration<Integer> keys = subSets.keys();
 			while (keys.hasMoreElements()) {
-				String key = (String) keys.nextElement();
+				int key = (int) keys.nextElement();
 				g.setColorOfNode(key, (subSets.get(key) == 1) ? Color.YELLOW
 						: Color.GREEN);
 			}
 		} else {
-			subSets = new Hashtable<String, Integer>();
+			subSets = new Hashtable<Integer, Integer>();
 			initializingNodesColor();
 		}
 
@@ -431,9 +624,9 @@ public class GView extends View {
         float[] max = new float[2];
         float[] min = new float[2];
         max[0] = max[1] = min[0] = min[1] = 0; 
-        Iterator<String> keys = g.getNombres().iterator();
+        Iterator<Integer> keys = g.getNombres().iterator();
         while(keys.hasNext()){
-        	String key = keys.next();
+        	Integer key = keys.next();
 			if(!load){
 		        max[0] = min[0] = g.getVertex().get(key).getPosX();
 		        max[1] = min[1] = g.getVertex().get(key).getPosY(); 
