@@ -25,10 +25,10 @@ public class Dijkstra {
 
 	private ArrayList<Arrow> arrows;
 	private ArrayList<Integer> nodes;
-	private Set<String> settledNodes;
-	private Set<String> unSettledNodes;
-	private Map<String, String> predecessors;
-	private Map<String, Integer> distance;
+	private Set<Integer> settledNodes;
+	private Set<Integer> unSettledNodes;
+	private Map<Integer, Integer> predecessors;
+	private Map<Integer, Integer> distance;
 	private Hashtable<Integer, Hashtable<Integer, Integer>> disT;
 
 	public Dijkstra(Graph graph) {
@@ -37,24 +37,24 @@ public class Dijkstra {
 		this.nodes = graph.getNombres();
 	}
 
-	public void execute(String source) {
-		settledNodes = new HashSet<String>();
-		unSettledNodes = new HashSet<String>();
-		distance = new HashMap<String, Integer>();
-		predecessors = new HashMap<String, String>();
+	public void execute(int source) {
+		settledNodes = new HashSet<Integer>();
+		unSettledNodes = new HashSet<Integer>();
+		distance = new HashMap<Integer, Integer>();
+		predecessors = new HashMap<Integer, Integer>();
 		distance.put(source, 0);
 		unSettledNodes.add(source);
 		while (unSettledNodes.size() > 0) {
-			String node = getMinimum(unSettledNodes);
+			int node = getMinimum(unSettledNodes);
 			settledNodes.add(node);
 			unSettledNodes.remove(node);
 			findMinimalDistances(node);
 		}
 	}
 
-	private void findMinimalDistances(String node) {
-		List<String> adjacentNodes = getNeighbors(node);
-		for (String target : adjacentNodes) {
+	private void findMinimalDistances(int node) {
+		List<Integer> adjacentNodes = getNeighbors(node);
+		for (Integer target : adjacentNodes) {
 			if (getShortestDistance(target) > getShortestDistance(node)
 					+ getDistance(node, target)) {
 				distance.put(target,
@@ -66,34 +66,34 @@ public class Dijkstra {
 
 	}
 
-	private int getDistance(String node, String target) {
+	private int getDistance(int node, int target) {
 		for (Arrow arrow : arrows) {
-			if (String.valueOf(arrow.getIdi()).equals(node) && String.valueOf(arrow.getIdf()).equals(target)) {
+			if ((arrow.getIdi())==(node) && (arrow.getIdf())==(target)) {
 				return arrow.getWeight();
-			} else if (String.valueOf(arrow.getIdf()).equals(node)
-					&& String.valueOf(arrow.getIdi()).equals(target)) {
+			} else if ((arrow.getIdf())==(node)
+					&& (arrow.getIdi())==(target)) {
 				return arrow.getWeight();
 			}
 		}
 		throw new RuntimeException("Should not happen");
 	}
 
-	private List<String> getNeighbors(String node) {
-		List<String> neighbors = new ArrayList<String>();
+	private List<Integer> getNeighbors(int node) {
+		List<Integer> neighbors = new ArrayList<Integer>();
 		for (Arrow arrow : arrows) {
-			if (String.valueOf(arrow.getIdi()).equals(node) && !isSettled(String.valueOf(arrow.getIdf()))) {
-				neighbors.add(String.valueOf(arrow.getIdf()));
-			} else if (String.valueOf(arrow.getIdf()).equals(node)
-					&& !isSettled(String.valueOf(arrow.getIdi()))) {
-				neighbors.add(String.valueOf(arrow.getIdi()));
+			if (arrow.getIdi()==(node) && !isSettled((arrow.getIdf()))) {
+				neighbors.add((arrow.getIdf()));
+			} else if ((arrow.getIdf())==(node)
+					&& !isSettled((arrow.getIdi()))) {
+				neighbors.add((arrow.getIdi()));
 			}
 		}
 		return neighbors;
 	}
 
-	private String getMinimum(Set<String> nodes) {
-		String minimum = null;
-		for (String node : nodes) {
+	private int getMinimum(Set<Integer> nodes) {
+		Integer minimum = null;
+		for (Integer node : nodes) {
 			if (minimum == null) {
 				minimum = node;
 			} else {
@@ -105,11 +105,11 @@ public class Dijkstra {
 		return minimum;
 	}
 
-	private boolean isSettled(String node) {
+	private boolean isSettled(int node) {
 		return settledNodes.contains(node);
 	}
 
-	private int getShortestDistance(String destination) {
+	private int getShortestDistance(int destination) {
 		Integer d = distance.get(destination);
 		if (d == null) {
 			return Integer.MAX_VALUE;
@@ -122,9 +122,9 @@ public class Dijkstra {
 	 * This method returns the path from the source to the selected target and
 	 * NULL if no path exists
 	 */
-	public LinkedList<String> getPath(String target) {
-		LinkedList<String> path = new LinkedList<String>();
-		String step = target;
+	public LinkedList<Integer> getPath(int target) {
+		LinkedList<Integer> path = new LinkedList<Integer>();
+		int step = target;
 		// check if a path exists
 		if (predecessors.get(step) == null) {
 			return null;
@@ -143,7 +143,7 @@ public class Dijkstra {
 		disT = new Hashtable<Integer, Hashtable<Integer, Integer>>();
 		for (int name : nodes) {
 			Hashtable<Integer, Integer> table = new Hashtable<Integer, Integer>();
-			execute(String.valueOf(name));
+			execute((name));
 			for (int name2 : nodes) {
 				if(distance.get(name2)==null){
 					table.put(name2, -1);
