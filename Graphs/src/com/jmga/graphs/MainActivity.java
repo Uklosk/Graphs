@@ -44,7 +44,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	private GView view;
 	private Node nFocused;
 	private Menu menu;
-	
+
 	private final SizeView size = new SizeView();
 
 	private static final int GRAPH_MODE_NODES = 0;
@@ -211,13 +211,14 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		menu.findItem(R.id.action_tableinfo).setEnabled(view.info_table);
 		menu.findItem(R.id.action_distance_table).setEnabled(view.table_dist);
 		menu.findItem(R.id.action_clear).setEnabled(view.cleangraph);
-		
+
 		stop(TOGGLE_ADD, (MenuItem) menu.findItem(R.id.action_add));
 		stop(TOGGLE_REMOVE, (MenuItem) menu.findItem(R.id.action_remove));
 		menu.findItem(R.id.action_kruskal).setEnabled(view.isKruskal);
 		menu.findItem(R.id.action_kruskal).setChecked(isKruskal);
 		menu.findItem(R.id.action_bipartit).setEnabled(view.isBipartite);
-		menu.findItem(R.id.action_bipartit).setChecked((view.isBipartite) ? isBipartite : false);
+		menu.findItem(R.id.action_bipartit).setChecked(
+				(view.isBipartite) ? isBipartite : false);
 	}
 
 	@Override
@@ -243,7 +244,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 						getString(R.string.memory_not_available),
 						Toast.LENGTH_LONG);
 				toast.show();
-				
+
 				return true;
 			}
 			LayoutInflater factory = LayoutInflater.from(this);
@@ -258,9 +259,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 									.findViewById(R.id.text_filename);
 							String file_name = txtTexto.getText().toString();
 							if (view.graphToXML(storage, file_name)) {
-								Toast.makeText(getApplicationContext(),
-										"Guardado con éxito como " + file_name + ".graph",
-										Toast.LENGTH_LONG).show();
+								Toast.makeText(
+										getApplicationContext(),
+										"Guardado con éxito como " + file_name
+												+ ".graph", Toast.LENGTH_LONG)
+										.show();
 								dialog.dismiss();
 								view.update();
 							} else
@@ -291,7 +294,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				view.bipartite(true);
 				view.invalidate();
 			}
-			
+
 			return true;
 
 		case R.id.action_kruskal:
@@ -305,7 +308,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			view.setMenuStateChecked(isKruskal, isBipartite);
 			view.update();
 			view.invalidate();
-			
+
 			return true;
 
 		case R.id.action_distance_table:
@@ -319,95 +322,123 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 		case R.id.action_tableinfo:
 			LayoutInflater factory_ = LayoutInflater.from(this);
-			final View dialogView_ = factory_.inflate(R.layout.information_graph, null);
+			final View dialogView_ = factory_.inflate(
+					R.layout.information_graph, null);
 			AlertDialog.Builder builder__ = new AlertDialog.Builder(this);
 			builder__.setTitle(R.string.action_tableinfo);
-			
+
 			Hashtable<String, String> info = view.getTableInfo();
 			TextView v = (TextView) dialogView_.findViewById(R.id.val_vertex);
 			v.setText(info.get("|V|"));
 			TextView a = (TextView) dialogView_.findViewById(R.id.val_edges);
 			a.setText(info.get("|A|"));
-			TextView b = (TextView) dialogView_.findViewById(R.id.val_bipartite);
+			TextView b = (TextView) dialogView_
+					.findViewById(R.id.val_bipartite);
 			b.setText(info.get("Bipartite"));
-			TextView c = (TextView) dialogView_.findViewById(R.id.val_component);
+			TextView c = (TextView) dialogView_
+					.findViewById(R.id.val_component);
 			c.setText(info.get("Components"));
 			TextView s = (TextView) dialogView_.findViewById(R.id.val_sum);
 			s.setText(info.get("Sum"));
 			TextView r = (TextView) dialogView_.findViewById(R.id.val_regular);
 			r.setText(info.get("Regular"));
 			TextView d = (TextView) dialogView_.findViewById(R.id.val_sequence);
-			d.setText(info.get("Sequence"));			
-			
+			d.setText(info.get("Sequence"));
+
 			builder__.setView(dialogView_);
 			AlertDialog dialog__ = builder__.create();
 			dialog__.show();
-			
-			return true;
-			
-		case R.id.action_clear:
-			clear();
-			
+
 			return true;
 
-		case R.id.action_settings: 
+		case R.id.action_clear:
+			clear();
+
+			return true;
+
+		case R.id.action_settings:
 			LayoutInflater f = LayoutInflater.from(this);
 			final View dv = f.inflate(R.layout.menu_settings, null);
 			AlertDialog.Builder bu = new AlertDialog.Builder(this);
-			
-			bu.setTitle(R.string.action_settings);		
+
+			bu.setTitle(R.string.action_settings);
 			/*
 			 * Scale graph
 			 */
-			SeekBar seekBar = (SeekBar)dv.findViewById(R.id.seekBar_zoom); 
-			seekBar.setProgress((size.getNew_percent()==0)?size.getOld_percent():size.getNew_percent());
-	        final TextView seekBarValue = (TextView)dv.findViewById(R.id.settings_zoom);
-	        seekBarValue.setText(Integer.toString((size.getNew_percent()==0)?size.getOld_percent():size.getNew_percent()));
-	        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){ 
-			    @Override 
-			    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) { 
-			    	seekBarValue.setText(String.valueOf(progress)); 
-			    	
-			    } 
-			    @Override 
-			    public void onStartTrackingTouch(SeekBar seekBar) {
-			    	size.setOld_height(view.getViewportHeight());
-			    	size.setOld_width(view.getViewportWidth());
-			    	size.setOld_percent(Integer.parseInt(seekBarValue.getText().toString()));
-			    }
-			    @Override 
-			    public void onStopTrackingTouch(SeekBar seekBar) { 
-			    	int nw = size.getOld_width() * Integer.parseInt(seekBarValue.getText().toString()) / size.getOld_percent();
-			    	int nh = size.getOld_height() * Integer.parseInt(seekBarValue.getText().toString()) / size.getOld_percent();
-			    	size.setNew_width(nw);
-			    	size.setNew_height(nh);
-			    	size.setNew_percent(Integer.parseInt(seekBarValue.getText().toString()));
-			    } 
-		    });
+			SeekBar seekBar = (SeekBar) dv.findViewById(R.id.seekBar_zoom);
+			seekBar.setProgress((size.getNew_percent() == 0) ? size
+					.getOld_percent() : size.getNew_percent());
+			final TextView seekBarValue = (TextView) dv
+					.findViewById(R.id.settings_zoom);
+			seekBarValue
+					.setText(Integer.toString((size.getNew_percent() == 0) ? size
+							.getOld_percent() : size.getNew_percent()));
+			seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+				@Override
+				public void onProgressChanged(SeekBar seekBar, int progress,
+						boolean fromUser) {
+					seekBarValue.setText(String.valueOf(progress));
+
+				}
+
+				@Override
+				public void onStartTrackingTouch(SeekBar seekBar) {
+					size.setOld_height(view.getViewportHeight());
+					size.setOld_width(view.getViewportWidth());
+					size.setOld_percent(Integer.parseInt(seekBarValue.getText()
+							.toString()));
+				}
+
+				@Override
+				public void onStopTrackingTouch(SeekBar seekBar) {
+					int nw = size.getOld_width()
+							* Integer.parseInt(seekBarValue.getText()
+									.toString()) / size.getOld_percent();
+					int nh = size.getOld_height()
+							* Integer.parseInt(seekBarValue.getText()
+									.toString()) / size.getOld_percent();
+					size.setNew_width(nw);
+					size.setNew_height(nh);
+					size.setNew_percent(Integer.parseInt(seekBarValue.getText()
+							.toString()));
+				}
+			});
 			/*
 			 * Scale vertex
 			 */
-			SeekBar seekBar_vertex = (SeekBar)dv.findViewById(R.id.seekBar_zoomvertex); 
-			seekBar_vertex.setProgress((size.getNew_percent_vertex()==0)?size.getOld_percent_vertex():size.getNew_percent_vertex());
-	        final TextView seekBarValue_vertex = (TextView)dv.findViewById(R.id.setting_zoomvertex);
-	        seekBarValue_vertex.setText(Integer.toString((size.getNew_percent_vertex()==0)?size.getOld_percent_vertex():size.getNew_percent_vertex()));
-	        seekBar_vertex.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){ 
-			    @Override 
-			    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) { 
-			    	seekBarValue_vertex.setText(String.valueOf(progress)); 
-			    	size.setNew_percent_vertex(progress);
-			    	view.changeRadius(size);
-			    } 
-			    @Override 
-			    public void onStartTrackingTouch(SeekBar seekBar) {
-			    	//
-			    }
-			    @Override 
-			    public void onStopTrackingTouch(SeekBar seekBar) { 
-			    	// 
-			    } 
-		    });
-	        bu.setPositiveButton(R.string.file_save,
+			SeekBar seekBar_vertex = (SeekBar) dv
+					.findViewById(R.id.seekBar_zoomvertex);
+			seekBar_vertex
+					.setProgress((size.getNew_percent_vertex() == 0) ? size
+							.getOld_percent_vertex() : size
+							.getNew_percent_vertex());
+			final TextView seekBarValue_vertex = (TextView) dv
+					.findViewById(R.id.setting_zoomvertex);
+			seekBarValue_vertex.setText(Integer.toString((size
+					.getNew_percent_vertex() == 0) ? size
+					.getOld_percent_vertex() : size.getNew_percent_vertex()));
+			seekBar_vertex
+					.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+						@Override
+						public void onProgressChanged(SeekBar seekBar,
+								int progress, boolean fromUser) {
+							seekBarValue_vertex.setText(String
+									.valueOf(progress));
+							size.setNew_percent_vertex(progress);
+							view.changeRadius(size);
+						}
+
+						@Override
+						public void onStartTrackingTouch(SeekBar seekBar) {
+							//
+						}
+
+						@Override
+						public void onStopTrackingTouch(SeekBar seekBar) {
+							//
+						}
+					});
+			bu.setPositiveButton(R.string.file_save,
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int id) {
 							view.resizeGraph(size);
@@ -423,17 +454,18 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 						}
 					});
 			bu.setView(dv);
-			
+
 			AlertDialog di = bu.create();
-			di.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			di.getWindow().clearFlags(
+					WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 			di.show();
-			
+
 			return true;
 
 		case R.id.action_remove:
 			toggle(TOGGLE_REMOVE, item);
 			stop(TOGGLE_ADD, (MenuItem) menu.findItem(R.id.action_add));
-			
+
 			return true;
 
 		case R.id.action_add:
@@ -448,7 +480,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	}
 
 	public void clear() {
-		isKruskal =  isBipartite = false;
+		isKruskal = isBipartite = false;
 		updatingMenu();
 		view.initializingNodesColor();
 		view.clear();
@@ -499,6 +531,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			getActionBar().setSelectedNavigationItem(
 					savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
 		}
+		view.graphToRestore = 2;
 	}
 
 	@Override
@@ -506,8 +539,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		// Serialize the current tab position.
 		outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getActionBar()
 				.getSelectedNavigationIndex());
+		view.graphToXML(getFilesDir().toString(), "/temp_save----");
 	}
 
+	
+	
 	@Override
 	public void onTabSelected(ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction) {
@@ -541,7 +577,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
 			if (node == null) {
-				view.addNode(x,y);
+				view.addNode(x, y);
 			} else {
 				nFocused = node;
 			}

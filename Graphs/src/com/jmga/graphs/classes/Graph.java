@@ -113,7 +113,7 @@ public class Graph implements Cloneable {
 		Node node = new Node(posX, posY, id, viewportWidth, viewportHeight,
 				density);
 		vertex.put(id, node);
-		nodes = id + 1;
+		if(id>=nodes)nodes=id+1;
 	}
 
 	public Node copiarNode(int name) {
