@@ -11,6 +11,7 @@
     <string name="action_bipartite">See bipartition</string>
     <string name="action_tableinfo">Information graph</string>
     <string name="action_clear">Clear</string>
+    <string name="action_digitizer">Digitizer</string>
     <string name="action_distance_table">Show table with distances</string>
     <string name="separator">Dividing line</string>
     <string name="file_titlesave">Save graph</string>

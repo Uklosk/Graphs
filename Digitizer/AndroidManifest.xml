@@ -28,7 +28,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name">
         <activity
-            android:name="com.labs.digitizer.MainActivity"
+            android:name="com.labs.digitizer.MainActivity_digitizer"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
             android:configChanges="keyboardHidden|orientation">

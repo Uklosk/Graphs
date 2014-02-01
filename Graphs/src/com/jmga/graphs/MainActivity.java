@@ -355,6 +355,13 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			clear();
 
 			return true;
+			
+		case R.id.action_digi:
+			clear();
+			Intent inten = new Intent(MainActivity.this, Digitizer.class);
+			startActivity(inten);
+
+			return true;
 
 		case R.id.action_settings:
 			LayoutInflater f = LayoutInflater.from(this);

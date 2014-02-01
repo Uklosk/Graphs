@@ -1,4 +1,4 @@
-package com.labs.digitizer;
+package com.jmga.graphs;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,8 +17,8 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
-import com.labs.digitizer.camera.DigitizerView;
-import com.labs.digitizer.logic.Digitizing;
+import com.jmga.graphs.classes.DigitizerView;
+import com.jmga.graphs.tools.Digitizing;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -35,22 +35,21 @@ import android.view.SubMenu;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements CvCameraViewListener2{
+public class Digitizer extends Activity implements CvCameraViewListener2{
 	private static final String  	TAG = "Mensage::";
     private static final String		storage_directory = Environment.getExternalStorageDirectory().toString() + "/Graphs";
     private MenuItem[] 			 	mModeListItems;
     private SubMenu				 	mMode;
-    private List<Size> 			 	mResolutionList;
-    private MenuItem[] 			 	mResolutionMenuItems;
-    private SubMenu				 	mResolutionMenu;
     private MenuItem             	mItemPHOTO;
     private MenuItem             	mItemXML;
     private MenuItem             	mItemSettings;
     private DigitizerView		 	mOpenCvCameraView;
     private Mat                  	mRgba;
 	private Digitizing 			 	digitizer;
+	private LinearLayout			viewPNGExplorer;
 	
 	private BaseLoaderCallback  mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -70,7 +69,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
     };
     
     
-    public MainActivity() {
+    public Digitizer() {
         Log.i(TAG, "Instantiated new " + this.getClass());
     }
     
@@ -81,11 +80,13 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_digitizer);
 
         mOpenCvCameraView = (DigitizerView) findViewById(R.id.digitizer_surface_view);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
+
+        viewPNGExplorer = (LinearLayout) findViewById(R.id.png_explorer);
         
         digitizer = new Digitizing(getApplicationContext(), storage_directory);
         
@@ -95,27 +96,15 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.i(TAG, "called onCreateOptionsMenu");
-        mMode = menu.addSubMenu("Mode");
+        mMode = menu.addSubMenu("Modo");
         mModeListItems = new MenuItem[2];
         for(int i = 0; i < 2; i++){
-        	mModeListItems[i] = mMode.add(1, i, Menu.NONE, (i%2==0)?"Camera":"Graphs");
+        	mModeListItems[i] = mMode.add(1, i, Menu.NONE, (i%2==0)?"Camara":"Explorador");
         }
         
-        mItemPHOTO = menu.add("Photo");
-        mItemXML = menu.add("XML");
-        mItemSettings = menu.add("Settings");
-        
-        mResolutionMenu = menu.addSubMenu("Resolution");
-        mResolutionList = mOpenCvCameraView.getResolutionList();
-        mResolutionMenuItems = new MenuItem[mResolutionList.size()];
-        ListIterator<Size> resolutionItr = mResolutionList.listIterator();
-        int idx = 0;
-        while(resolutionItr.hasNext()) {
-            Size element = resolutionItr.next();
-            mResolutionMenuItems[idx] = mResolutionMenu.add(2, idx, Menu.NONE,
-                    Integer.valueOf(element.width).toString() + "x" + Integer.valueOf(element.height).toString());
-            idx++;
-        }
+        mItemPHOTO = menu.add("Tomar foto");
+        mItemXML = menu.add("Digitalizar");
+        mItemSettings = menu.add("Opciones");
         
         return true;
     }
@@ -165,6 +154,8 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
         if (item.getGroupId() == 1){
         	int id = item.getItemId();
 	        if (id == 0) {
+	        	viewPNGExplorer.setVisibility(SurfaceView.GONE);
+	            
 	        	mOpenCvCameraView.enableView();
 	            mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
 	            Toast.makeText(this, "The camera is active", Toast.LENGTH_SHORT).show();
@@ -182,41 +173,9 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
 	        }else if (id == 1) {
 	            mOpenCvCameraView.setVisibility(SurfaceView.GONE);
 	        	mOpenCvCameraView.disableView();
-	            Toast.makeText(this, "Now you can work", Toast.LENGTH_SHORT).show();
 	            
-	            /*******************************************************************
-	             * *****************************************************************
-	             * *****************************************************************
-	             * 
-	             * Abrir el activity de graphs.apk
-	             * 
-	             * *****************************************************************
-	             * *****************************************************************
-	             * *****************************************************************
-	             */
+	            viewPNGExplorer.setVisibility(SurfaceView.VISIBLE);
 	        }
-        }
-        
-        if (item.getGroupId() == 2){
-            
-            /*******************************************************************
-             * *****************************************************************
-             * *****************************************************************
-             * 
-             * Cambiar reslucion de pantalla.
-             * Yo lo dejaria...
-             * 
-             * *****************************************************************
-             * *****************************************************************
-             * *****************************************************************
-             */
-        	
-            int id = item.getItemId();
-            Size resolution = mResolutionList.get(id);
-            mOpenCvCameraView.setResolution(resolution);
-            resolution = mOpenCvCameraView.getResolution();
-            String caption = Integer.valueOf(resolution.width).toString() + "x" + Integer.valueOf(resolution.height).toString();
-            Toast.makeText(this, caption, Toast.LENGTH_SHORT).show();
         }
 
         if (item == mItemPHOTO) {
@@ -249,7 +208,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2{
             String currentDateandTime = sdf.format(new Date());
             String fileName = storage_directory + "/graph_" + currentDateandTime + ".png";
             mOpenCvCameraView.takePicture(fileName);
-            Toast.makeText(this, fileName + " saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Se ha guardado " + fileName, Toast.LENGTH_SHORT).show();
         } else if (item == mItemXML) {
             
             /*******************************************************************
