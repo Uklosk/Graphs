@@ -14,6 +14,7 @@ public class Node extends ShapeDrawable {
 	float posX, posY;
 	private int enlacesExistentes;
 	public int radius;
+	private int defaultRadius;
 	private final int DPS = 25;
 	private int id;
 
@@ -42,9 +43,12 @@ public class Node extends ShapeDrawable {
 	public Node(int x, int y, int id, int viewportWidth, int viewportHeight,
 			float density) {
 		super(new OvalShape());
-		if(!(((int) (DPS * density + 0.5f) * viewportWidth * viewportHeight / 787184	)==0)){
-			radius = ((int) (DPS * density + 0.5f) * viewportWidth * viewportHeight / 787184	);	
-				} else radius = ((int) (DPS * density + 0.5f) * viewportWidth / 700	);	
+		if (!(((int) (DPS * density + 0.5f) * viewportWidth * viewportHeight / 787184) == 0)) {
+			radius = ((int) (DPS * density + 0.5f) * viewportWidth
+					* viewportHeight / 787184);
+		} else
+			radius = ((int) (DPS * density + 0.5f) * viewportWidth / 700);
+		defaultRadius = radius;
 		color = Color.BLACK;
 		getPaint().setColor(color);
 		getPaint().setAntiAlias(true);
@@ -61,9 +65,14 @@ public class Node extends ShapeDrawable {
 	public Node(int x, int y, int viewportWidth, int viewportHeight,
 			float density) {
 		super(new OvalShape());
-		if(!(((int) (DPS * density + 0.5f) * viewportWidth * viewportHeight / 787184	)==0)){
-			radius = ((int) (DPS * density + 0.5f) * viewportWidth * viewportHeight / 787184	);	
-				} else radius = ((int) (DPS * density + 0.5f) * viewportWidth / 700	);	
+		if (!(((int) (DPS * density + 0.5f) * viewportWidth * viewportHeight / 787184) == 0)) {
+			radius = ((int) (DPS * density + 0.5f) * viewportWidth
+					* viewportHeight / 787184);
+		} else
+			radius = ((int) (DPS * density + 0.5f) * viewportWidth / 700);
+		
+		defaultRadius = radius;
+
 		color = Color.BLACK;
 		getPaint().setColor(color);
 		getPaint().setAntiAlias(true);
@@ -77,9 +86,13 @@ public class Node extends ShapeDrawable {
 	public Node(float posX, float posY, int id, int viewportWidth,
 			int viewportHeight, float density) {
 		super(new OvalShape());
-		if(!(((int) (DPS * density + 0.5f) * viewportWidth * viewportHeight / 787184	)==0)){
-			radius = ((int) (DPS * density + 0.5f) * viewportWidth * viewportHeight / 787184	);	
-				} else radius = ((int) (DPS * density + 0.5f) * viewportWidth / 700	);	
+		if (!(((int) (DPS * density + 0.5f) * viewportWidth * viewportHeight / 787184) == 0)) {
+			radius = ((int) (DPS * density + 0.5f) * viewportWidth
+					* viewportHeight / 787184);
+		} else
+			radius = ((int) (DPS * density + 0.5f) * viewportWidth / 700);
+
+		defaultRadius = radius;
 
 		color = Color.BLACK;
 		getPaint().setColor(color);
@@ -191,7 +204,7 @@ public class Node extends ShapeDrawable {
 		for (int i = 0; i < enlaces.size(); i++) {
 			Link miEnlace;
 			miEnlace = enlaces.get(i);
-			if (miEnlace.getIdf()==idi)
+			if (miEnlace.getIdf() == idi)
 				return i;
 		}
 		return -1;
@@ -201,6 +214,11 @@ public class Node extends ShapeDrawable {
 		Link miEnlace;
 		miEnlace = enlaces.get(posi);
 		return miEnlace.getIdf();
+	}
+	public void updateRadius(int percentage){
+		radius = defaultRadius * percentage/100;
+		setBounds(getCenterX() - radius, getCenterY() - radius, getCenterX() + radius, getCenterY() + radius);
+
 	}
 
 }

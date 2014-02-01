@@ -80,7 +80,7 @@
         android:id="@+id/seekBar_zoomvertex"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:max="100"
+        android:max="200"
         android:progress="100" />
 
 </LinearLayout>

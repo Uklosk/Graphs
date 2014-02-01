@@ -657,4 +657,12 @@ public class GView extends View {
 			node.setPosF(x, y, viewportWidth, viewportHeight);
 		}
 	}
+	public void changeRadius(SizeView size) {
+		// TODO Auto-generated method stub
+		for(int n : g.getNombres()){
+			g.getVertex().get(n).updateRadius(size.getNew_percent_vertex());
+		}
+		update();
+		invalidate();
+	}
 }

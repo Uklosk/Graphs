@@ -3,6 +3,7 @@ package com.jmga.graphs;
 import java.util.Hashtable;
 import java.util.zip.Inflater;
 
+import android.R.color;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,6 +23,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -356,6 +358,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			LayoutInflater f = LayoutInflater.from(this);
 			final View dv = f.inflate(R.layout.menu_settings, null);
 			AlertDialog.Builder bu = new AlertDialog.Builder(this);
+			
 			bu.setTitle(R.string.action_settings);		
 			/*
 			 * Scale graph
@@ -395,6 +398,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			    @Override 
 			    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) { 
 			    	seekBarValue_vertex.setText(String.valueOf(progress)); 
+			    	size.setNew_percent_vertex(progress);
+			    	view.changeRadius(size);
 			    } 
 			    @Override 
 			    public void onStartTrackingTouch(SeekBar seekBar) {
@@ -403,7 +408,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			    @Override 
 			    public void onStopTrackingTouch(SeekBar seekBar) { 
 			    	// 
-			    	size.setNew_percent_vertex(Integer.parseInt(seekBarValue_vertex.getText().toString()));
 			    } 
 		    });
 	        bu.setPositiveButton(R.string.file_save,
@@ -420,7 +424,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 						}
 					});
 			bu.setView(dv);
+			
 			AlertDialog di = bu.create();
+			di.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 			di.show();
 			
 			return true;
