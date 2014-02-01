@@ -608,6 +608,8 @@ public class GView extends View {
 	}
 	
 	public void resizeGraph(SizeView s){
+		Log.d("PKJ",String.valueOf(s.getNew_percent()));
+		if(!(s.getNew_percent()==100)){
 		Enumeration<Node> nodes = g.getVertex().elements();
 		while(nodes.hasMoreElements()){
 			Node node = new Node();
@@ -655,7 +657,7 @@ public class GView extends View {
 			float x = node.getPosX() + displacement[0];
 			float y = node.getPosY() + displacement[1];
 			node.setPosF(x, y, viewportWidth, viewportHeight);
-		}
+		}}
 	}
 	public void changeRadius(SizeView size) {
 		// TODO Auto-generated method stub

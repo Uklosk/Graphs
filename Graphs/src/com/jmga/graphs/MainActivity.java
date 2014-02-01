@@ -60,8 +60,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	boolean toggle_remove = false;
 	boolean toggle_add = false;
 
-	private DisplayMetrics metrics;
-
 	public int weight = 0;
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
@@ -82,8 +80,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				.setTabListener(this));
 		actionBar.addTab(actionBar.newTab().setText("pesos")
 				.setTabListener(this));
-
-		metrics = getResources().getDisplayMetrics();
 
 		view = new GView(this);
 
@@ -371,6 +367,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			    @Override 
 			    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) { 
 			    	seekBarValue.setText(String.valueOf(progress)); 
+			    	
 			    } 
 			    @Override 
 			    public void onStartTrackingTouch(SeekBar seekBar) {
@@ -415,6 +412,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 						public void onClick(DialogInterface dialog, int id) {
 							view.resizeGraph(size);
 							view.update();
+							size.setOld_percent(100);
+							size.setNew_percent(100);
 						}
 					});
 			bu.setNegativeButton(R.string.file_cancel,

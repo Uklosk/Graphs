@@ -8,7 +8,7 @@ public class SizeView {
 	private int old_percent;
 	private int new_width;
 	private int new_height;
-	private int new_percent;
+	private int new_percent = 100;
 	// Scale vertex
 	private int old_percent_vertex;
 	private int new_percent_vertex;
