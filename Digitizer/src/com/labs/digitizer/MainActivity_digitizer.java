@@ -272,7 +272,7 @@ public class MainActivity_digitizer extends Activity implements CvCameraViewList
         	digitizer.setCurrentImage("graph.png");
         	if(digitizer.loadData() == true){
         		Toast.makeText(this, "Grafo digitalizado con éxito", Toast.LENGTH_SHORT).show();
-        		digitizer.generateXML();
+        		digitizer.generateXML( " pedo");
         	}            
             
             Bitmap b = Bitmap.createBitmap(800, 500, Bitmap.Config.ARGB_8888);

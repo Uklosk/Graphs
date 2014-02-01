@@ -13,6 +13,7 @@ import org.opencv.imgproc.Imgproc;
 import org.xmlpull.v1.XmlSerializer;
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 import android.util.Xml;
 
@@ -218,8 +219,8 @@ public class Digitizing {
 	    return task;
 	}
 	
-	public void generateXML(){
-		File file = new File(storage_path, "graph.xml");
+	public void generateXML(String timeStamp){
+		File file = new File(Environment.getExternalStorageDirectory()+"/Graphs/", "graph_"+timeStamp+".graph");
 		FileOutputStream fout = null;
 		try {
 			fout = new FileOutputStream(file, false);

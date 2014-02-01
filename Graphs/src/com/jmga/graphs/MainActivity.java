@@ -1,7 +1,16 @@
 package com.jmga.graphs;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.zip.Inflater;
+
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
 
 import android.R.color;
 import android.app.ActionBar;
@@ -11,9 +20,16 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.ActionProvider;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -33,6 +49,7 @@ import android.widget.Toast;
 
 import com.jmga.graphs.classes.GView;
 import com.jmga.graphs.classes.Node;
+import com.jmga.graphs.tools.Digitizing;
 import com.jmga.graphs.tools.XMLParser;
 import com.jmga.graphs.tools.auxiliary.SizeView;
 
@@ -62,6 +79,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	public int weight = 0;
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
+	private Uri fileUri;
 
 	private static final int REQUEST_PATH = 0;
 
@@ -155,6 +173,29 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			}
 		});
 
+	}
+
+	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+		@Override
+		public void onManagerConnected(int status) {
+			switch (status) {
+			case LoaderCallbackInterface.SUCCESS: {
+				Log.i("OpenCV", "OpenCV loaded successfully");
+			}
+				break;
+			default: {
+				super.onManagerConnected(status);
+			}
+				break;
+			}
+		}
+	};
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_8, this,
+				mLoaderCallback);
 	}
 
 	@Override
@@ -355,11 +396,20 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			clear();
 
 			return true;
-			
+
 		case R.id.action_digi:
 			clear();
-			Intent inten = new Intent(MainActivity.this, Digitizer.class);
-			startActivity(inten);
+			// create Intent to take a picture and return control to the calling
+			// application
+			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+			fileUri = getOutputMediaFileUri(1); // create a file to save the
+												// image
+			intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image
+																// file name
+
+			// start the image capture Intent
+			startActivityForResult(intent, 1);
 
 			return true;
 
@@ -549,7 +599,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		view.graphToXML(getFilesDir().toString(), "/temp_save----");
 	}
 
-	
 	@Override
 	public void onTabSelected(ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction) {
@@ -775,7 +824,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// See which child activity is calling us back.
-		if (requestCode == REQUEST_PATH) {
+	/*	if (requestCode == REQUEST_PATH) {
 			if (resultCode == RESULT_OK) {
 				clear();
 
@@ -784,7 +833,22 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				view.invalidate();
 
 			}
-		}
+		}*/
+		//if (requestCode == 1) {
+			if (resultCode == RESULT_OK) {
+				// Image captured and saved to fileUri specified in the Intent
+				clear();
+				String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
+				.format(new Date());
+				digit(timeStamp);
+				
+			} else if (resultCode == RESULT_CANCELED) {
+				// User cancelled the image capture
+				
+			} else {
+				// Image capture failed, advise user
+			}
+	//	}
 	}
 
 	public void getfile() {
@@ -792,4 +856,53 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		startActivityForResult(intent1, REQUEST_PATH);
 	}
 
+	/** Create a file Uri for saving an image or video */
+	private  Uri getOutputMediaFileUri(int type) {
+		return Uri.fromFile(getOutputMediaFile(type));
+	}
+
+	
+	
+	/** Create a File for saving an image or video */
+	private  File getOutputMediaFile(int type) {
+		// To be safe, you should check that the SDCard is mounted
+		// using Environment.getExternalStorageState() before doing this.
+
+		File mediaStorageDir = new File(getFilesDir(),
+				"MyCameraApp");
+		// This location works best if you want the created images to be shared
+		// between applications and persist after your app has been uninstalled.
+
+		// Create the storage directory if it does not exist
+		if (!mediaStorageDir.exists()) {
+			if (!mediaStorageDir.mkdirs()) {
+				Log.d("MyCameraApp", "failed to create directory");
+				return null;
+			}
+		}
+
+		// Create a media file name
+		
+		File mediaFile;
+		if (type == 1) {
+			mediaFile = new File(mediaStorageDir.getPath() + File.separator
+					+ "graph.png");
+		} else {
+			return null;
+		}
+
+		return mediaFile;
+	}
+
+	public void digit(String timeStamp) {
+
+		Digitizing digitizer = new Digitizing(this, getFilesDir().toString());
+		digitizer.setCurrentImage("graph.png");
+		if (digitizer.loadData() == true) {
+			Toast.makeText(this, "Grafo digitalizado con éxito",
+					Toast.LENGTH_SHORT).show();
+			digitizer.generateXML(timeStamp);
+		}
+
+	}
 }

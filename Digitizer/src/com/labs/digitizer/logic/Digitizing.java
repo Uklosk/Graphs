@@ -218,8 +218,8 @@ public class Digitizing {
 	    return task;
 	}
 	
-	public void generateXML(){
-		File file = new File(storage_path, "graph.xml");
+	public void generateXML(String timeStamp){
+		File file = new File(storage_path, "graph"+timeStamp+".graph");
 		FileOutputStream fout = null;
 		try {
 			fout = new FileOutputStream(file, false);
