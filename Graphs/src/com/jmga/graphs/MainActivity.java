@@ -79,8 +79,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	public int weight = 0;
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
+	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private Uri fileUri;
+	public static final int MEDIA_TYPE_IMAGE = 1;
 
+	
 	private static final int REQUEST_PATH = 0;
 
 	@Override
@@ -398,18 +401,16 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			return true;
 
 		case R.id.action_digi:
-			clear();
 			// create Intent to take a picture and return control to the calling
 			// application
+
 			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-			fileUri = getOutputMediaFileUri(1); // create a file to save the
-												// image
-			intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image
-																// file name
+		    fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE); // create a file to save the image
+		    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
 
-			// start the image capture Intent
-			startActivityForResult(intent, 1);
+		    // start the image capture Intent
+		    startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 
 			return true;
 
@@ -824,7 +825,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// See which child activity is calling us back.
-	/*	if (requestCode == REQUEST_PATH) {
+		if (requestCode == REQUEST_PATH) {
 			if (resultCode == RESULT_OK) {
 				clear();
 
@@ -833,22 +834,23 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				view.invalidate();
 
 			}
-		}*/
-		//if (requestCode == 1) {
+		}
+		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
 				// Image captured and saved to fileUri specified in the Intent
 				clear();
 				String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
-				.format(new Date());
+						.format(new Date());
 				digit(timeStamp);
-				
+				view.xmlToGraph(storage+"/graph_"+timeStamp+".graph","");
+
 			} else if (resultCode == RESULT_CANCELED) {
 				// User cancelled the image capture
-				
+
 			} else {
 				// Image capture failed, advise user
 			}
-	//	}
+		}
 	}
 
 	public void getfile() {
@@ -857,46 +859,44 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	}
 
 	/** Create a file Uri for saving an image or video */
-	private  Uri getOutputMediaFileUri(int type) {
+	private static Uri getOutputMediaFileUri(int type) {
 		return Uri.fromFile(getOutputMediaFile(type));
 	}
 
-	
-	
 	/** Create a File for saving an image or video */
-	private  File getOutputMediaFile(int type) {
+	private static File getOutputMediaFile(int type) {
 		// To be safe, you should check that the SDCard is mounted
 		// using Environment.getExternalStorageState() before doing this.
 
-		File mediaStorageDir = new File(getFilesDir(),
-				"MyCameraApp");
+		File mediaStorageDir = new File(Environment
+				.getExternalStorageDirectory().toString(), "Graphs");
 		// This location works best if you want the created images to be shared
 		// between applications and persist after your app has been uninstalled.
 
-		// Create the storage directory if it does not exist
-		if (!mediaStorageDir.exists()) {
-			if (!mediaStorageDir.mkdirs()) {
-				Log.d("MyCameraApp", "failed to create directory");
-				return null;
-			}
-		}
+		  // Create the storage directory if it does not exist
+	    if (! mediaStorageDir.exists()){
+	        if (! mediaStorageDir.mkdirs()){
+	            Log.d("Graphs", "failed to create directory");
+	            return null;
+	        }
+	    }
 
-		// Create a media file name
-		
-		File mediaFile;
-		if (type == 1) {
-			mediaFile = new File(mediaStorageDir.getPath() + File.separator
-					+ "graph.png");
-		} else {
-			return null;
-		}
+	    // Create a media file name
+	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+	    File mediaFile;
+	    if (type == MEDIA_TYPE_IMAGE){
+	        mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+	        "graph.png");
+	    } else {
+	        return null;
+	    }
 
-		return mediaFile;
+	    return mediaFile;
 	}
 
 	public void digit(String timeStamp) {
 
-		Digitizing digitizer = new Digitizing(this, getFilesDir().toString());
+		Digitizing digitizer = new Digitizing(this, storage);
 		digitizer.setCurrentImage("graph.png");
 		if (digitizer.loadData() == true) {
 			Toast.makeText(this, "Grafo digitalizado con éxito",
