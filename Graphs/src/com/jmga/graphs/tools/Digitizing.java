@@ -12,6 +12,8 @@ import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 import org.xmlpull.v1.XmlSerializer;
 
+import com.jmga.graphs.tools.auxiliary.SizeView;
+
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
@@ -28,11 +30,24 @@ public class Digitizing {
 	private double[][] allcir;
 	private int totalcir;
 	
+	private int width, height;
 	
+	private static final String attribute_control = "apk";
+	private static final String val_control = "Graphs";
+	
+
 	public Digitizing(Context con_, String path) {
 		super();
 		con = con_;
 		storage_path = path + "/";
+	}	
+	
+	public Digitizing(Context con_, String path, int w, int h) {
+		super();
+		con = con_;
+		storage_path = path + "/";
+		width = w;
+		height = h;
 	}
 	
 	
@@ -234,14 +249,15 @@ public class Digitizing {
 		    serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
 		    
 			serializer.startTag(null, "graph");
+			serializer.attribute(null, attribute_control, val_control);
 			serializer.attribute(null, "v", Integer.toString(totalcir));
 			serializer.attribute(null, "a", Integer.toString(totalvec));
 	
 			for(int i = 0; i < totalcir; i++){
 				serializer.startTag(null, "vertex");
 				serializer.attribute(null, "id", i+"");
-				serializer.attribute(null, "x", Double.toString(allcir[i][0]));
-				serializer.attribute(null, "y", Double.toString(allcir[i][1]));
+				serializer.attribute(null, "x", Double.toString(allcir[i][0] / width));
+				serializer.attribute(null, "y", Double.toString(allcir[i][1] / height));
 				serializer.attribute(null, "r", Double.toString(allcir[i][2]));
 				String adjacent = "";
 				for(int j = 0; j < totalvec; j++)

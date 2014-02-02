@@ -31,6 +31,7 @@ import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ActionProvider;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -895,13 +896,14 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	}
 
 	public void digit(String timeStamp) {
-
-		Digitizing digitizer = new Digitizing(this, storage);
+		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		
+		Digitizing digitizer = new Digitizing(this, storage, view.getMeasuredWidth(), view.getMeasuredHeight());
 		digitizer.setCurrentImage("graph.png");
 		if (digitizer.loadData() == true) {
+			digitizer.generateXML(timeStamp);
 			Toast.makeText(this, "Grafo digitalizado con éxito",
 					Toast.LENGTH_SHORT).show();
-			digitizer.generateXML(timeStamp);
 		}
 
 	}
