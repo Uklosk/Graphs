@@ -117,7 +117,7 @@ public class Digitizing {
 		    Imgproc.cvtColor(m_img, m_gray, Imgproc.COLOR_BGR2GRAY);
 		    Imgproc.GaussianBlur( m_gray, m_gray, new Size(9, 9), 0, 0);
 		    Mat circles = new Mat();
-		    Imgproc.HoughCircles( m_gray, circles, Imgproc.CV_HOUGH_GRADIENT, 1, 80, 70, 10, 12, 25);
+		    Imgproc.HoughCircles( m_gray, circles, Imgproc.CV_HOUGH_GRADIENT, 1, 80, 70, 10, 5, 25);
 		    totalcir = circles.cols();
 		    allcir = new double[totalcir][3];
 		    for(int i = 0; i < totalcir; i++ ){
@@ -150,7 +150,7 @@ public class Digitizing {
 		    int minLineSize = 30;
 		    int lineGap = 10;
 		
-		    Imgproc.HoughLinesP(dst, lines, 15, Math.PI / 180, threshold,
+		    Imgproc.HoughLinesP(dst, lines, 2, Math.PI / 180, threshold,
 		            minLineSize, lineGap);
 		    
 		    int t = lines.cols();
