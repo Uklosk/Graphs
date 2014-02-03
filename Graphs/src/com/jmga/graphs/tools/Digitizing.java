@@ -117,8 +117,16 @@ public class Digitizing {
 		    Imgproc.cvtColor(m_img, m_gray, Imgproc.COLOR_BGR2GRAY);
 		    Imgproc.GaussianBlur( m_gray, m_gray, new Size(9, 9), 0, 0);
 		    Mat circles = new Mat();
+		    /*
+		     * Aplicamos HoughLineP para cargra en la matriz circles todos los circulos detectados
+		     */
 		    Imgproc.HoughCircles( m_gray, circles, Imgproc.CV_HOUGH_GRADIENT, 1, 80, 70, 10, 5, 25);
 		    totalcir = circles.cols();
+		    /*
+		     * Cargamos en la matriz de los vértices los datos de los circulos detectados:
+		     * - Posición x e y en el eje de coordenadas
+		     * - Radio del circulo
+		     */
 		    allcir = new double[totalcir][3];
 		    for(int i = 0; i < totalcir; i++ ){
 		    	double[] cir = circles.get(0, i);
@@ -156,17 +164,23 @@ public class Digitizing {
 		    int t = lines.cols();
 		    int tv = t;
 		    
+		    /*
+		     * Cargamos la matriz de las rectas a la matriz de aristas
+		     */
 		    double[][] allvectors = new double[t][4];
 		    for (int i = 0; i < t; i++){
 		    	double[] vec = lines.get(0, i);
 		    	allvectors[i] = vec;
 		    }
 				
-		    // Una recta puede interpretarse como una recta fragmentada, de modo que hay que
-		    // seleccionar unico fragmento con el que trabajar y eliminar los sobrantes, para
-		    // ello se realiza una busqueda que elimina las rectas cuyo punto inicial no esta
-		    // contenido en un vertice, y se prolongan las rectas cuyo punto final no esta 
-		    // contenido en un vertice, la recta se prolonga hasta cortar con un vertice
+		    /* Una recta puede interpretarse como una recta fragmentada, de modo que hay que
+		     * seleccionar un unico fragmento con el que trabajar y eliminar los sobrantes, para
+		     * ello se realiza una busqueda que elimina las rectas cuyo punto inicial no esta
+		     * contenido en un vertice, y se prolongan las rectas cuyo punto final no esta 
+		     * contenido en un vertice, la recta se prolonga hasta cortar con un vertice
+		     * Sucederá lo mismo cuando una recta corte con otra y ambas sean interpretadas como
+		     * más de una recta
+		     */
 		    for(int i = 0; i < t; i++){
 		    	boolean[] remain = new boolean[2];
 		    	remain[0] = inVertex(allvectors[i][0], allvectors[i][1]);
@@ -234,6 +248,9 @@ public class Digitizing {
 	    return task;
 	}
 	
+	/*
+	 * En este método construimos el archivo .graph a partir de la matriz de círculos y la matriz de rectas
+	 */
 	public void generateXML(String timeStamp){
 		File file = new File(Environment.getExternalStorageDirectory()+"/Graphs/", "graph_"+timeStamp+".graph");
 		FileOutputStream fout = null;
