@@ -11,6 +11,7 @@
     <string name="action_bipartite">Ver bipartición</string>
     <string name="action_tableinfo">Información general</string>
     <string name="action_clear">Limpiar</string>
+    <string name="action_iso">Activar herramienta para comprobar isomorfismo</string>
     <string name="memory_not_available">No se puede acceder a la memoria</string>
     <string name="action_distance_table">Ver tabla de distancias</string>
     <string name="file_titlesave">Guardar grafo</string>

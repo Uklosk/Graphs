@@ -37,7 +37,7 @@ public class GView extends View {
 	// la hashtable isomorphism y no sobre el objeto graph
 	boolean isomorphism_selected;
 	// ****************************************************
-	private Graph gKruskal;
+	private Graph gKruskal, gIso;
 	private Paint paint, auxP;
 	private Paint fontPaint;
 	private Path path;
@@ -51,6 +51,7 @@ public class GView extends View {
 	public boolean isBipartite = false;
 	private boolean checked_kruskal = false;
 	private boolean checked_bipartite = false;
+	private boolean checked_iso = false;
 	private Hashtable<Integer, Integer> subSets;
 
 	public int graphToRestore = 0;
@@ -253,9 +254,10 @@ public class GView extends View {
 		return label[i];
 	}
 
-	public void setMenuStateChecked(boolean ck, boolean cb) {
+	public void setMenuStateChecked(boolean ck, boolean cb, boolean ci) {
 		checked_kruskal = ck;
 		checked_bipartite = cb;
+		checked_iso = ci;
 	}
 
 	public int getViewportHeight() {
@@ -310,6 +312,7 @@ public class GView extends View {
 		density = getResources().getDisplayMetrics().density;
 
 		g = new Graph();
+		gIso = new Graph();
 		isomorphism = new Hashtable<String,Graph>();
 		isomorphism_selected = false;
 		gKruskal = new Graph();
@@ -385,6 +388,10 @@ public class GView extends View {
 			e.printStackTrace();
 			task = false;
 		}
+		
+		g = isomorphism.get("A");
+		gIso = isomorphism.get("B");
+		
 		return task;
 	}
 
@@ -394,6 +401,36 @@ public class GView extends View {
 		super.onDraw(canvas);
 		canvas.drawColor(Color.WHITE);
 
+		if(checked_iso)
+		{
+			for (int i = 0; i < gIso.getArrows().size(); i++) {
+				Arrow a = gIso.getArrows().get(i);
+				paint.setColor(gIso.getArrows().get(i).color);
+				canvas.drawLine(a.start[0], a.start[1], a.stop[0], a.stop[1], paint);
+				if (a.getWeight() > 0) {
+					path = new Path();
+					path.moveTo(a.start[0], a.start[1]);
+					path.lineTo(a.stop[0], a.stop[1]);
+					canvas.drawTextOnPath(a.getWeightS(), path, 0, 30, fontPaint);
+
+					path = new Path();
+					path.moveTo(a.stop[0], a.stop[1]);
+					path.lineTo(a.start[0], a.start[1]);
+					canvas.drawTextOnPath(a.getWeightS(), path, 0, 30, fontPaint);
+
+				}
+
+			}
+
+			for (int ns : gIso.getNombres()) {
+				Node n = gIso.getVertex().get(ns);
+				n.draw(canvas);
+				canvas.drawText(label[n.getId()], n.getCenterX(), n.getCenterY()
+						- n.radius - 20, fontPaint);
+			}
+			
+		}
+		
 		for (int i = 0; i < g.getArrows().size(); i++) {
 			Arrow a = g.getArrows().get(i);
 			paint.setColor(g.getArrows().get(i).color);

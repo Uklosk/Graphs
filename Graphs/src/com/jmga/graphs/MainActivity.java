@@ -57,6 +57,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	boolean isKruskal = false;
 	boolean isBipartite = false;
+	boolean isIso = false;
 	boolean toggle_remove = false;
 	boolean toggle_add = false;
 
@@ -120,7 +121,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 					break;
 				}
 
-				view.setMenuStateChecked(isKruskal, isBipartite);
+				view.setMenuStateChecked(isKruskal, isBipartite, isIso);
 				view.update();
 				view.invalidate();
 
@@ -296,7 +297,12 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			}
 
 			return true;
-
+		case R.id.action_iso:
+			if (isIso) {
+				isIso = false;
+			} else {
+				isIso = true;
+			}
 		case R.id.action_kruskal:
 			if (isKruskal) {
 				isKruskal = false;
@@ -305,7 +311,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			} else {
 				isKruskal = true;
 			}
-			view.setMenuStateChecked(isKruskal, isBipartite);
+			view.setMenuStateChecked(isKruskal, isBipartite,isIso);
 			view.update();
 			view.invalidate();
 
@@ -542,8 +548,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		view.graphToXML(getFilesDir().toString(), "/temp_save----");
 	}
 
-	
-	
 	@Override
 	public void onTabSelected(ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction) {
