@@ -31,6 +31,12 @@ import com.jmga.graphs.tools.auxiliary.SizeView;
 
 public class GView extends View {
 	private Graph g;
+	// Para ejercicios de isomorfismo tenemos 2 grafos
+	Hashtable<String,Graph> isomorphism;
+	// Se podrá activar el modo isomorfismo para trabajar sobre
+	// la hashtable isomorphism y no sobre el objeto graph
+	boolean isomorphism_selected;
+	// ****************************************************
 	private Graph gKruskal;
 	private Paint paint, auxP;
 	private Paint fontPaint;
@@ -304,6 +310,8 @@ public class GView extends View {
 		density = getResources().getDisplayMetrics().density;
 
 		g = new Graph();
+		isomorphism = new Hashtable<String,Graph>();
+		isomorphism_selected = false;
 		gKruskal = new Graph();
 		subSets = new Hashtable<Integer, Integer>();
 
@@ -351,11 +359,28 @@ public class GView extends View {
 			viewportWidth = (int) (50 * density + 0.5f);
 			paint.setStrokeWidth(0);
 			fontPaint.setTextSize(0);
-
 		}
 		XMLParser xmlp = new XMLParser(storage, xml, this);
 		try {
 			g = xmlp.parseGraph(g);
+		} catch (Exception e) {
+			e.printStackTrace();
+			task = false;
+		}
+		return task;
+	}
+	
+	public boolean xmlToIsomorphism(String storage, String xml) {
+		boolean task = true;
+		if (viewportHeight == 0 || viewportWidth == 0) {
+			viewportHeight = (int) (50 * density + 0.5f);
+			viewportWidth = (int) (50 * density + 0.5f);
+			paint.setStrokeWidth(0);
+			fontPaint.setTextSize(0);
+		}
+		XMLParser xmlp = new XMLParser(storage, xml, this);
+		try {
+			isomorphism = xmlp.parseIsomorphism(isomorphism);
 		} catch (Exception e) {
 			e.printStackTrace();
 			task = false;

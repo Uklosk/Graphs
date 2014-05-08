@@ -7,10 +7,16 @@ import com.jmga.graphs.classes.Graph;
 import com.jmga.graphs.classes.Link;
 import com.jmga.graphs.classes.Node;
 
+// ALGORITMO DE KRUSKAL
+
 public class Kruskal {
 
 	@SuppressWarnings("unchecked")
 	public static Graph aplicarKruskal(Graph grafo) {
+		/*
+		 * Creamos el grafo que va a ser nuestro árbol
+		 * y le añadimos los vértices al grafo 
+		 */
 		Graph arbol = new Graph();
 		ArrayList<Integer> Nodes = grafo.getNombres();
 
@@ -20,6 +26,12 @@ public class Kruskal {
 
 		}
 
+		/*
+		 * Creamos un conjunto auxiliar con todas las aristas del grafo
+		 * ordenadas de menor a mayor peso
+		 * 
+		 * Añadimos la primera al árbol y la borramos del conjunto auxiliar
+		 */
 		ArrayList<Arrow> L = (ArrayList<Arrow>) grafo.getArrows().clone();
 
 		for (int i = 0; i < L.size(); i++) {
@@ -29,11 +41,21 @@ public class Kruskal {
 		arbol.addLink(pro.getIdi(), pro.getIdf(), pro.getWeight());
 		L.remove(pro);
 
+		/*
+		 * Mientras queden aristas en este conjunto seleccionamos la de
+		 * menor peso e iteramos comprobando si forma ciclo
+		 * 
+		 * Si no forma ciclo la añadimos y luego la borramos
+		 * 
+		 * Si forma ciclo la borramos directamente
+		 */
 		while (L.size()>0) {
 			pro = L.get(0);
 			
-			if (HayCiclo(arbol, pro, arbol.getNode(pro.getIdf()), pro.getIdf()) == false) {
-				arbol.addLink(pro.getIdi(), pro.getIdf(), pro.getWeight());
+			if (HayCiclo(arbol, pro, arbol.getNode(pro.getIdf()), 
+					pro.getIdf()) == false) {
+				arbol.addLink(pro.getIdi(), pro.getIdf(), 
+						pro.getWeight());
 			}
 
 			L.remove(pro);
