@@ -32,6 +32,9 @@ public class XMLParser {
 	private static final String attribute_control = "apk";
 	private static final String val_control = "Graphs";
 	
+	// Controla la lectura ordenada de los grafos A y B para un ejercicio de isomorfismo
+	private int control_isomorphism;
+	
 	private float[] displacement; /* [0]:x [1]:y */
 	private float density;
 	private GView view;
@@ -41,6 +44,8 @@ public class XMLParser {
 	public XMLParser(GView view){
 		storage_path = "";
 		current_xml = "";
+		
+		control_isomorphism = 0;
 		
 		this.view = view;
 		density = view.getDensity();
@@ -57,6 +62,8 @@ public class XMLParser {
 		checkTheDirectory();
 		current_xml = "";
 
+		control_isomorphism = 0;
+		
 		this.view = view;
 		density = view.getDensity();
 		
@@ -71,6 +78,8 @@ public class XMLParser {
 		storage_path = storage + "/";
 		checkTheDirectory();
 		current_xml = xml;
+		
+		control_isomorphism = 0;
 		
 		this.view = view;
 		density = view.getDensity();
@@ -109,6 +118,38 @@ public class XMLParser {
 			while(event != XmlPullParser.END_DOCUMENT){
 				if(event == XmlPullParser.START_TAG){
 					if(xml.getName().equals( "graph" ))
+						if(xml.getAttributeName(0).equals( attribute_control ))
+							if(xml.getAttributeValue(0).equals( val_control )){
+								fis.close();
+								return true;
+							}
+				}
+				event = xml.next();
+			}
+			fis.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return task;
+	}
+	
+	public static boolean isIsomorphism(String file_path){
+		Log.d(TAG,"File path: " + file_path);
+		
+		boolean task = false;
+		FileInputStream fis = null;
+		XmlPullParser xml = Xml.newPullParser();
+
+		try {
+			fis = new FileInputStream(file_path);
+			xml.setInput(fis, "UTF-8");
+			
+			int event = xml.next();
+			while(event != XmlPullParser.END_DOCUMENT){
+				if(event == XmlPullParser.START_TAG){
+					if(xml.getName().equals( "isomorphism" ))
 						if(xml.getAttributeName(0).equals( attribute_control ))
 							if(xml.getAttributeValue(0).equals( val_control )){
 								fis.close();
@@ -289,4 +330,18 @@ public class XMLParser {
 		return gr;
 	}
 	
+	public Hashtable<String,Graph> parseIsomorphism(Hashtable<String,Graph> isomorphism) throws Exception{
+		Graph ga = new Graph();
+		Graph gb = new Graph();
+		
+		ga = parseGraph(ga);
+		gb = parseGraph(gb);
+		
+		isomorphism.put("A", ga);
+		isomorphism.put("B", gb);
+		
+		return isomorphism;
+	}
+	
 }
+
