@@ -27,10 +27,7 @@ public class XMLParser {
 	private static final String TAG = "XMLParser";
 
 	private String storage_path;
-	private String current_xml;
-
-	private static final String attribute_control = "apk";
-	private static final String val_control = "Graphs";
+	private String current_xml;	
 	
 	// Controla la lectura ordenada de los grafos A y B para un ejercicio de isomorfismo
 	private int control_isomorphism;
@@ -117,12 +114,10 @@ public class XMLParser {
 			int event = xml.next();
 			while(event != XmlPullParser.END_DOCUMENT){
 				if(event == XmlPullParser.START_TAG){
-					if(xml.getName().equals( "graph" ))
-						if(xml.getAttributeName(0).equals( attribute_control ))
-							if(xml.getAttributeValue(0).equals( val_control )){
-								fis.close();
-								return true;
-							}
+					if(xml.getName().equals( "isomorphism" )){
+						fis.close();
+						return true;
+					}
 				}
 				event = xml.next();
 			}
@@ -149,12 +144,10 @@ public class XMLParser {
 			int event = xml.next();
 			while(event != XmlPullParser.END_DOCUMENT){
 				if(event == XmlPullParser.START_TAG){
-					if(xml.getName().equals( "isomorphism" ))
-						if(xml.getAttributeName(0).equals( attribute_control ))
-							if(xml.getAttributeValue(0).equals( val_control )){
-								fis.close();
-								return true;
-							}
+					if(xml.getName().equals( "isomorphism" )){
+						fis.close();
+						return true;
+					}
 				}
 				event = xml.next();
 			}
@@ -185,9 +178,6 @@ public class XMLParser {
 	    serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
 	    
 		serializer.startTag(null, "graph");
-		// Control attribute
-		serializer.attribute(null, attribute_control, val_control);
-		// -----------------
 		serializer.attribute(null, "v", Integer.toString(v.size()));
 		serializer.attribute(null, "a", Integer.toString(a.size()));
 		
@@ -236,17 +226,22 @@ public class XMLParser {
 		fis = new FileInputStream(storage_path + current_xml);
 		xml.setInput(fis, "UTF-8");
 		
+		boolean graph_load = false;
 		int event = xml.next();
 		while(event != XmlPullParser.END_DOCUMENT) {
 			ArrayList<String> xmldata = new ArrayList<String>();
 			if(event == XmlPullParser.START_TAG){
 				for(int i = 0; i < xml.getAttributeCount(); i++){ 
-					if(xml.getName().equals("graph")){
+					if(xml.getName().equals("isomorphism")){
+						control_isomorphism = (control_isomorphism==0) ? 1 : 2;
+					}else if(xml.getName().equals("graph") ||
+							xml.getName().equals("graph"+control_isomorphism)){
 						if(xml.getAttributeName(i).equals("v")){
 							cardinals[0] = Integer.parseInt(xml.getAttributeValue(i));
 						}else if(xml.getAttributeName(i).equals("a")){
 							cardinals[1] = Integer.parseInt(xml.getAttributeValue(i));}
-					}else if(xml.getName().equals("vertex")){
+						graph_load = true;	
+					}else if(xml.getName().equals("vertex") && graph_load==true){
 						if(xml.getAttributeName(i).equals("id")){
 							data.put(xml.getAttributeValue(i), xmldata);
 						}else{
@@ -338,6 +333,7 @@ public class XMLParser {
 		gb = parseGraph(gb);
 		
 		isomorphism.put("A", ga);
+		control_isomorphism ++; // Para guardar el segundo grafo del archivo
 		isomorphism.put("B", gb);
 		
 		return isomorphism;
