@@ -53,7 +53,7 @@ public class Node extends ShapeDrawable {
 		getPaint().setColor(color);
 		getPaint().setAntiAlias(true);
 		setPos(x, y, viewportWidth, viewportHeight);
-		enlacesExistentes = -1;
+		enlacesExistentes = 0;
 		enlaces = new ArrayList<Link>();
 		this.id = id;
 
@@ -77,7 +77,7 @@ public class Node extends ShapeDrawable {
 		getPaint().setColor(color);
 		getPaint().setAntiAlias(true);
 		setPos(x, y, viewportWidth, viewportHeight);
-		enlacesExistentes = -1;
+		enlacesExistentes = 0;
 		enlaces = new ArrayList<Link>();
 		id = -1;
 
@@ -98,7 +98,7 @@ public class Node extends ShapeDrawable {
 		getPaint().setColor(color);
 		getPaint().setAntiAlias(true);
 		setPosF(posX, posY, viewportWidth, viewportHeight);
-		enlacesExistentes = -1;
+		enlacesExistentes = 0;
 		enlaces = new ArrayList<Link>();
 		this.id = id;
 
@@ -188,6 +188,7 @@ public class Node extends ShapeDrawable {
 
 	public void agregarEnlace(int idf, int weight) {
 		enlaces.add(new Link(idf, weight));
+		enlacesExistentes++;
 
 	}
 
@@ -195,6 +196,7 @@ public class Node extends ShapeDrawable {
 		for (int i = 0; i < enlaces.size(); i++) {
 			if (enlaces.get(i).getIdf() == idf) {
 				enlaces.remove(i);
+				enlacesExistentes--;
 				i = 0;
 			}
 		}

@@ -52,6 +52,7 @@ public class GView extends View {
 	private boolean checked_kruskal = false;
 	private boolean checked_bipartite = false;
 	private boolean checked_iso = false;
+	
 	private Hashtable<Integer, Integer> subSets;
 
 	public int graphToRestore = 0;
@@ -254,12 +255,11 @@ public class GView extends View {
 		return label[i];
 	}
 
-	public void setMenuStateChecked(boolean ck, boolean cb, boolean ci) {
+	public void setMenuStateChecked(boolean ck, boolean cb) {
 		checked_kruskal = ck;
 		checked_bipartite = cb;
-		checked_iso = ci;
 	}
-
+	
 	public int getViewportHeight() {
 		return viewportHeight;
 	}
@@ -374,7 +374,7 @@ public class GView extends View {
 	}
 	
 	public boolean xmlToIsomorphism(String storage, String xml) {
-		boolean task = true;
+		boolean task = checked_iso = true;
 		if (viewportHeight == 0 || viewportWidth == 0) {
 			viewportHeight = (int) (50 * density + 0.5f);
 			viewportWidth = (int) (50 * density + 0.5f);
@@ -405,27 +405,16 @@ public class GView extends View {
 		{
 			for (int i = 0; i < gIso.getArrows().size(); i++) {
 				Arrow a = gIso.getArrows().get(i);
-				paint.setColor(gIso.getArrows().get(i).color);
+				paint.setColor(Color.RED);
 				canvas.drawLine(a.start[0], a.start[1], a.stop[0], a.stop[1], paint);
-				if (a.getWeight() > 0) {
-					path = new Path();
-					path.moveTo(a.start[0], a.start[1]);
-					path.lineTo(a.stop[0], a.stop[1]);
-					canvas.drawTextOnPath(a.getWeightS(), path, 0, 30, fontPaint);
-
-					path = new Path();
-					path.moveTo(a.stop[0], a.stop[1]);
-					path.lineTo(a.start[0], a.start[1]);
-					canvas.drawTextOnPath(a.getWeightS(), path, 0, 30, fontPaint);
-
-				}
-
+			
 			}
 
 			for (int ns : gIso.getNombres()) {
 				Node n = gIso.getVertex().get(ns);
+				n.setColor(Color.RED);
 				n.draw(canvas);
-				canvas.drawText(label[n.getId()], n.getCenterX(), n.getCenterY()
+				canvas.drawText(label[n.getId()]+" | "+n.getEnlacesExistentes(), n.getCenterX(), n.getCenterY()
 						- n.radius - 20, fontPaint);
 			}
 			
@@ -435,7 +424,7 @@ public class GView extends View {
 			Arrow a = g.getArrows().get(i);
 			paint.setColor(g.getArrows().get(i).color);
 			canvas.drawLine(a.start[0], a.start[1], a.stop[0], a.stop[1], paint);
-			if (a.getWeight() > 0) {
+			if (!checked_iso) {
 				path = new Path();
 				path.moveTo(a.start[0], a.start[1]);
 				path.lineTo(a.stop[0], a.stop[1]);
@@ -458,7 +447,7 @@ public class GView extends View {
 		for (int ns : g.getNombres()) {
 			Node n = g.getVertex().get(ns);
 			n.draw(canvas);
-			canvas.drawText(label[n.getId()], n.getCenterX(), n.getCenterY()
+			canvas.drawText(label[n.getId()]+" | "+n.getEnlacesExistentes(), n.getCenterX(), n.getCenterY()
 					- n.radius - 20, fontPaint);
 		}
 
@@ -650,7 +639,7 @@ public class GView extends View {
 	public void clear() {
 		g = new Graph();
 		gKruskal = new Graph();
-		isKruskal = isBipartite = cleangraph = table_dist = save_graph = info_table = false;
+		isKruskal = isBipartite = cleangraph = table_dist = save_graph = info_table = checked_iso= false;
 		invalidate();
 	}
 

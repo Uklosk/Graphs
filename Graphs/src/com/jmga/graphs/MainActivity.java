@@ -64,7 +64,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	public int weight = 0;
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
-	private static final int REQUEST_PATH = 0;
+	private static final int REQUEST_PATH = 0,ISOMORPHISM = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +121,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 					break;
 				}
 
-				view.setMenuStateChecked(isKruskal, isBipartite, isIso);
+				view.setMenuStateChecked(isKruskal, isBipartite);
 				view.update();
 				view.invalidate();
 
@@ -298,11 +298,10 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 			return true;
 		case R.id.action_iso:
-			if (isIso) {
-				isIso = false;
-			} else {
-				isIso = true;
-			}
+			isIso = true;
+			
+			getisofile();
+			return true;
 		case R.id.action_kruskal:
 			if (isKruskal) {
 				isKruskal = false;
@@ -311,7 +310,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			} else {
 				isKruskal = true;
 			}
-			view.setMenuStateChecked(isKruskal, isBipartite,isIso);
+			view.setMenuStateChecked(isKruskal, isBipartite);
 			view.update();
 			view.invalidate();
 
@@ -486,7 +485,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	}
 
 	public void clear() {
-		isKruskal = isBipartite = false;
+		isKruskal = isBipartite = isIso = false;
 		updatingMenu();
 		view.initializingNodesColor();
 		view.clear();
@@ -783,11 +782,26 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 			}
 		}
+		if (requestCode == ISOMORPHISM) {
+			if (resultCode == RESULT_OK) {
+				clear();
+
+				view.xmlToIsomorphism(data.getStringExtra("GetPath"), "");
+				view.update();
+				view.invalidate();
+
+			}
+		}
 	}
 
 	public void getfile() {
 		Intent intent1 = new Intent(this, FileChooser.class);
 		startActivityForResult(intent1, REQUEST_PATH);
+	}
+	
+	public void getisofile() {
+		Intent intent1 = new Intent(this, FileChooser.class);
+		startActivityForResult(intent1, ISOMORPHISM);
 	}
 
 }
