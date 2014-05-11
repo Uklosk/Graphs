@@ -1,5 +1,8 @@
 package com.jmga.graphs;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Hashtable;
 import java.util.zip.Inflater;
 
@@ -545,6 +548,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getActionBar()
 				.getSelectedNavigationIndex());
 		view.graphToXML(getFilesDir().toString(), "/temp_save----");
+	
 	}
 
 	@Override
