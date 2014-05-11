@@ -733,6 +733,11 @@ public class GView extends View {
 		for (int n : g.getNombres()) {
 			g.getVertex().get(n).updateRadius(size.getNew_percent_vertex());
 		}
+		if(checked_iso)
+			for (int n : gIso.getNombres()) {
+				gIso.getVertex().get(n).updateRadius(size.getNew_percent_vertex());
+			}
+			
 		update();
 		invalidate();
 	}
