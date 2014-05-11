@@ -355,6 +355,10 @@ public class GView extends View {
 		return XMLParser.isGraph(complete_path);
 	}
 
+	public boolean isXMLIsomorphism(String complete_path) {
+		return XMLParser.isIsomorphism(complete_path);
+	}
+
 	public boolean xmlToGraph(String storage, String xml) {
 		boolean task = true;
 		if (viewportHeight == 0 || viewportWidth == 0) {

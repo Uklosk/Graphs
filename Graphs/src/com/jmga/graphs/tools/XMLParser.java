@@ -491,11 +491,13 @@ public class XMLParser {
 		Graph ga = new Graph();
 		Graph gb = new Graph();
 
-		ga = parseIsoGraph(ga,1);
-		gb = parseIsoGraph(gb,2);
+		ga = parseGraph(ga);
+		// A : izquierda
+		control_isomorphism++; // Para guardar el segundo grafo del archivo
+		gb = parseGraph(gb);
+		// B : dercha
 
 		isomorphism.put("A", ga);
-		control_isomorphism++; // Para guardar el segundo grafo del archivo
 		isomorphism.put("B", gb);
 
 		return isomorphism;

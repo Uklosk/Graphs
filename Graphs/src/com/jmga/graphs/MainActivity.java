@@ -544,6 +544,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
+		
+		//http://www.sgoliver.net/blog/?p=1731
+			
 		// Serialize the current tab position.
 		outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getActionBar()
 				.getSelectedNavigationIndex());
