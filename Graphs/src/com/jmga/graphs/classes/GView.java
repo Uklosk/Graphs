@@ -333,7 +333,8 @@ public class GView extends View {
 
 		fontPaint = new Paint();
 		fontPaint.setTextAlign(Align.CENTER);
-		fontPaint.setTextSize(20);
+		fontPaint.setTextSize(24);
+		
 
 	}
 
@@ -392,8 +393,9 @@ public class GView extends View {
 			e.printStackTrace();
 			task = false;
 		}
-		
+		g= new Graph();
 		g = isomorphism.get("A");
+		gIso = new Graph();
 		gIso = isomorphism.get("B");
 		
 		return task;

@@ -248,7 +248,7 @@ public class XMLParser {
 									.getAttributeValue(i));
 						}
 						graph_load = true;
-					} else if (xml.getName().equals("vertex")
+					} else if ((xml.getName().equals("vertex")||xml.getName().equals("vertex1"))
 							&& graph_load == true) {
 						if (xml.getAttributeName(i).equals("id")) {
 							data.put(xml.getAttributeValue(i), xmldata);
@@ -357,9 +357,8 @@ public class XMLParser {
 					if (xml.getName().equals("isomorphism")) {
 						control_isomorphism = (control_isomorphism == 0) ? 1
 								: 2;
-					} else if (xml.getName().equals("graph")
-							|| xml.getName().equals(
-									"graph" + control_isomorphism)) {
+					} else if (xml.getName().equals(
+									"graph"+caso)) {
 						if (xml.getAttributeName(i).equals("v")) {
 							cardinals[0] = Integer.parseInt(xml
 									.getAttributeValue(i));
@@ -368,15 +367,17 @@ public class XMLParser {
 									.getAttributeValue(i));
 						}
 						graph_load = true;
-					} else if (xml.getName().equals("vertex")
-							&& graph_load == true) {
+					} else if (xml.getName().equals("vertex"+caso)
+							&& graph_load == true ) {
 						if (xml.getAttributeName(i).equals("id")) {
 							data.put(xml.getAttributeValue(i), xmldata);
+							
 						} else {
 							if (xml.getAttributeValue(i) != null) {
 								xmldata.add(xml.getAttributeValue(i));
-							} else
+							} else{
 								xmldata.add("");
+							}
 						}
 					}
 				}
