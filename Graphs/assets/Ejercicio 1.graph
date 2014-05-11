@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?> 
+<isomorphism name="Ejercicio 1">
+    
+  <graph1 v="6" a="13">
+    <vertex1 id="0" x="0.28515624" y="0.3535032" r="33" adjacent="2,1,3,5" weights="1,1,1,1" />
+  <vertex1 id="1" x="0.2796875" y="0.64490443" r="33" adjacent="0,3,2,4" weights="1,1,1,1" />
+  <vertex1 id="2" x="0.4984375" y="0.22133759" r="33" adjacent="0,1,4,5,3" weights="1,1,1,1,1" />
+  <vertex1 id="3" x="0.49140626" y="0.77866244" r="33" adjacent="0,1,5,4,2" weights="1,1,1,1,1" />
+  <vertex1 id="4" x="0.7203125" y="0.36305732" r="33" adjacent="2,3,5,1" weights="1,1,1,1" />
+  <vertex1 id="5" x="0.71640626" y="0.6496815" r="33" adjacent="0,2,3,4" weights="1,1,1,1" />
+  </graph1>
+
+  <graph2 v="6" a="13">
+  <vertex2 id="0" x="0.70625" y="0.34394905" r="33" adjacent="1,4,3,5" weights="1,1,1,1" />
+  <vertex2 id="1" x="0.48984376" y="0.18471338" r="33" adjacent="0,5,2,4" weights="1,1,1,1" />
+  <vertex2 id="2" x="0.26015624" y="0.57961786" r="33" adjacent="5,3,1,4" weights="1,1,1,1" />
+  <vertex2 id="3" x="0.4875" y="0.75318474" r="33" adjacent="2,4,5,0" weights="1,1,1,1" />
+  <vertex2 id="4" x="0.7117188" y="0.59713376" r="33" adjacent="3,0,2,1,5" weights="1,1,1,1,1" />
+  <vertex2 id="5" x="0.25546875" y="0.35031846" r="33" adjacent="1,2,3,0,4" weights="1,1,1,1,1" />
+</graph2>
+
+</isomorphism>

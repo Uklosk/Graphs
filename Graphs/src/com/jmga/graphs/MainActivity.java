@@ -1,8 +1,11 @@
 package com.jmga.graphs;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Hashtable;
 import java.util.zip.Inflater;
 
@@ -14,6 +17,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.DisplayMetrics;
@@ -73,6 +77,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		copyAssets();
+		
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayShowTitleEnabled(false);
@@ -97,7 +103,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				int x = Math.round(event.getX());
 				int y = Math.round(event.getY());
 				Node node = view.checkBounds(x, y);
-
+				if(!isIso)
 				switch (gMode) {
 				case GRAPH_MODE_NODES:
 					if (toggle_add)
@@ -123,7 +129,10 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 					break;
 				}
+				else modifyGraph(v, event, x, y, node);
 
+					
+				
 				view.setMenuStateChecked(isKruskal, isBipartite);
 				view.update();
 				view.invalidate();
@@ -301,8 +310,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 			return true;
 		case R.id.action_iso:
-			isIso = true;
-			
+		
 			getisofile();
 			return true;
 		case R.id.action_kruskal:
@@ -792,7 +800,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		if (requestCode == ISOMORPHISM) {
 			if (resultCode == RESULT_OK) {
 				clear();
-
+				isIso=true;
 				view.xmlToIsomorphism(data.getStringExtra("GetPath"), "");
 				view.update();
 				view.invalidate();
@@ -811,4 +819,41 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		startActivityForResult(intent1, ISOMORPHISM);
 	}
 
+	
+	private void copyAssets() {
+	    AssetManager assetManager = getAssets();
+	    String[] files = null;
+	    try {
+	        files = assetManager.list("");
+	    } catch (IOException e) {
+	    }
+	    for(String filename : files) {
+	        InputStream in = null;
+	        FileOutputStream out = null;
+	        try {
+	          in = assetManager.open(filename);
+	          File file = new File(storage);
+
+	          file.mkdirs();
+	          File outFile = new File(storage, filename);
+	          
+	          out = new FileOutputStream(outFile);
+	          copyFile(in, out);
+	          in.close();
+	          in = null;
+	          out.flush();
+	          out.close();
+	          out = null;
+	        } catch(IOException e) {
+	        }       
+	    }
+	}
+	private void copyFile(InputStream in, FileOutputStream out) throws IOException {
+	    byte[] buffer = new byte[1024];
+	    int read;
+	    while((read = in.read(buffer)) != -1){
+	      out.write(buffer, 0, read);
+	    }
+	}
+	
 }
