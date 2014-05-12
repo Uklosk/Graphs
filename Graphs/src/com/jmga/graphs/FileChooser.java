@@ -60,9 +60,14 @@ public class FileChooser extends ListActivity {
 					Item it= new Item(ff.getName(), ff.length() + " Byte",
 							date_modify, ff.getAbsolutePath(), false);
 					it.setIsGraph(XMLParser.isGraph(it.getPath()));
-					if(it.getIsGraph())
+					switch(it.getIsGraph()){
+					case 1:
 						fls.add(it);
-							
+						break;
+					case 2:
+						fls.add(it);
+						
+					}
 				}
 			}
 		} catch (Exception e) {

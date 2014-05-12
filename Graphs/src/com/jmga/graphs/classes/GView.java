@@ -352,7 +352,7 @@ public class GView extends View {
 		return task;
 	}
 
-	public boolean isXMLGraph(String complete_path) {
+	public int isXMLGraph(String complete_path) {
 		return XMLParser.isGraph(complete_path);
 	}
 

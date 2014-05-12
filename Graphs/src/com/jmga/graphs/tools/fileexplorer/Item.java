@@ -6,7 +6,7 @@ public class Item implements Comparable<Item> {
 	private String date;
 	private String path;
 	private String image;
-	private boolean isGraph;
+	private int isGraph;
 	private boolean isDir;
 
 	public Item(String n, String d, String dt, String p, boolean dir) {
@@ -15,7 +15,7 @@ public class Item implements Comparable<Item> {
 		date = dt;
 		path = p;
 		isDir = dir;
-		isGraph = false;
+		isGraph = 0;
 	}
 
 	public String getName() {
@@ -38,11 +38,11 @@ public class Item implements Comparable<Item> {
 		return isDir;
 	}
 
-	public void setIsGraph(boolean isGraph) {
+	public void setIsGraph(int isGraph) {
 		this.isGraph = isGraph;
 	}
 
-	public boolean getIsGraph() {
+	public int getIsGraph() {
 		return isGraph;
 	}
 

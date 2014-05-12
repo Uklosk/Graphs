@@ -101,10 +101,10 @@ public class XMLParser {
 		current_xml = xml;
 	}
 
-	public static boolean isGraph(String file_path) {
+	public static int isGraph(String file_path) {
 		Log.d(TAG, "File path: " + file_path);
 
-		boolean task = false;
+		int task = 0;
 		FileInputStream fis = null;
 		XmlPullParser xml = Xml.newPullParser();
 
@@ -117,7 +117,10 @@ public class XMLParser {
 				if (event == XmlPullParser.START_TAG) {
 					if (xml.getName().equals("isomorphism")) {
 						fis.close();
-						return true;
+						task= 2;
+					} else if(xml.getName().equals("graph")){
+						fis.close();
+						task= 1;
 					}
 				}
 				event = xml.next();
@@ -234,12 +237,9 @@ public class XMLParser {
 			ArrayList<String> xmldata = new ArrayList<String>();
 			if (event == XmlPullParser.START_TAG) {
 				for (int i = 0; i < xml.getAttributeCount(); i++) {
-					if (xml.getName().equals("isomorphism")) {
-						control_isomorphism = (control_isomorphism == 0) ? 1
-								: 2;
-					} else if (xml.getName().equals("graph")
+					if (xml.getName().equals("graph")
 							|| xml.getName().equals(
-									"graph" + control_isomorphism)) {
+									"graph1")) {
 						if (xml.getAttributeName(i).equals("v")) {
 							cardinals[0] = Integer.parseInt(xml
 									.getAttributeValue(i));
