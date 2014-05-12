@@ -78,6 +78,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		super.onCreate(savedInstanceState);
 
 		copyAssets();
+		view = new GView(this);
 		
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -91,7 +92,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		actionBar.addTab(actionBar.newTab().setText("pesos")
 				.setTabListener(this));
 
-		view = new GView(this);
+		
 
 		setContentView(view);
 
