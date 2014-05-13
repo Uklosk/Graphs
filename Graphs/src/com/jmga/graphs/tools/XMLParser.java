@@ -117,10 +117,10 @@ public class XMLParser {
 				if (event == XmlPullParser.START_TAG) {
 					if (xml.getName().equals("isomorphism")) {
 						fis.close();
-						task= 2;
+						return  2;
 					} else if(xml.getName().equals("graph")){
 						fis.close();
-						task= 1;
+						return 1;
 					}
 				}
 				event = xml.next();

@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -670,12 +671,21 @@ public class GView extends View {
 			graphToRestore--;
 
 		if (graphToRestore == 1) {
-			xmlToGraph(getContext().getFilesDir().toString(), "/temp_save----.graph");
-			graphToRestore--;
-			update();
-			invalidate();
-			File file = new File(getContext().getFilesDir().toString() + "/temp_save----.graph");
-			file.delete();
+			SharedPreferences prefs = getContext().getSharedPreferences("Preferences_Graph",Context.MODE_PRIVATE);
+			 if(prefs.getString("mode", "").equals("isomorphism")){
+			 if(prefs.getString("currentfile", "").length()>0){
+			 xmlToIsomorphism(prefs.getString("currentfile", ""), "");
+			 update();
+			 invalidate();
+			 }
+			 }else{
+			 xmlToGraph(getContext().getFilesDir().toString(), "/temp_save----.graph");
+			 graphToRestore--;
+			 update();
+			 invalidate();
+			 File file = new File(getContext().getFilesDir().toString() + "/temp_save----.graph");
+			 file.delete();
+			 }
 		}
 
 	}

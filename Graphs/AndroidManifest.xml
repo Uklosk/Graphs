@@ -30,7 +30,6 @@
         <activity
             android:name="com.jmga.graphs.FileChooser"
             android:label="@string/app_name">
-            
         </activity>
     </application>
 

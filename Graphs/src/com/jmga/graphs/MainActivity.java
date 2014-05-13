@@ -17,6 +17,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -48,6 +49,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	private final static String storage = Environment
 			.getExternalStorageDirectory().toString() + "/Graphs";
 
+	SharedPreferences prefs;
+	private static boolean running = false;
+	
 	private GView view;
 	private Node nFocused;
 	private Menu menu;
@@ -71,7 +75,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	public int weight = 0;
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
-	private static final int REQUEST_PATH = 0,ISOMORPHISM = 1;
+	private static final int REQUEST_PATH = 0, ISOMORPHISM = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +83,16 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 		copyAssets();
 		view = new GView(this);
+
+		prefs = getSharedPreferences("Preferences_Graph", Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = prefs.edit();
+		if (!running) {
+			editor.putString("mode", "graph");
+			editor.putString("currentfile", "");
+			editor.putString("load", "");
+		}
+		editor.commit();
+		running=true;
 		
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -92,8 +106,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		actionBar.addTab(actionBar.newTab().setText("pesos")
 				.setTabListener(this));
 
-		
-
 		setContentView(view);
 
 		view.setOnTouchListener(new OnTouchListener() {
@@ -104,36 +116,35 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				int x = Math.round(event.getX());
 				int y = Math.round(event.getY());
 				Node node = view.checkBounds(x, y);
-				if(!isIso)
-				switch (gMode) {
-				case GRAPH_MODE_NODES:
-					if (toggle_add)
-						addNodeM(v, event, x, y, node);
-					else if (toggle_remove)
-						deleteNodeM(v, event, x, y, node);
-					else
+				if (!isIso)
+					switch (gMode) {
+					case GRAPH_MODE_NODES:
+						if (toggle_add)
+							addNodeM(v, event, x, y, node);
+						else if (toggle_remove)
+							deleteNodeM(v, event, x, y, node);
+						else
+							modifyGraph(v, event, x, y, node);
+						break;
+					case GRAPH_MODE_ARROWS:
+						if (toggle_add)
+							addArrowM(v, event, x, y, node);
+						else if (toggle_remove)
+							deleteArrowM(v, event, x, y, node);
+						else
+							modifyGraph(v, event, x, y, node);
+						break;
+					case GRAPH_MODE_WEIGHTS:
+						weightM(v, event, x, y, node);
+						break;
+					default:
 						modifyGraph(v, event, x, y, node);
-					break;
-				case GRAPH_MODE_ARROWS:
-					if (toggle_add)
-						addArrowM(v, event, x, y, node);
-					else if (toggle_remove)
-						deleteArrowM(v, event, x, y, node);
-					else
-						modifyGraph(v, event, x, y, node);
-					break;
-				case GRAPH_MODE_WEIGHTS:
-					weightM(v, event, x, y, node);
-					break;
-				default:
+
+						break;
+					}
+				else
 					modifyGraph(v, event, x, y, node);
 
-					break;
-				}
-				else modifyGraph(v, event, x, y, node);
-
-					
-				
 				view.setMenuStateChecked(isKruskal, isBipartite);
 				view.update();
 				view.invalidate();
@@ -311,7 +322,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 			return true;
 		case R.id.action_iso:
-		
+
 			getisofile();
 			return true;
 		case R.id.action_kruskal:
@@ -547,20 +558,29 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
 			getActionBar().setSelectedNavigationItem(
 					savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
-		}
+		}		
 		view.graphToRestore = 2;
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		
-		//http://www.sgoliver.net/blog/?p=1731
-			
+
+		// http://www.sgoliver.net/blog/?p=1731
+		SharedPreferences.Editor editor = prefs.edit();
+		String mode = prefs.getString("mode", "");
+		if (mode.equals("isomorphism")) {
+
+			editor.putString("currentfile", prefs.getString("currentfile", ""));
+			editor.commit();
+		} else {
+			view.graphToXML(getFilesDir().toString(), "/temp_save----");
+		}
+		editor.commit();
 		// Serialize the current tab position.
 		outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getActionBar()
 				.getSelectedNavigationIndex());
 		view.graphToXML(getFilesDir().toString(), "/temp_save----");
-	
+
 	}
 
 	@Override
@@ -791,7 +811,14 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		if (requestCode == REQUEST_PATH) {
 			if (resultCode == RESULT_OK) {
 				clear();
-
+				
+				SharedPreferences.Editor editor = prefs.edit();
+				
+				editor.putString("currentfile", data.getStringExtra("GetPath"));
+				editor.putString("mode", "graph");
+				editor.commit();
+				
+				isIso=false;
 				view.xmlToGraph(data.getStringExtra("GetPath"), "");
 				view.update();
 				view.invalidate();
@@ -801,7 +828,14 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		if (requestCode == ISOMORPHISM) {
 			if (resultCode == RESULT_OK) {
 				clear();
-				isIso=true;
+				
+				SharedPreferences.Editor editor = prefs.edit();
+				
+				editor.putString("currentfile", data.getStringExtra("GetPath"));
+				editor.putString("mode", "isomorphism");
+				editor.commit();
+				
+				isIso = true;
 				view.xmlToIsomorphism(data.getStringExtra("GetPath"), "");
 				view.update();
 				view.invalidate();
@@ -813,48 +847,58 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	public void getfile() {
 		Intent intent1 = new Intent(this, FileChooser.class);
 		startActivityForResult(intent1, REQUEST_PATH);
+		SharedPreferences.Editor editor;
+		editor = prefs.edit();
+		editor.putString("load", "graph");
+		editor.commit();
+
 	}
-	
+
 	public void getisofile() {
 		Intent intent1 = new Intent(this, FileChooser.class);
 		startActivityForResult(intent1, ISOMORPHISM);
+		SharedPreferences.Editor editor;
+		editor = prefs.edit();
+		editor.putString("load", "isomorphism");
+		editor.commit();
 	}
 
-	
 	private void copyAssets() {
-	    AssetManager assetManager = getAssets();
-	    String[] files = null;
-	    try {
-	        files = assetManager.list("");
-	    } catch (IOException e) {
-	    }
-	    for(String filename : files) {
-	        InputStream in = null;
-	        FileOutputStream out = null;
-	        try {
-	          in = assetManager.open(filename);
-	          File file = new File(storage);
+		AssetManager assetManager = getAssets();
+		String[] files = null;
+		try {
+			files = assetManager.list("");
+		} catch (IOException e) {
+		}
+		for (String filename : files) {
+			InputStream in = null;
+			FileOutputStream out = null;
+			try {
+				in = assetManager.open(filename);
+				File file = new File(storage);
 
-	          file.mkdirs();
-	          File outFile = new File(storage, filename);
-	          
-	          out = new FileOutputStream(outFile);
-	          copyFile(in, out);
-	          in.close();
-	          in = null;
-	          out.flush();
-	          out.close();
-	          out = null;
-	        } catch(IOException e) {
-	        }       
-	    }
+				file.mkdirs();
+				File outFile = new File(storage, filename);
+
+				out = new FileOutputStream(outFile);
+				copyFile(in, out);
+				in.close();
+				in = null;
+				out.flush();
+				out.close();
+				out = null;
+			} catch (IOException e) {
+			}
+		}
 	}
-	private void copyFile(InputStream in, FileOutputStream out) throws IOException {
-	    byte[] buffer = new byte[1024];
-	    int read;
-	    while((read = in.read(buffer)) != -1){
-	      out.write(buffer, 0, read);
-	    }
+
+	private void copyFile(InputStream in, FileOutputStream out)
+			throws IOException {
+		byte[] buffer = new byte[1024];
+		int read;
+		while ((read = in.read(buffer)) != -1) {
+			out.write(buffer, 0, read);
+		}
 	}
-	
+
 }

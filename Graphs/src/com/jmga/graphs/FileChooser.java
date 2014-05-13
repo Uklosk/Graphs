@@ -12,7 +12,9 @@ import com.jmga.graphs.tools.fileexplorer.FileArrayAdapter;
 import com.jmga.graphs.tools.fileexplorer.Item;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -21,12 +23,14 @@ public class FileChooser extends ListActivity {
 
 	private File currentDir;
 	private FileArrayAdapter adapter;
+	SharedPreferences prefs;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		currentDir = new File("/sdcard/Graphs");
 		fill(currentDir);
+		
 	}
 
 	private void fill(File f) {
@@ -57,16 +61,19 @@ public class FileChooser extends ListActivity {
 					dir.add(new Item(ff.getName(), num_item, date_modify, ff
 							.getAbsolutePath(), true));
 				} else {
-					Item it= new Item(ff.getName(), ff.length() + " Byte",
+					Item it = new Item(ff.getName(), ff.length() + " Byte",
 							date_modify, ff.getAbsolutePath(), false);
 					it.setIsGraph(XMLParser.isGraph(it.getPath()));
-					switch(it.getIsGraph()){
+					prefs = getSharedPreferences("Preferences_Graph", Context.MODE_PRIVATE);
+					switch (it.getIsGraph()) {
 					case 1:
+						if (prefs.getString("load", "").equals("graph"))
 						fls.add(it);
 						break;
 					case 2:
+						if (prefs.getString("load", "").equals("isomorphism"))
 						fls.add(it);
-						
+
 					}
 				}
 			}
@@ -101,7 +108,7 @@ public class FileChooser extends ListActivity {
 		// Toast.makeText(this, "Folder Clicked: "+ currentDir,
 		// Toast.LENGTH_SHORT).show();
 		Intent intent = new Intent();
-		//intent.putExtra("GetPath", currentDir.toString());
+		// intent.putExtra("GetPath", currentDir.toString());
 		intent.putExtra("GetPath", o.getPath());
 		intent.putExtra("GetFileName", o.getName());
 		setResult(RESULT_OK, intent);
