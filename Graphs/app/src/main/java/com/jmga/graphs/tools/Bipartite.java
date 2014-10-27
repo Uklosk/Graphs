@@ -54,7 +54,7 @@ public class Bipartite {
 		// Recorrido en amplitud del grafo: Breadth First Search (BFS)
 		BreadthFirstSearch();
 		
-		// En caso de que existan mas componentes conexas se añadiran
+		// En caso de que existan mas componentes conexas se aÃ±adiran
 		// dichas componentes por separado para crear la biparticion
 		// de cada una
 		while(g.getNombres().size() > visited.size()){
@@ -72,7 +72,7 @@ public class Bipartite {
 					}
 					// Recorrido en amplitud de la componente conexa: Breadth First Search (BFS)
 					BreadthFirstSearch();
-					// Actualizando el número de componentes conexas
+					// Actualizando el nÃºmero de componentes conexas
 					connected_components++;
 					temp = new Hashtable<Integer,Integer>();
 				}

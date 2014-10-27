@@ -99,7 +99,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setDisplayShowHomeEnabled(false);
 
-		actionBar.addTab(actionBar.newTab().setText("vértices")
+		actionBar.addTab(actionBar.newTab().setText("vÃ©rtices")
 				.setTabListener(this));
 		actionBar.addTab(actionBar.newTab().setText("aristas")
 				.setTabListener(this));
@@ -286,7 +286,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 							if (view.graphToXML(storage, file_name)) {
 								Toast.makeText(
 										getApplicationContext(),
-										"Guardado con éxito como " + file_name
+										"Guardado con ï¿½xito como " + file_name
 												+ ".graph", Toast.LENGTH_LONG)
 										.show();
 								dialog.dismiss();
@@ -294,7 +294,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 							} else
 								Toast.makeText(
 										getApplicationContext(),
-										"No ha podido guardarse, inténtelo de nuevo.",
+										"No ha podido guardarse, intï¿½ntelo de nuevo.",
 										Toast.LENGTH_LONG).show();
 						}
 					});

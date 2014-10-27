@@ -290,8 +290,8 @@ public class XMLParser {
 				}
 			}
 		}
-		// Calculando el tamaño que ocupa el grafo
-		// Y actualizando el desplazamiento de los vertices respecto del tamaño
+		// Calculando el tamaÃ±o que ocupa el grafo
+		// Y actualizando el desplazamiento de los vertices respecto del tamaÃ±o
 		// del canvas
 		// [0]:width [1]:height
 		float[] tam = new float[2];
@@ -318,7 +318,7 @@ public class XMLParser {
 			// anteriormente como vertice
 			// principal (hash<"id principal", ArrayList>), la arista que pueda
 			// generarse con esos IDs
-			// ya existira y por tanto no se añadira
+			// ya existira y por tanto no se aÃ±adira
 			String adj = xmlitem.get(3);
 			String wei = xmlitem.get(4);
 			if (adj.length() > 0)
@@ -411,8 +411,8 @@ public class XMLParser {
 				}
 			}
 		}
-		// Calculando el tamaño que ocupa el grafo
-		// Y actualizando el desplazamiento de los vertices respecto del tamaño
+		// Calculando el tamaÃ±o que ocupa el grafo
+		// Y actualizando el desplazamiento de los vertices respecto del tamaÃ±o
 		// del canvas
 		// [0]:width [1]:height
 		float[] tam = new float[2];
@@ -464,7 +464,7 @@ public class XMLParser {
 			// anteriormente como vertice
 			// principal (hash<"id principal", ArrayList>), la arista que pueda
 			// generarse con esos IDs
-			// ya existira y por tanto no se añadira
+			// ya existira y por tanto no se aÃ±adira
 			String adj = xmlitem.get(3);
 			String wei = xmlitem.get(4);
 			if (adj.length() > 0)

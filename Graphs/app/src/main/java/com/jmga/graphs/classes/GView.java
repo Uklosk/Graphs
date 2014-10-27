@@ -34,7 +34,7 @@ public class GView extends View {
 	private Graph g;
 	// Para ejercicios de isomorfismo tenemos 2 grafos
 	Hashtable<String,Graph> isomorphism;
-	// Se podr· activar el modo isomorfismo para trabajar sobre
+	// Se podr√° activar el modo isomorfismo para trabajar sobre
 	// la hashtable isomorphism y no sobre el objeto graph
 	boolean isomorphism_selected;
 	// ****************************************************
