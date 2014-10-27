@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/fd_Icon1"
+        android:layout_width="50dip"
+        android:layout_height="50dip">
+    </ImageView>
+
+    <com.jmga.graphs.classes.GView
+        android:id="@+id/fd_Icon2"
+        android:layout_width="50dip"
+        android:layout_height="50dip"
+        android:layout_toRightOf="@+id/fd_Icon1" >
+    </com.jmga.graphs.classes.GView>
+
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dip"
+        android:layout_marginTop="5dip"
+        android:layout_toRightOf="@+id/fd_Icon2"
+        android:singleLine="true"
+        android:text="@+id/TextView01"
+        android:textStyle="bold" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/TextView02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/TextView01"
+        android:layout_marginLeft="10dip"
+        android:layout_toRightOf="@+id/fd_Icon2"
+        android:text="@+id/TextView02" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/TextViewDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/TextView01"
+        android:layout_marginLeft="5dip"
+        android:text="@+id/TextViewDate" >
+    </TextView>
+
+</RelativeLayout><!-- From: file:/C:/Development/Android/android-studio-workspace/Graphs1/app/src/main/res/layout/file_view.xml -->
