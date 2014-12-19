@@ -31,6 +31,8 @@ import com.jmga.graphs.tools.XMLParser;
 import com.jmga.graphs.tools.auxiliary.SizeView;
 
 public class GView extends View {
+	private String currentDirImages;
+	
 	private Graph g;
 	// Para ejercicios de isomorfismo tenemos 2 grafos
 	Hashtable<String,Graph> isomorphism;
@@ -309,6 +311,7 @@ public class GView extends View {
 	}
 
 	private void init() {
+		currentDirImages = "/sdcard/Graphs/Images";
 
 		density = getResources().getDisplayMetrics().density;
 
@@ -400,6 +403,82 @@ public class GView extends View {
 		gIso = isomorphism.get("B");
 		
 		return task;
+	}
+
+	public static String getTime() {
+	        Date ahora = new Date();
+	        SimpleDateFormat formateador = new SimpleDateFormat("hh:mm:ss");
+	        return formateador.format(ahora);
+    	}
+	
+	public void graphToPNG(){
+		Bitmap b = Bitmap.createBitmap(800, 500, Bitmap.Config.ARGB_8888);
+	        Canvas c = new Canvas(b);
+	        c.drawColor(Color.WHITE);
+	        Paint p = new Paint();
+	        p.setStrokeWidth(1);
+	        p.setColor(Color.BLACK);
+	
+	        if(checked_iso)
+			{
+				for (int i = 0; i < gIso.getArrows().size(); i++) {
+					Arrow a = gIso.getArrows().get(i);
+					paint.setColor(Color.RED);
+					c.drawLine(a.start[0], a.start[1], a.stop[0], a.stop[1], paint);
+				
+				}
+	
+				for (int ns : gIso.getNombres()) {
+					Node n = gIso.getVertex().get(ns);
+					n.setColor(Color.RED);
+					n.draw(canvas);
+					c.drawText(label[n.getId()]+" | "+n.getEnlacesExistentes(), n.getCenterX(), n.getCenterY()
+								- n.radius - 20, fontPaint);
+				}
+				
+			}
+	        
+			for (int i = 0; i < g.getArrows().size(); i++) {
+				Arrow a = g.getArrows().get(i);
+				c.drawLine(a.start[0], a.start[1], a.stop[0], a.stop[1], p);
+				if (!checked_iso) {
+					path = new Path();
+					path.moveTo(a.start[0], a.start[1]);
+					path.lineTo(a.stop[0], a.stop[1]);
+					canvas.drawTextOnPath(a.getWeightS(), path, 0, 30, fontPaint);
+	
+					path = new Path();
+					path.moveTo(a.stop[0], a.stop[1]);
+					path.lineTo(a.start[0], a.start[1]);
+					c.drawTextOnPath(a.getWeightS(), path, 0, 30, fontPaint);
+	
+				}
+	
+			}
+	
+			if (aux != null) {
+				c.drawLine(aux.start[0], aux.start[1], aux.stop[0],
+						   aux.stop[1], auxP);
+			}
+	
+			for (int ns : g.getNombres()) {
+				Node n = g.getVertex().get(ns);
+				n.draw(c);
+				c.drawText(label[n.getId()]+" | "+n.getEnlacesExistentes(), n.getCenterX(), n.getCenterY()
+							- n.radius - 20, fontPaint);
+			}
+	        
+	        OutputStream outStream = null;
+	        File file = new File(currentDirImages, "Graph "+getTime()+".png");
+	        try {
+	         outStream = new FileOutputStream(file);
+	         b.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+	         outStream.flush();
+	         outStream.close();
+	        }
+	        catch(Exception e){
+	        	e.printStackTrace();
+	        }
 	}
 
 	@SuppressLint("DrawAllocation")
@@ -518,8 +597,45 @@ public class GView extends View {
 
 		return printBipatite;
 	}
+	
+	public boolean bipartite(boolean print, Graph g) {
+		boolean printBipatite = false;
+		Bipartite b = new Bipartite(g);
+		try {
+			printBipatite = b.execute(true);
+		} catch (Exception e) {
+			printBipatite = false;
+			e.printStackTrace();
+		}
+		if (printBipatite && print) {
+			subSets = b.getSubSet();
+			Enumeration<Integer> keys = subSets.keys();
+			while (keys.hasMoreElements()) {
+				int key = (int) keys.nextElement();
+				g.setColorOfNode(key, (subSets.get(key) == 1) ? Color.YELLOW
+						: Color.GREEN);
+			}
+		} else {
+			subSets = new Hashtable<Integer, Integer>();
+			initializingNodesColor();
+		}
+
+		return printBipatite;
+	}
 
 	public int connectedComponents() {
+		int cc = 0;
+		Bipartite b = new Bipartite(g);
+		try {
+			b.execute(false);
+			cc = b.getConnectedComponents();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return cc;
+	}
+	
+	public int connectedComponents(Graph g) {
 		int cc = 0;
 		Bipartite b = new Bipartite(g);
 		try {
@@ -534,6 +650,9 @@ public class GView extends View {
 	public Hashtable<String, String> getTableInfo() {
 		Hashtable<String, String> info = new Hashtable<String, String>();
 
+		if(checked_iso==true){
+			info.put("Graph 1", ""));
+		}
 		info.put("|V|", Integer.toString(g.getNombres().size()));
 		info.put("|A|", Integer.toString(g.getArrows().size()));
 		info.put("Bipartite", (bipartite(false) ? "Si" : "No"));
@@ -544,6 +663,21 @@ public class GView extends View {
 				: "No");
 		info.put("Sequence", "{" + arrayParseString(g.getSequenceDegrees())
 				+ "}");
+
+		// Second Table's graph (gIso)
+		if(checked_iso==true){
+			info.put("Graph 2", ""));
+			info.put("|V|", Integer.toString(gIso.getNombres().size()));
+			info.put("|A|", Integer.toString(gIso.getArrows().size()));
+			info.put("Bipartite", (bipartite(false, gIso) ? "Si" : "No"));
+			info.put("Components", Integer.toString(connectedComponents(gIso)));
+			info.put("Sum", Integer.toString(gIso.getTotalWeight()));
+			int degree = gIso.isRegular();
+			info.put("Regular", (degree > 0) ? "Si, regular de grado " + degree
+					: "No");
+			info.put("Sequence", "{" + arrayParseString(gIso.getSequenceDegrees())
+					+ "}");
+		}
 
 		return info;
 	}
