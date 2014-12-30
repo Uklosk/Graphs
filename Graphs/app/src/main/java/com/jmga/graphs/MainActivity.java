@@ -286,7 +286,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 							if (view.graphToXML(storage, file_name)) {
 								Toast.makeText(
 										getApplicationContext(),
-										"Guardado con �xito como " + file_name
+										"Guardado correctamente como " + file_name
 												+ ".graph", Toast.LENGTH_LONG)
 										.show();
 								dialog.dismiss();
@@ -294,7 +294,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 							} else
 								Toast.makeText(
 										getApplicationContext(),
-										"No ha podido guardarse, int�ntelo de nuevo.",
+										"No ha podido guardarse, prueba de nuevo.",
 										Toast.LENGTH_LONG).show();
 						}
 					});
@@ -306,6 +306,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 					});
 			AlertDialog dialog_ = builder_.create();
 			dialog_.show();
+
+			return true;
+
+		case R.id.action_clear:
+			view.graphToPNG();
 
 			return true;
 
