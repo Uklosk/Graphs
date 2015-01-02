@@ -5,6 +5,7 @@
     <string name="action_settings">Opciones</string>
     <string name="action_load">Cargar grafo</string>
     <string name="action_save">Guardar grafo</string>
+    <string name="action_export_image">Exportar imagen</string>
     <string name="action_add">Añadir</string>
     <string name="action_remove">Eliminar</string>
     <string name="action_kruskal">Árbol recubridor mínimo</string>
