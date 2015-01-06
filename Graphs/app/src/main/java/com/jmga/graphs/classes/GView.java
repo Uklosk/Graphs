@@ -1,7 +1,11 @@
 package com.jmga.graphs.classes;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -9,6 +13,7 @@ import java.util.Iterator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -419,62 +424,61 @@ public class GView extends View {
 	        p.setStrokeWidth(1);
 	        p.setColor(Color.BLACK);
 	
-	        if(checked_iso)
-			{
-				for (int i = 0; i < gIso.getArrows().size(); i++) {
-					Arrow a = gIso.getArrows().get(i);
-					paint.setColor(Color.RED);
-					c.drawLine(a.start[0], a.start[1], a.stop[0], a.stop[1], paint);
-				
-				}
-	
-				for (int ns : gIso.getNombres()) {
-					Node n = gIso.getVertex().get(ns);
-					n.setColor(Color.RED);
-					n.draw(canvas);
-					c.drawText(label[n.getId()]+" | "+n.getEnlacesExistentes(), n.getCenterX(), n.getCenterY()
-								- n.radius - 20, fontPaint);
-				}
-				
+	        if(checked_iso){
+			for (int i = 0; i < gIso.getArrows().size(); i++) {
+				Arrow a = gIso.getArrows().get(i);
+				paint.setColor(Color.RED);
+				c.drawLine(a.start[0], a.start[1], a.stop[0], a.stop[1], paint);
+			
 			}
-	        
-			for (int i = 0; i < g.getArrows().size(); i++) {
-				Arrow a = g.getArrows().get(i);
-				c.drawLine(a.start[0], a.start[1], a.stop[0], a.stop[1], p);
-				if (!checked_iso) {
-					path = new Path();
-					path.moveTo(a.start[0], a.start[1]);
-					path.lineTo(a.stop[0], a.stop[1]);
-					canvas.drawTextOnPath(a.getWeightS(), path, 0, 30, fontPaint);
-	
-					path = new Path();
-					path.moveTo(a.stop[0], a.stop[1]);
-					path.lineTo(a.start[0], a.start[1]);
-					c.drawTextOnPath(a.getWeightS(), path, 0, 30, fontPaint);
-	
-				}
-	
-			}
-	
-			if (aux != null) {
-				c.drawLine(aux.start[0], aux.start[1], aux.stop[0],
-						   aux.stop[1], auxP);
-			}
-	
-			for (int ns : g.getNombres()) {
-				Node n = g.getVertex().get(ns);
+
+			for (int ns : gIso.getNombres()) {
+				Node n = gIso.getVertex().get(ns);
+				n.setColor(Color.RED);
 				n.draw(c);
 				c.drawText(label[n.getId()]+" | "+n.getEnlacesExistentes(), n.getCenterX(), n.getCenterY()
 							- n.radius - 20, fontPaint);
 			}
+			
+		}
+        
+		for (int i = 0; i < g.getArrows().size(); i++) {
+			Arrow a = g.getArrows().get(i);
+			c.drawLine(a.start[0], a.start[1], a.stop[0], a.stop[1], p);
+			if (!checked_iso) {
+				path = new Path();
+				path.moveTo(a.start[0], a.start[1]);
+				path.lineTo(a.stop[0], a.stop[1]);
+				c.drawTextOnPath(a.getWeightS(), path, 0, 30, fontPaint);
+
+				path = new Path();
+				path.moveTo(a.stop[0], a.stop[1]);
+				path.lineTo(a.start[0], a.start[1]);
+				c.drawTextOnPath(a.getWeightS(), path, 0, 30, fontPaint);
+
+			}
+
+		}
+
+		if (aux != null) {
+			c.drawLine(aux.start[0], aux.start[1], aux.stop[0],
+					   aux.stop[1], auxP);
+		}
+
+		for (int ns : g.getNombres()) {
+			Node n = g.getVertex().get(ns);
+			n.draw(c);
+			c.drawText(label[n.getId()]+" | "+n.getEnlacesExistentes(), n.getCenterX(), n.getCenterY()
+						- n.radius - 20, fontPaint);
+		}
 	        
 	        OutputStream outStream = null;
 	        File file = new File(currentDirImages, "Graph "+getTime()+".png");
 	        try {
-	         outStream = new FileOutputStream(file);
-	         b.compress(Bitmap.CompressFormat.PNG, 100, outStream);
-	         outStream.flush();
-	         outStream.close();
+		        outStream = new FileOutputStream(file);
+		        b.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+		        outStream.flush();
+		        outStream.close();
 	        }
 	        catch(Exception e){
 	        	e.printStackTrace();
@@ -672,7 +676,7 @@ public class GView extends View {
 			info.put("Bipartite", (bipartite(false, gIso) ? "Si" : "No"));
 			info.put("Components", Integer.toString(connectedComponents(gIso)));
 			info.put("Sum", Integer.toString(gIso.getTotalWeight()));
-			int degree = gIso.isRegular();
+			degree = gIso.isRegular();
 			info.put("Regular", (degree > 0) ? "Si, regular de grado " + degree
 					: "No");
 			info.put("Sequence", "{" + arrayParseString(gIso.getSequenceDegrees())
