@@ -308,11 +308,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			dialog_.show();
 
 			return true;
-
+        /*
 		case R.id.action_clear:
 			view.graphToPNG();
 
-			return true;
+			return true;*/
 
 		case R.id.action_bipartit:
 			if (isBipartite) {

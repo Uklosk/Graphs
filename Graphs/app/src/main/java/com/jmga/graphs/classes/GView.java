@@ -655,7 +655,7 @@ public class GView extends View {
 		Hashtable<String, String> info = new Hashtable<String, String>();
 
 		if(checked_iso==true){
-			info.put("Graph 1", ""));
+			info.put("Graph 1", "");
 		}
 		info.put("|V|", Integer.toString(g.getNombres().size()));
 		info.put("|A|", Integer.toString(g.getArrows().size()));
@@ -670,7 +670,7 @@ public class GView extends View {
 
 		// Second Table's graph (gIso)
 		if(checked_iso==true){
-			info.put("Graph 2", ""));
+			info.put("Graph 2", "");
 			info.put("|V|", Integer.toString(gIso.getNombres().size()));
 			info.put("|A|", Integer.toString(gIso.getArrows().size()));
 			info.put("Bipartite", (bipartite(false, gIso) ? "Si" : "No"));
