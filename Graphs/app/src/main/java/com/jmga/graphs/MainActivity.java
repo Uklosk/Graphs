@@ -21,6 +21,10 @@ import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.view.ActionProvider;
 import android.view.KeyEvent;
@@ -31,6 +35,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -44,7 +49,7 @@ import com.jmga.graphs.classes.Node;
 import com.jmga.graphs.tools.XMLParser;
 import com.jmga.graphs.tools.auxiliary.SizeView;
 
-public class MainActivity extends Activity implements ActionBar.TabListener {
+public class MainActivity extends ActionBarActivity implements ActionBar.TabListener, NavigationDrawerFragment.NavigationDrawerCallbacks {
 
 	private final static String storage = Environment
 			.getExternalStorageDirectory().toString() + "/Graphs";
@@ -53,7 +58,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	private static boolean running = false;
 	
 	private GView view;
-	private Node nFocused;
+	private static Node nFocused;
+    private static int gFocused;
 	private Menu menu;
 
 	private final SizeView size = new SizeView();
@@ -61,18 +67,27 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	private static final int GRAPH_MODE_NODES = 0;
 	private static final int GRAPH_MODE_ARROWS = 1;
 	private static final int GRAPH_MODE_WEIGHTS = 2;
+    private static final int MAX_DESVIATION = 10;
+    private static long lastPressTime = 0;
+    private static int lastX, lastY;
+
 	private int gMode = GRAPH_MODE_NODES;
 
 	private static final int TOGGLE_ADD = 0;
 	private static final int TOGGLE_REMOVE = 1;
-
+    /*
 	boolean isKruskal = false;
 	boolean isBipartite = false;
 	boolean isIso = false;
+	*/
 	boolean toggle_remove = false;
+
 	boolean toggle_add = false;
 
-	public int weight = 0;
+    private NavigationDrawerFragment mNavigationDrawerFragment;
+
+
+    public int weight = 0;
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
 	private static final int REQUEST_PATH = 0, ISOMORPHISM = 1;
@@ -80,7 +95,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_main);
 		copyAssets();
 		view = new GView(this);
 
@@ -93,8 +108,16 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		}
 		editor.commit();
 		running=true;
-		
-		final ActionBar actionBar = getActionBar();
+
+        mNavigationDrawerFragment = (NavigationDrawerFragment)
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+
+        // Set up the drawer.
+        mNavigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
+
+		/*final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setDisplayShowHomeEnabled(false);
@@ -105,80 +128,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				.setTabListener(this));
 		actionBar.addTab(actionBar.newTab().setText("pesos")
 				.setTabListener(this));
+        */
 
-		setContentView(view);
-
-		view.setOnTouchListener(new OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-				int x = Math.round(event.getX());
-				int y = Math.round(event.getY());
-				Node node = view.checkBounds(x, y);
-				if (!isIso)
-					switch (gMode) {
-					case GRAPH_MODE_NODES:
-						if (toggle_add)
-							addNodeM(v, event, x, y, node);
-						else if (toggle_remove)
-							deleteNodeM(v, event, x, y, node);
-						else
-							modifyGraph(v, event, x, y, node);
-						break;
-					case GRAPH_MODE_ARROWS:
-						if (toggle_add)
-							addArrowM(v, event, x, y, node);
-						else if (toggle_remove)
-							deleteArrowM(v, event, x, y, node);
-						else
-							modifyGraph(v, event, x, y, node);
-						break;
-					case GRAPH_MODE_WEIGHTS:
-						weightM(v, event, x, y, node);
-						break;
-					default:
-						modifyGraph(v, event, x, y, node);
-
-						break;
-					}
-				else
-					modifyGraph(v, event, x, y, node);
-
-				view.setMenuStateChecked(isKruskal, isBipartite);
-				view.update();
-				view.invalidate();
-
-				return true;
-
-			}
-
-			private void modifyGraph(View v, MotionEvent event, int x, int y,
-					Node node) {
-				switch (event.getActionMasked()) {
-				case MotionEvent.ACTION_DOWN:
-					if (node == null) {
-					} else {
-						nFocused = node;
-					}
-					break;
-				case MotionEvent.ACTION_MOVE:
-					if (nFocused != null) {
-						view.setPosition(x, y, nFocused);
-					}
-					break;
-
-				case MotionEvent.ACTION_UP:
-					nFocused = null;
-					break;
-
-				default:
-					break;
-
-				}
-
-			}
-		});
 
 	}
 
@@ -231,19 +182,29 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	}
 
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
+        // update the main content by replacing fragments
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                .commit();
+    }
+
 	public void updatingMenu() {
-		menu.findItem(R.id.action_save).setEnabled(view.save_graph);
+		/*menu.findItem(R.id.action_save).setEnabled(view.save_graph);
 		menu.findItem(R.id.action_tableinfo).setEnabled(view.info_table);
 		menu.findItem(R.id.action_distance_table).setEnabled(view.table_dist);
 		menu.findItem(R.id.action_clear).setEnabled(view.cleangraph);
-
+        */
 		stop(TOGGLE_ADD, (MenuItem) menu.findItem(R.id.action_add));
 		stop(TOGGLE_REMOVE, (MenuItem) menu.findItem(R.id.action_remove));
-		menu.findItem(R.id.action_kruskal).setEnabled(view.isKruskal);
+
+        /*menu.findItem(R.id.action_kruskal).setEnabled(view.isKruskal);
 		menu.findItem(R.id.action_kruskal).setChecked(isKruskal);
 		menu.findItem(R.id.action_bipartit).setEnabled(view.isBipartite);
 		menu.findItem(R.id.action_bipartit).setChecked(
-				(view.isBipartite) ? isBipartite : false);
+				(view.isBipartite) ? isBipartite : false);*/
 	}
 
 	@Override
@@ -262,6 +223,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			getfile();
 
 			return true;
+            /**
+             *
 
 		case R.id.action_save:
 			if (!isExternalStorageWritable()) {
@@ -308,11 +271,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			dialog_.show();
 
 			return true;
-        /*
+
 		case R.id.action_clear:
 			view.graphToPNG();
 
-			return true;*/
+			return true;
 
 		case R.id.action_bipartit:
 			if (isBipartite) {
@@ -388,7 +351,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			clear();
 
 			return true;
-
+             */
 		case R.id.action_settings:
 			LayoutInflater f = LayoutInflater.from(this);
 			final View dv = f.inflate(R.layout.menu_settings, null);
@@ -438,7 +401,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			});
 			/*
 			 * Scale vertex
-			 */
+
 			SeekBar seekBar_vertex = (SeekBar) dv
 					.findViewById(R.id.seekBar_zoomvertex);
 			seekBar_vertex
@@ -492,7 +455,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			di.getWindow().clearFlags(
 					WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 			di.show();
-
+            */
 			return true;
 
 		case R.id.action_remove:
@@ -512,12 +475,13 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		}
 	}
 
+    /*
 	public void clear() {
 		isKruskal = isBipartite = isIso = false;
 		updatingMenu();
 		view.initializingNodesColor();
 		view.clear();
-	}
+	}*/
 
 	public class CustomEditProvider extends ActionProvider {
 		public int weight = 0;
@@ -564,7 +528,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			getActionBar().setSelectedNavigationItem(
 					savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
 		}		
-		view.graphToRestore = 2;
+		//view.graphToRestore = 2;
 	}
 
 	@Override
@@ -578,13 +542,13 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			editor.putString("currentfile", prefs.getString("currentfile", ""));
 			editor.commit();
 		} else {
-			view.graphToXML(getFilesDir().toString(), "/temp_save----");
+			//view.graphToXML(getFilesDir().toString(), "/temp_save----");
 		}
 		editor.commit();
 		// Serialize the current tab position.
 		outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getActionBar()
 				.getSelectedNavigationIndex());
-		view.graphToXML(getFilesDir().toString(), "/temp_save----");
+		//view.graphToXML(getFilesDir().toString(), "/temp_save----");
 
 	}
 
@@ -617,11 +581,15 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			FragmentTransaction fragmentTransaction) {
 	}
 
-	public void addNodeM(View v, MotionEvent event, int x, int y, Node node) {
+	public void addNodeM(View v, MotionEvent event, int x, int y, Node node, int grafo) {
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
 			if (node == null) {
-				view.addNode(x, y);
+                /**
+                 *
+                 *  MODIFICAR
+                 */
+				view.addNode(x, y,0);
 			} else {
 				nFocused = node;
 			}
@@ -642,11 +610,12 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		}
 	}
 
-	public void deleteNodeM(View v, MotionEvent event, int x, int y, Node node) {
+	public void deleteNodeM(View v, MotionEvent event, int x, int y, Node node, int grafo) {
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
 			if (node != null) {
 				nFocused = node;
+
 			}
 			break;
 		case MotionEvent.ACTION_MOVE:
@@ -655,7 +624,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 		case MotionEvent.ACTION_UP:
 			if (nFocused == node) {
-				view.deleteNode(nFocused);
+				view.deleteNode(nFocused, grafo);
 			}
 			break;
 
@@ -665,11 +634,12 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		}
 	}
 
-	public void addArrowM(View v, MotionEvent event, int x, int y, Node node) {
+	public void addArrowM(View v, MotionEvent event, int x, int y, Node node, int grafo) {
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
 			if (node != null) {
 				nFocused = node;
+                gFocused = grafo;
 				view.addAux(nFocused, x, y);
 			}
 			break;
@@ -683,7 +653,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			if (node == nFocused) {
 
 			} else if (node != null && node != nFocused) {
-				view.addArrow(nFocused, node);
+				view.addArrow(nFocused, node, grafo);
 			}
 			view.deleteAux();
 
@@ -697,7 +667,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	}
 
-	public void deleteArrowM(View v, MotionEvent event, int x, int y, Node node) {
+	public void deleteArrowM(View v, MotionEvent event, int x, int y, Node node, int grafo) {
 
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
@@ -716,7 +686,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			if (node == nFocused) {
 
 			} else if (node != null && node != nFocused) {
-				view.deleteArrow(nFocused, node);
+				view.deleteArrow(nFocused, node, grafo);
 			}
 			view.deleteAux();
 
@@ -728,7 +698,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		}
 	}
 
-	public void weightM(View v, MotionEvent event, int x, int y, Node node) {
+	public void weightM(View v, MotionEvent event, int x, int y, Node node, int grafo) {
 
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
@@ -747,7 +717,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			if (node == nFocused) {
 
 			} else if (node != null && node != nFocused) {
-				view.changeWeight(nFocused, node, weight);
+				view.changeWeight(nFocused, node, weight, grafo);
 			}
 			view.deleteAux();
 
@@ -815,7 +785,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		// See which child activity is calling us back.
 		if (requestCode == REQUEST_PATH) {
 			if (resultCode == RESULT_OK) {
-				clear();
+				//clear();
 				
 				SharedPreferences.Editor editor = prefs.edit();
 				
@@ -823,8 +793,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				editor.putString("mode", "graph");
 				editor.commit();
 				
-				isIso=false;
-				view.xmlToGraph(data.getStringExtra("GetPath"), "");
+				//isIso=false;
+				//view.xmlToGraph(data.getStringExtra("GetPath"), "");
 				view.update();
 				view.invalidate();
 
@@ -832,7 +802,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		}
 		if (requestCode == ISOMORPHISM) {
 			if (resultCode == RESULT_OK) {
-				clear();
+				//clear();
 				
 				SharedPreferences.Editor editor = prefs.edit();
 				
@@ -840,8 +810,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 				editor.putString("mode", "isomorphism");
 				editor.commit();
 				
-				isIso = true;
-				view.xmlToIsomorphism(data.getStringExtra("GetPath"), "");
+				//isIso = true;
+				//view.xmlToIsomorphism(data.getStringExtra("GetPath"), "");
 				view.update();
 				view.invalidate();
 
@@ -897,6 +867,112 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 		}
 	}
 
+    private void menuNodo (Node nodo, int grafo){
+        LayoutInflater f = LayoutInflater.from(this);
+        final View dv = f.inflate(R.layout.menu_settings, null);
+        AlertDialog.Builder bu = new AlertDialog.Builder(this);
+
+        bu.setTitle(R.string.action_settings);
+			/*
+			 * Scale graph
+			 */
+        SeekBar seekBar = (SeekBar) dv.findViewById(R.id.seekBar_zoom);
+        seekBar.setProgress((size.getNew_percent() == 0) ? size
+                .getOld_percent() : size.getNew_percent());
+        final TextView seekBarValue = (TextView) dv
+                .findViewById(R.id.settings_zoom);
+        seekBarValue
+                .setText(Integer.toString((size.getNew_percent() == 0) ? size
+                        .getOld_percent() : size.getNew_percent()));
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress,
+                                          boolean fromUser) {
+                seekBarValue.setText(String.valueOf(progress));
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                size.setOld_height(view.getViewportHeight());
+                size.setOld_width(view.getViewportWidth());
+                size.setOld_percent(Integer.parseInt(seekBarValue.getText()
+                        .toString()));
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                int nw = size.getOld_width()
+                        * Integer.parseInt(seekBarValue.getText()
+                        .toString()) / size.getOld_percent();
+                int nh = size.getOld_height()
+                        * Integer.parseInt(seekBarValue.getText()
+                        .toString()) / size.getOld_percent();
+                size.setNew_width(nw);
+                size.setNew_height(nh);
+                size.setNew_percent(Integer.parseInt(seekBarValue.getText()
+                        .toString()));
+            }
+        });
+			/*
+			 * Scale vertex
+
+			SeekBar seekBar_vertex = (SeekBar) dv
+					.findViewById(R.id.seekBar_zoomvertex);
+			seekBar_vertex
+					.setProgress((size.getNew_percent_vertex() == 0) ? size
+							.getOld_percent_vertex() : size
+							.getNew_percent_vertex());
+			final TextView seekBarValue_vertex = (TextView) dv
+					.findViewById(R.id.setting_zoomvertex);
+			seekBarValue_vertex.setText(Integer.toString((size
+					.getNew_percent_vertex() == 0) ? size
+					.getOld_percent_vertex() : size.getNew_percent_vertex()));
+			seekBar_vertex
+					.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+						@Override
+						public void onProgressChanged(SeekBar seekBar,
+								int progress, boolean fromUser) {
+							seekBarValue_vertex.setText(String
+									.valueOf(progress));
+							size.setNew_percent_vertex(progress);
+							view.changeRadius(size);
+						}
+
+						@Override
+						public void onStartTrackingTouch(SeekBar seekBar) {
+							//
+						}
+
+						@Override
+						public void onStopTrackingTouch(SeekBar seekBar) {
+							//
+						}
+					});
+			bu.setPositiveButton(R.string.file_save,
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							view.resizeGraph(size);
+							view.update();
+							size.setOld_percent(100);
+							size.setNew_percent(100);
+						}
+					});
+			bu.setNegativeButton(R.string.file_cancel,
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
+			bu.setView(dv);
+
+			AlertDialog di = bu.create();
+			di.getWindow().clearFlags(
+					WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			di.show();
+            */
+    }
+
 	private void copyFile(InputStream in, FileOutputStream out)
 			throws IOException {
 		byte[] buffer = new byte[1024];
@@ -905,5 +981,198 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 			out.write(buffer, 0, read);
 		}
 	}
+
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class PlaceholderFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static PlaceholderFragment newInstance(int sectionNumber) {
+            PlaceholderFragment fragment = new PlaceholderFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        public PlaceholderFragment() {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            //View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+            final GView g_view = new GView(getActivity());
+            g_view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                                /* ... */
+
+                    Node node = g_view.checkBounds(lastX, lastY);
+                    int grafo = g_view.checkBoundsG(lastX, lastY);
+                /*if(node!=null&&grafo>=0)
+                    view.deleteNode(node,grafo);
+                */
+                    //menuNodo(node, grafo);
+
+                    return true;
+                }
+            });
+
+            g_view.setOnTouchListener(new OnTouchListener() {
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    // TODO Auto-generated method stub
+                    int x = Math.round(event.getX());
+                    int y = Math.round(event.getY());
+                    Node node = g_view.checkBounds(x, y);
+                    int grafo = g_view.checkBoundsG(x,y);
+                    switch (event.getActionMasked())
+                    {
+                        case MotionEvent.ACTION_DOWN:
+                            if(node==null)
+                                g_view.addNode(x,y,0);
+                            else
+                            {
+                                if(event.getEventTime()-lastPressTime<500)
+                                    g_view.deleteNode(node,grafo);
+                                lastX = x;
+                                lastY = y;
+                                return false;
+                            }
+
+                            break;
+                        case MotionEvent.ACTION_MOVE:
+                            if (node == null)
+
+                            {//view.addNode(x,y,grafo);
+                                lastX = x;
+                                lastY = y;
+                            } else {
+                                //if(event.getEventTime()-event.getDownTime()>2000){
+                                //    view.deleteNode(node,grafo);
+                                //}
+
+
+                            }
+
+
+                            break;
+                        case MotionEvent.ACTION_UP:;
+                            if(node==null);
+                                //view.addNode(x,y,grafo);
+                            else
+                            {
+
+
+                            }
+
+                    }
+
+
+                    //if (!isIso)
+					/*switch (gMode) {
+					case GRAPH_MODE_NODES:
+						if (toggle_add)
+							addNodeM(v, event, x, y, node, grafo);
+						else if (toggle_remove)
+							deleteNodeM(v, event, x, y, node, grafo);
+						else
+							modifyGraph(v, event, x, y, node);
+						break;
+					case GRAPH_MODE_ARROWS:
+						if (toggle_add)
+							addArrowM(v, event, x, y, node, grafo);
+						else if (toggle_remove)
+							deleteArrowM(v, event, x, y, node, grafo);
+						else
+							modifyGraph(v, event, x, y, node);
+						break;
+					case GRAPH_MODE_WEIGHTS:
+						weightM(v, event, x, y, node, grafo);
+						break;
+					default:
+						modifyGraph(v, event, x, y, node);
+
+						break;
+					}*/
+				/*else
+					modifyGraph(v, event, x, y, node);*/
+
+                    //view.setMenuStateChecked(isKruskal, isBipartite);
+                    lastPressTime = event.getDownTime();
+                    g_view.update();
+                    g_view.invalidate();
+
+                    return true;
+
+                }
+
+
+
+                private void modifyGraph(View v, MotionEvent event, int x, int y,
+                                         Node node) {
+                    switch (event.getActionMasked()) {
+                        case MotionEvent.ACTION_DOWN:
+                            if (node == null) {
+                            } else {
+                                nFocused = node;
+                            }
+                            break;
+                        case MotionEvent.ACTION_MOVE:
+                            if (nFocused != null) {
+                                g_view.setPosition(x, y, nFocused);
+                            }
+                            break;
+
+                        case MotionEvent.ACTION_UP:
+                            nFocused = null;
+                            break;
+
+                        default:
+                            break;
+
+                    }
+
+                }
+            });
+            return g_view;
+        }
+
+        @Override
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+            ((MainActivity) activity).onSectionAttached(
+                    getArguments().getInt(ARG_SECTION_NUMBER));
+        }
+
+
+    }
+
+    public void onSectionAttached(int number) {
+        switch (number) {
+            case 1:
+                //mTitle = getString(R.string.title_section1);
+                break;
+            case 2:
+                //mTitle = getString(R.string.title_section2);
+                break;
+            case 3:
+                // mTitle = getString(R.string.title_section3);
+                break;
+        }
+    }
+
 
 }

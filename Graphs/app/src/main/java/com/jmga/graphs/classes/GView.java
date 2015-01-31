@@ -37,8 +37,17 @@ import com.jmga.graphs.tools.auxiliary.SizeView;
 
 public class GView extends View {
 	private String currentDirImages;
-	
-	private Graph g;
+	private final int  MAX_GRAFOS = 1;
+
+	private Graph[] grafos;
+
+    private Paint paint, auxP;
+    private Paint fontPaint;
+    private Path path;
+
+    /**
+     *  Desactivado temporalmente
+     *
 	// Para ejercicios de isomorfismo tenemos 2 grafos
 	Hashtable<String,Graph> isomorphism;
 	// Se podrá activar el modo isomorfismo para trabajar sobre
@@ -46,9 +55,7 @@ public class GView extends View {
 	boolean isomorphism_selected;
 	// ****************************************************
 	private Graph gKruskal, gIso;
-	private Paint paint, auxP;
-	private Paint fontPaint;
-	private Path path;
+
 
 	public boolean save_graph = false;
 	public boolean info_table = false;
@@ -64,10 +71,11 @@ public class GView extends View {
 	private Hashtable<Integer, Integer> subSets;
 
 	public int graphToRestore = 0;
-
+    */
 	private int viewportHeight, viewportWidth;
 
 	final private SizeView size = new SizeView();
+
 	private static final String[] label = { "A", "B", "C", "D", "E", "F", "G",
 			"H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
 			"U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g",
@@ -263,11 +271,16 @@ public class GView extends View {
 		return label[i];
 	}
 
+    /**
+     * Desactivado temporalmente
+     *
+
+
 	public void setMenuStateChecked(boolean ck, boolean cb) {
 		checked_kruskal = ck;
 		checked_bipartite = cb;
 	}
-	
+    */
 	public int getViewportHeight() {
 		return viewportHeight;
 	}
@@ -315,17 +328,25 @@ public class GView extends View {
 		init();
 	}
 
+
+    /**
+     *
+     *
+     * INICIALIZACIÓN
+     *
+     */
 	private void init() {
 		currentDirImages = "/sdcard/Graphs/Images";
 
 		density = getResources().getDisplayMetrics().density;
-
-		g = new Graph();
-		gIso = new Graph();
-		isomorphism = new Hashtable<String,Graph>();
-		isomorphism_selected = false;
-		gKruskal = new Graph();
-		subSets = new Hashtable<Integer, Integer>();
+        grafos = new Graph[MAX_GRAFOS+1];
+        for(int i = 0; i< MAX_GRAFOS; i++)
+    		grafos[i] = new Graph();
+		//gIso = new Graph();
+		//isomorphism = new Hashtable<String,Graph>();
+		//isomorphism_selected = false;
+		//gKruskal = new Graph();
+		//subSets = new Hashtable<Integer, Integer>();
 
 		paint = new Paint();
 		paint.setStrokeWidth(4f);
@@ -343,9 +364,12 @@ public class GView extends View {
 		fontPaint = new Paint();
 		fontPaint.setTextAlign(Align.CENTER);
 		fontPaint.setTextSize(24);
-		
-
 	}
+
+    /**
+     *
+     * Desactivado temporalmente
+
 
 	public boolean graphToXML(String storage, String file_name) {
 		boolean task = false;
@@ -410,155 +434,188 @@ public class GView extends View {
 		return task;
 	}
 
+     public void graphToPNG(){
+     Bitmap b = Bitmap.createBitmap(800, 500, Bitmap.Config.ARGB_8888);
+     Canvas c = new Canvas(b);
+     c.drawColor(Color.WHITE);
+     Paint p = new Paint();
+     p.setStrokeWidth(1);
+     p.setColor(Color.BLACK);
+
+     if(checked_iso){
+     for (int i = 0; i < gIso.getArrows().size(); i++) {
+     Arrow a = gIso.getArrows().get(i);
+     paint.setColor(Color.RED);
+     c.drawLine(a.start[0], a.start[1], a.stop[0], a.stop[1], paint);
+
+     }
+
+     for (int ns : gIso.getNombres()) {
+     Node n = gIso.getVertex().get(ns);
+     n.setColor(Color.RED);
+     n.draw(c);
+     c.drawText(label[n.getId()]+" | "+n.getEnlacesExistentes(), n.getCenterX(), n.getCenterY()
+     - n.radius - 20, fontPaint);
+     }
+
+     }
+
+     for (int i = 0; i < g.getArrows().size(); i++) {
+     Arrow a = g.getArrows().get(i);
+     c.drawLine(a.start[0], a.start[1], a.stop[0], a.stop[1], p);
+     if (!checked_iso) {
+     path = new Path();
+     path.moveTo(a.start[0], a.start[1]);
+     path.lineTo(a.stop[0], a.stop[1]);
+     c.drawTextOnPath(a.getWeightS(), path, 0, 30, fontPaint);
+
+     path = new Path();
+     path.moveTo(a.stop[0], a.stop[1]);
+     path.lineTo(a.start[0], a.start[1]);
+     c.drawTextOnPath(a.getWeightS(), path, 0, 30, fontPaint);
+
+     }
+
+     }
+
+     if (aux != null) {
+     c.drawLine(aux.start[0], aux.start[1], aux.stop[0],
+     aux.stop[1], auxP);
+     }
+
+     for (int ns : g.getNombres()) {
+     Node n = g.getVertex().get(ns);
+     n.draw(c);
+     c.drawText(label[n.getId()]+" | "+n.getEnlacesExistentes(), n.getCenterX(), n.getCenterY()
+     - n.radius - 20, fontPaint);
+     }
+
+     OutputStream outStream = null;
+     File file = new File(currentDirImages, "Graph "+getTime()+".png");
+     try {
+     outStream = new FileOutputStream(file);
+     b.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+     outStream.flush();
+     outStream.close();
+     }
+     catch(Exception e){
+     e.printStackTrace();
+     }
+     }
+
+    */
 	public static String getTime() {
 	        Date ahora = new Date();
 	        SimpleDateFormat formateador = new SimpleDateFormat("hh:mm:ss");
 	        return formateador.format(ahora);
     	}
 	
-	public void graphToPNG(){
-		Bitmap b = Bitmap.createBitmap(800, 500, Bitmap.Config.ARGB_8888);
-	        Canvas c = new Canvas(b);
-	        c.drawColor(Color.WHITE);
-	        Paint p = new Paint();
-	        p.setStrokeWidth(1);
-	        p.setColor(Color.BLACK);
-	
-	        if(checked_iso){
-			for (int i = 0; i < gIso.getArrows().size(); i++) {
-				Arrow a = gIso.getArrows().get(i);
-				paint.setColor(Color.RED);
-				c.drawLine(a.start[0], a.start[1], a.stop[0], a.stop[1], paint);
-			
-			}
 
-			for (int ns : gIso.getNombres()) {
-				Node n = gIso.getVertex().get(ns);
-				n.setColor(Color.RED);
-				n.draw(c);
-				c.drawText(label[n.getId()]+" | "+n.getEnlacesExistentes(), n.getCenterX(), n.getCenterY()
-							- n.radius - 20, fontPaint);
-			}
-			
-		}
-        
-		for (int i = 0; i < g.getArrows().size(); i++) {
-			Arrow a = g.getArrows().get(i);
-			c.drawLine(a.start[0], a.start[1], a.stop[0], a.stop[1], p);
-			if (!checked_iso) {
-				path = new Path();
-				path.moveTo(a.start[0], a.start[1]);
-				path.lineTo(a.stop[0], a.stop[1]);
-				c.drawTextOnPath(a.getWeightS(), path, 0, 30, fontPaint);
-
-				path = new Path();
-				path.moveTo(a.stop[0], a.stop[1]);
-				path.lineTo(a.start[0], a.start[1]);
-				c.drawTextOnPath(a.getWeightS(), path, 0, 30, fontPaint);
-
-			}
-
-		}
-
-		if (aux != null) {
-			c.drawLine(aux.start[0], aux.start[1], aux.stop[0],
-					   aux.stop[1], auxP);
-		}
-
-		for (int ns : g.getNombres()) {
-			Node n = g.getVertex().get(ns);
-			n.draw(c);
-			c.drawText(label[n.getId()]+" | "+n.getEnlacesExistentes(), n.getCenterX(), n.getCenterY()
-						- n.radius - 20, fontPaint);
-		}
-	        
-	        OutputStream outStream = null;
-	        File file = new File(currentDirImages, "Graph "+getTime()+".png");
-	        try {
-		        outStream = new FileOutputStream(file);
-		        b.compress(Bitmap.CompressFormat.PNG, 100, outStream);
-		        outStream.flush();
-		        outStream.close();
-	        }
-	        catch(Exception e){
-	        	e.printStackTrace();
-	        }
-	}
 
 	@SuppressLint("DrawAllocation")
 	@Override
 	public void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
-		canvas.drawColor(Color.WHITE);
+        super.onDraw(canvas);
+        canvas.drawColor(Color.WHITE);
 
-		if(checked_iso)
-		{
-			for (int i = 0; i < gIso.getArrows().size(); i++) {
-				Arrow a = gIso.getArrows().get(i);
-				paint.setColor(Color.RED);
-				canvas.drawLine(a.start[0], a.start[1], a.stop[0], a.stop[1], paint);
-			
-			}
+        /**if(checked_iso)
+         {
+         for (int i = 0; i < gIso.getArrows().size(); i++) {
+         Arrow a = gIso.getArrows().get(i);
+         paint.setColor(Color.RED);
+         canvas.drawLine(a.start[0], a.start[1], a.stop[0], a.stop[1], paint);
 
-			for (int ns : gIso.getNombres()) {
-				Node n = gIso.getVertex().get(ns);
-				n.setColor(Color.RED);
-				n.draw(canvas);
-				canvas.drawText(label[n.getId()]+" | "+n.getEnlacesExistentes(), n.getCenterX(), n.getCenterY()
-						- n.radius - 20, fontPaint);
-			}
-			
-		}
-		
-		for (int i = 0; i < g.getArrows().size(); i++) {
-			Arrow a = g.getArrows().get(i);
-			paint.setColor(g.getArrows().get(i).color);
-			canvas.drawLine(a.start[0], a.start[1], a.stop[0], a.stop[1], paint);
-			if (!checked_iso) {
-				path = new Path();
-				path.moveTo(a.start[0], a.start[1]);
-				path.lineTo(a.stop[0], a.stop[1]);
-				canvas.drawTextOnPath(a.getWeightS(), path, 0, 30, fontPaint);
+         }
 
-				path = new Path();
-				path.moveTo(a.stop[0], a.stop[1]);
-				path.lineTo(a.start[0], a.start[1]);
-				canvas.drawTextOnPath(a.getWeightS(), path, 0, 30, fontPaint);
+         for (int ns : gIso.getNombres()) {
+         Node n = gIso.getVertex().get(ns);
+         n.setColor(Color.RED);
+         n.draw(canvas);
+         canvas.drawText(label[n.getId()]+" | "+n.getEnlacesExistentes(), n.getCenterX(), n.getCenterY()
+         - n.radius - 20, fontPaint);
+         }
 
-			}
+         }
+         */
 
-		}
+        for (int n_g = 0; n_g < MAX_GRAFOS; n_g++) {
 
-		if (aux != null) {
+            for (int i = 0; i < grafos[n_g].getArrows().size(); i++) {
+                Arrow a = grafos[n_g].getArrows().get(i);
+                paint.setColor(grafos[n_g].getArrows().get(i).color);
+                canvas.drawLine(a.start[0], a.start[1], a.stop[0], a.stop[1], paint);
+                //if (!checked_iso)
+                {
+                    path = new Path();
+                    path.moveTo(a.start[0], a.start[1]);
+                    path.lineTo(a.stop[0], a.stop[1]);
+                    canvas.drawTextOnPath(a.getWeightS(), path, 0, 30, fontPaint);
+
+                    path = new Path();
+                    path.moveTo(a.stop[0], a.stop[1]);
+                    path.lineTo(a.start[0], a.start[1]);
+                    canvas.drawTextOnPath(a.getWeightS(), path, 0, 30, fontPaint);
+
+                }
+
+            }
+            for (int ns : grafos[n_g].getNombres()) {
+                Node n = grafos[n_g].getVertex().get(ns);
+                n.draw(canvas);
+                canvas.drawText(label[n.getId()] + " | " + n.getEnlacesExistentes(), n.getCenterX(), n.getCenterY()
+                        - n.radius - 20, fontPaint);
+            }
+        }
+        if (aux != null) {
 			canvas.drawLine(aux.start[0], aux.start[1], aux.stop[0],
 					aux.stop[1], auxP);
 		}
 
-		for (int ns : g.getNombres()) {
-			Node n = g.getVertex().get(ns);
-			n.draw(canvas);
-			canvas.drawText(label[n.getId()]+" | "+n.getEnlacesExistentes(), n.getCenterX(), n.getCenterY()
-					- n.radius - 20, fontPaint);
-		}
+
 
 	}
 
 	public Node checkBounds(int x, int y) {
-		Iterator<Integer> ids = g.getNombres().iterator();
-		while (ids.hasNext()) {
-			int id = ids.next();
-			Node n = new Node();
-			n = g.getVertex().get(id);
-			if (n != null && !(n.getId() == -1)) {
-				if (n.getBounds().left < x && n.getBounds().right > x
-						&& n.getBounds().top < y && n.getBounds().bottom > y) {
-					return n;
-				}
-			}
-		}
+        for(int i=0;i<MAX_GRAFOS;i++)
+        {
+            Iterator<Integer> ids = grafos[i].getNombres().iterator();
+
+            while (ids.hasNext()) {
+                int id = ids.next();
+                Node n = new Node();
+                n = grafos[i].getVertex().get(id);
+                if (n != null && !(n.getId() == -1)) {
+                    if (n.getBounds().left < x && n.getBounds().right > x
+                            && n.getBounds().top < y && n.getBounds().bottom > y) {
+                        return n;
+                    }
+                }
+            }
+        }
 		return null;
 	}
 
+    public int checkBoundsG(int x, int y) {
+        for(int i=0;i<MAX_GRAFOS;i++)
+        {
+            Iterator<Integer> ids = grafos[i].getNombres().iterator();
+
+            while (ids.hasNext()) {
+                int id = ids.next();
+                Node n = new Node();
+                n = grafos[i].getVertex().get(id);
+                if (n != null && !(n.getId() == -1)) {
+                    if (n.getBounds().left < x && n.getBounds().right > x
+                            && n.getBounds().top < y && n.getBounds().bottom > y) {
+                        return i;
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
 	public void Kruskal() {
 		restore();
 		if (g.getArrows().size() >= g.getNombres().size() - 1) {
@@ -702,34 +759,34 @@ public class GView extends View {
 	public Graph aplicarKruskal(Graph g) {
 		return Kruskal.aplicarKruskal(g);
 	}
-
-	public void addNode(int x, int y) {
-		g.addNode(x, y, viewportWidth, viewportHeight, density);
+     */
+	public void addNode(int x, int y, int g) {
+		grafos[g].addNode(x, y, viewportWidth, viewportHeight, density);
 	}
 
-	public void addNode(Node n) {
-		g.addNode(n.getCenterX(), n.getCenterY(), viewportWidth,
+	public void addNode(Node n, int g) {
+		grafos[g].addNode(n.getCenterX(), n.getCenterY(), viewportWidth,
 				viewportHeight, density);
 	}
 
-	public void deleteNode(Node n) {
+	public void deleteNode(Node n, int g) {
 		if (n != null) {
-			g.deleteNode(n.getId());
+			grafos[g].deleteNode(n.getId());
 		}
 	}
 
-	public void addArrow(Node n1, Node n2) {
+	public void addArrow(Node n1, Node n2, int g) {
 		if (n1 != null && n2 != null) {
-			g.addLink(n1.getId(), n2.getId(), 1);
+			grafos[g].addLink(n1.getId(), n2.getId(), 1);
 		}
 	}
 
-	public void deleteArrow(Node n1, Node n2) {
-		g.deleteLink(n1.getId(), n2.getId());
+	public void deleteArrow(Node n1, Node n2, int g) {
+		grafos[g].deleteLink(n1.getId(), n2.getId());
 	}
 
-	public void changeWeight(Node n1, Node n2, int weight) {
-		g.changeWeight(n1.getId(), n2.getId(), weight);
+	public void changeWeight(Node n1, Node n2, int weight, int g) {
+		grafos[g].changeWeight(n1.getId(), n2.getId(), weight);
 	}
 
 	public void addAux(Node n, int x, int y) {
@@ -750,8 +807,9 @@ public class GView extends View {
 	}
 
 	public void update() {
-		g.update();
-
+        for(int i=0;i<MAX_GRAFOS;i++)
+		    grafos[i].update();
+        /*
 		if (g.getNombres().size() > 0)
 			save_graph = info_table = table_dist = cleangraph = true;
 		else
@@ -777,17 +835,20 @@ public class GView extends View {
 			isBipartite = false;
 			initializingNodesColor();
 		}
-
+        */
 		invalidate();
 	}
 
 	public void clear() {
-		g = new Graph();
-		gKruskal = new Graph();
-		isKruskal = isBipartite = cleangraph = table_dist = save_graph = info_table = checked_iso= false;
+
+        for(int i=0;i< MAX_GRAFOS;i++)
+            grafos[i] = new Graph();
+		//gKruskal = new Graph();
+		//isKruskal = isBipartite = cleangraph = table_dist = save_graph = info_table = checked_iso= false;
 		invalidate();
 	}
 
+    /*
 	public void restore() {
 		for (int i = 0; i < g.getArrows().size(); i++) {
 			g.getArrows().get(i).color = Color.BLACK;
@@ -799,13 +860,15 @@ public class GView extends View {
 		d.dijkstra(g);
 		return d.getTableDistance(context);
 	}
+    */
 
 	@Override
 	public void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
 		viewportWidth = w;
 		viewportHeight = h;
-		if (graphToRestore == 2)
+		/*
+        if (graphToRestore == 2)
 			graphToRestore--;
 
 		if (graphToRestore == 1) {
@@ -824,10 +887,11 @@ public class GView extends View {
 			 File file = new File(getContext().getFilesDir().toString() + "/temp_save----.graph");
 			 file.delete();
 			 }
-		}
+		}*/
 
 	}
 
+    /**
 	public void resizeGraph(SizeView s) {
 		Log.d("PKJ", String.valueOf(s.getNew_percent()));
 		if (!(s.getNew_percent() == 100)) {
@@ -895,4 +959,5 @@ public class GView extends View {
 		update();
 		invalidate();
 	}
+     */
 }
