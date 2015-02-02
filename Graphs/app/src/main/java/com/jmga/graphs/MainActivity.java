@@ -55,9 +55,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 			.getExternalStorageDirectory().toString() + "/Graphs";
 
 	SharedPreferences prefs;
-	private static boolean running = false;
-	
-	private GView view;
+    private static boolean running = false;
+    private static boolean first_time = true;
+
+	private static GView g_view;
 	private static Node nFocused;
     private static int gFocused;
 	private Menu menu;
@@ -97,7 +98,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 		copyAssets();
-		view = new GView(this);
+		//view = new GView(this);
+        gFocused = 0;
 
 		prefs = getSharedPreferences("Preferences_Graph", Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = prefs.edit();
@@ -186,9 +188,18 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+        if(first_time){
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                    .commit(); first_time = false;}
+        else if(gFocused==position) g_view.toggle_visible(position);
+        else {
+            if(!g_view.isVisible(position))g_view.toggle_visible(position);
+            gFocused = position;
+        }
+
+
+
     }
 
 	public void updatingMenu() {
@@ -379,8 +390,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
 				@Override
 				public void onStartTrackingTouch(SeekBar seekBar) {
-					size.setOld_height(view.getViewportHeight());
-					size.setOld_width(view.getViewportWidth());
+					//size.setOld_height(view.getViewportHeight());
+					//size.setOld_width(view.getViewportWidth());
 					size.setOld_percent(Integer.parseInt(seekBarValue.getText()
 							.toString()));
 				}
@@ -533,7 +544,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-
+        first_time = true;
 		// http://www.sgoliver.net/blog/?p=1731
 		SharedPreferences.Editor editor = prefs.edit();
 		String mode = prefs.getString("mode", "");
@@ -546,8 +557,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 		}
 		editor.commit();
 		// Serialize the current tab position.
-		outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getActionBar()
-				.getSelectedNavigationIndex());
+		//outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getActionBar()
+		//		.getSelectedNavigationIndex());
 		//view.graphToXML(getFilesDir().toString(), "/temp_save----");
 
 	}
@@ -589,14 +600,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                  *
                  *  MODIFICAR
                  */
-				view.addNode(x, y,0);
+				//view.addNode(x, y,0);
 			} else {
 				nFocused = node;
 			}
 			break;
 		case MotionEvent.ACTION_MOVE:
 			if (nFocused != null) {
-				view.setPosition(x, y, nFocused);
+				//view.setPosition(x, y, nFocused);
 			}
 			break;
 
@@ -624,7 +635,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
 		case MotionEvent.ACTION_UP:
 			if (nFocused == node) {
-				view.deleteNode(nFocused, grafo);
+				//view.deleteNode(nFocused, grafo);
 			}
 			break;
 
@@ -640,12 +651,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 			if (node != null) {
 				nFocused = node;
                 gFocused = grafo;
-				view.addAux(nFocused, x, y);
+				//view.addAux(nFocused, x, y);
 			}
 			break;
 		case MotionEvent.ACTION_MOVE:
 			if (nFocused != null) {
-				view.updateAux(x, y);
+				//view.updateAux(x, y);
 			}
 			break;
 
@@ -653,9 +664,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 			if (node == nFocused) {
 
 			} else if (node != null && node != nFocused) {
-				view.addArrow(nFocused, node, grafo);
+				//view.addArrow(nFocused, node, grafo);
 			}
-			view.deleteAux();
+			//view.deleteAux();
 
 			nFocused = null;
 			break;
@@ -673,12 +684,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 		case MotionEvent.ACTION_DOWN:
 			if (node != null) {
 				nFocused = node;
-				view.addAux(nFocused, x, y);
+				//view.addAux(nFocused, x, y);
 			}
 			break;
 		case MotionEvent.ACTION_MOVE:
 			if (nFocused != null) {
-				view.updateAux(x, y);
+				//view.updateAux(x, y);
 			}
 			break;
 
@@ -686,9 +697,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 			if (node == nFocused) {
 
 			} else if (node != null && node != nFocused) {
-				view.deleteArrow(nFocused, node, grafo);
+				//view.deleteArrow(nFocused, node, grafo);
 			}
-			view.deleteAux();
+			//view.deleteAux();
 
 			nFocused = null;
 			break;
@@ -704,12 +715,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 		case MotionEvent.ACTION_DOWN:
 			if (node != null) {
 				nFocused = node;
-				view.addAux(nFocused, x, y);
+				//view.addAux(nFocused, x, y);
 			}
 			break;
 		case MotionEvent.ACTION_MOVE:
 			if (nFocused != null) {
-				view.updateAux(x, y);
+				//view.updateAux(x, y);
 			}
 			break;
 
@@ -717,9 +728,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 			if (node == nFocused) {
 
 			} else if (node != null && node != nFocused) {
-				view.changeWeight(nFocused, node, weight, grafo);
+				//view.changeWeight(nFocused, node, weight, grafo);
 			}
-			view.deleteAux();
+			//view.deleteAux();
 
 			nFocused = null;
 			break;
@@ -795,8 +806,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 				
 				//isIso=false;
 				//view.xmlToGraph(data.getStringExtra("GetPath"), "");
-				view.update();
-				view.invalidate();
+				//view.update();
+				//view.invalidate();
 
 			}
 		}
@@ -812,8 +823,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 				
 				//isIso = true;
 				//view.xmlToIsomorphism(data.getStringExtra("GetPath"), "");
-				view.update();
-				view.invalidate();
+				//view.update();
+				//view.invalidate();
 
 			}
 		}
@@ -894,8 +905,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                size.setOld_height(view.getViewportHeight());
-                size.setOld_width(view.getViewportWidth());
+               // size.setOld_height(view.getViewportHeight());
+                //size.setOld_width(view.getViewportWidth());
                 size.setOld_percent(Integer.parseInt(seekBarValue.getText()
                         .toString()));
             }
@@ -991,6 +1002,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
+        private int lastXmoved = 0;
+        private int lastYmoved = 0;
+        private boolean isLong = false;
 
         /**
          * Returns a new instance of this fragment for the given section
@@ -1012,19 +1026,28 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                                  Bundle savedInstanceState) {
             //View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-            final GView g_view = new GView(getActivity());
+            g_view =  new GView(getActivity());
             g_view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                                 /* ... */
+                    isLong = true;
+                    if(g_view.isVisible(gFocused)) {
+                        Node node = g_view.checkBounds(lastX, lastY);
+                        int grafo = g_view.checkBoundsG(lastX, lastY);
 
-                    Node node = g_view.checkBounds(lastX, lastY);
-                    int grafo = g_view.checkBoundsG(lastX, lastY);
-                /*if(node!=null&&grafo>=0)
+                        Node nodo2 = g_view.checkBounds(lastXmoved, lastYmoved);
+                        int grafo2 = g_view.checkBoundsG(lastXmoved, lastYmoved);
+                        System.out.println(lastX + " " + lastXmoved);
+                        if (grafo2 == grafo && nodo2 != null && node != null && node != nodo2)
+                            g_view.addArrow(node, nodo2, grafo);
+
+
+                /*    if(node!=null&&grafo>=0)
                     view.deleteNode(node,grafo);
                 */
-                    //menuNodo(node, grafo);
-
+                        //menuNodo(node, grafo);
+                    }
                     return true;
                 }
             });
@@ -1041,25 +1064,42 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     switch (event.getActionMasked())
                     {
                         case MotionEvent.ACTION_DOWN:
-                            if(node==null)
-                                g_view.addNode(x,y,0);
+
+
+                            if(g_view.isVisible(gFocused))
+
+                                if(node==null)
+                                    g_view.addNode(x, y, gFocused);
+
+
                             else
-                            {
+                            {   nFocused = node;
                                 if(event.getEventTime()-lastPressTime<500)
                                     g_view.deleteNode(node,grafo);
                                 lastX = x;
                                 lastY = y;
-                                return false;
                             }
 
                             break;
+                        case MotionEvent.ACTION_POINTER_DOWN:
+                            System.out.println(event.getActionIndex()==1);
+                            System.out.println(g_view.checkBoundsG((int)event.getX(1),(int)event.getY(1))+" "+g_view.checkBoundsG((int)event.getX(0),(int)event.getY(0)));
+                            System.out.println(g_view.checkBounds((int)event.getX(1),(int)event.getY(1))+" "+g_view.checkBounds((int)event.getX(0),(int)event.getY(0)));
+                            if(event.getActionIndex()==1&&g_view.checkBoundsG((int)event.getX(1),(int)event.getY(1))==g_view.checkBoundsG((int)event.getX(0),(int)event.getY(0))&&g_view.checkBounds((int)event.getX(1),(int)event.getY(1))!=null&&g_view.checkBounds((int)event.getX(0),(int)event.getY(0))!=null&&g_view.checkBounds((int)event.getX(1),(int)event.getY(1))!=g_view.checkBounds((int)event.getX(0),(int)event.getY(0)))
+                                g_view.addArrow(g_view.checkBounds((int)event.getX(1),(int)event.getY(1)),g_view.checkBounds((int)event.getX(0),(int)event.getY(0)),grafo);
+                            System.out.println("shit");
+                            break;
                         case MotionEvent.ACTION_MOVE:
+
+
                             if (node == null)
 
                             {//view.addNode(x,y,grafo);
-                                lastX = x;
-                                lastY = y;
+                                lastXmoved = x;
+                                lastYmoved = y;
                             } else {
+                                if(nFocused!=null)
+                                g_view.setPosition(x,y,nFocused);
                                 //if(event.getEventTime()-event.getDownTime()>2000){
                                 //    view.deleteNode(node,grafo);
                                 //}
@@ -1074,9 +1114,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                                 //view.addNode(x,y,grafo);
                             else
                             {
-
+                                nFocused= null;
 
                             }
+                            break;
 
                     }
 
@@ -1122,10 +1163,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
 
                 private void modifyGraph(View v, MotionEvent event, int x, int y,
-                                         Node node) {
+                                         Node node, int grafo) {
                     switch (event.getActionMasked()) {
                         case MotionEvent.ACTION_DOWN:
                             if (node == null) {
+                                nFocused = null;
                             } else {
                                 nFocused = node;
                             }

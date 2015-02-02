@@ -22,6 +22,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.jmga.graphs.classes.GraphAdapter;
+import com.jmga.graphs.classes.GraphView;
+
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
@@ -97,6 +100,13 @@ public class NavigationDrawerFragment extends Fragment {
                 selectItem(position);
             }
         });
+        GraphView [] adapter_data = new GraphView[]{
+                new GraphView(1,R.drawable.ic_action_discard),
+                new GraphView(2,R.drawable.ic_action_discard),
+                new GraphView(0,R.drawable.ic_action_new)
+        };
+        //mDrawerListView.setAdapter(new GraphAdapter(getActionBar().getThemedContext(),R.layout.listview_item_row,adapter_data));
+
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_1,

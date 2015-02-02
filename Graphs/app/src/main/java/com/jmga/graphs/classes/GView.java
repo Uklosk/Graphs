@@ -37,7 +37,7 @@ import com.jmga.graphs.tools.auxiliary.SizeView;
 
 public class GView extends View {
 	private String currentDirImages;
-	private final int  MAX_GRAFOS = 1;
+	private final int  MAX_GRAFOS = 4;
 
 	private Graph[] grafos;
 
@@ -335,13 +335,21 @@ public class GView extends View {
      * INICIALIZACIÓN
      *
      */
+    static class ColorGrafos{
+        public static final int[] colores = {0xFF000000,0xFFFF0000,0xFF00FF00,0xFF0000FF,0xFFFFFF00};
+
+    }
 	private void init() {
 		currentDirImages = "/sdcard/Graphs/Images";
 
 		density = getResources().getDisplayMetrics().density;
         grafos = new Graph[MAX_GRAFOS+1];
-        for(int i = 0; i< MAX_GRAFOS; i++)
-    		grafos[i] = new Graph();
+        for(int i = 0; i< MAX_GRAFOS; i++) {
+            grafos[i] = new Graph();
+            grafos[i].setColor(ColorGrafos.colores[i]);
+        }
+
+
 		//gIso = new Graph();
 		//isomorphism = new Hashtable<String,Graph>();
 		//isomorphism_selected = false;
@@ -539,7 +547,7 @@ public class GView extends View {
          */
 
         for (int n_g = 0; n_g < MAX_GRAFOS; n_g++) {
-
+            if(grafos[n_g].visible){
             for (int i = 0; i < grafos[n_g].getArrows().size(); i++) {
                 Arrow a = grafos[n_g].getArrows().get(i);
                 paint.setColor(grafos[n_g].getArrows().get(i).color);
@@ -564,7 +572,7 @@ public class GView extends View {
                 n.draw(canvas);
                 canvas.drawText(label[n.getId()] + " | " + n.getEnlacesExistentes(), n.getCenterX(), n.getCenterY()
                         - n.radius - 20, fontPaint);
-            }
+            }}
         }
         if (aux != null) {
 			canvas.drawLine(aux.start[0], aux.start[1], aux.stop[0],
@@ -890,6 +898,16 @@ public class GView extends View {
 		}*/
 
 	}
+
+    public void toggle_visible(int position) {
+        grafos[position].visible=!grafos[position].visible;
+        update();
+        invalidate();
+    }
+
+    public boolean isVisible(int gFocused) {
+        return grafos[gFocused].visible;
+    }
 
     /**
 	public void resizeGraph(SizeView s) {

@@ -25,6 +25,8 @@ public class Graph implements Cloneable {
 	private ArrayList<Arrow> arrows;
 	private Arrow aux;
 	private int nodes;
+    int color = Color.BLACK;
+    public boolean visible = true;
 
 	/*
 	 * CONSTRUCTORES
@@ -332,8 +334,18 @@ public class Graph implements Cloneable {
 			arrows.get(i).stop = new float[] { iF.getCenterX(), iF.getCenterY() };
 
 		}
+        for (int ns : getNombres()) {
+            Node n = getVertex().get(ns);
+            n.getPaint().setColor(color);
+        }
+        for(int i = 0;i < arrows.size();i++){
+            arrows.get(i).color=color;
+        }
 	}
+    public void setColor(int color){
+        this.color=color;
 
+    }
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
@@ -407,4 +419,8 @@ public class Graph implements Cloneable {
 	public void setAux(Arrow aux) {
 		this.aux = aux;
 	}
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
 }

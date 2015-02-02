@@ -31,9 +31,9 @@
     <string name="text_zoompos">Scale of the graph</string>
     <string name="text_percent">%</string>
     <string name="text_zoomvertex">Scalar vertex</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 1</string>
-    <string name="title_section3">Section 1</string>
+    <string name="title_section1">Grafo 1</string>
+    <string name="title_section2">Grafo 2</string>
+    <string name="title_section3">Grafo 3</string>
     <string name="navigation_drawer_open">Abrir</string>
     <string name="navigation_drawer_close">Section 1</string>
 </resources>
