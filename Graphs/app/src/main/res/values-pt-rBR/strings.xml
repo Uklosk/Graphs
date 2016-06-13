@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="app_name">Grafos</string>
+	<string name="action_settings">Configurações</string>
+	<string name="action_load">Abrir grafo</string>
+	<string name="action_save">Salvar grafo</string>
+	<string name="action_export_image">Exportar imagem</string>
+	<string name="action_add">Adicionar</string>
+	<string name="action_remove">Remover</string>
+	<string name="action_kruskal">Árvore geradora mínima</string>
+	<string name="action_bipartite">Ver bipartição</string>
+	<string name="action_tableinfo">Grafo de informação</string>
+	<string name="action_clear">Limpar</string>
+	<string name="action_iso">Isomorfismo</string>
+	<string name="action_distance_table">Exibir tabela com distâncias</string>
+	<string name="separator">Reta divisória</string>
+	<string name="file_titlesave">Salvar grafo</string>
+	<string name="file_hint">Grafo</string>
+	<string name="file_extension">.grafo</string>
+	<string name="file_save">Salvar</string>
+	<string name="file_cancel">Cancelar</string>
+	<string name="text_vertex">Vértice</string>
+	<string name="text_edges">Arestas</string>
+	<string name="text_components">Componentes conectados</string>
+	<string name="text_bipartite">Bipartido</string>
+	<string name="text_sumofdistances">Soma das distâncias</string>
+	<string name="text_regular">Regular</string>
+	<string name="text_secuence">Sequence de graus</string>
+	<string name="text_separator">:</string>
+	<string name="text_zoompos">Escala do graph</string>
+	<string name="text_percent">%</string>
+	<string name="text_zoomvertex">Vértice escalar</string>
+
+</resources>
